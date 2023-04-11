@@ -7,7 +7,7 @@ from pyspark.sql.types import StructType
 class JinjaVariables(Enum):
     DATABASE = "database"
     TABLE = "table"
-    SOURCE_TABLE = "source_table"
+    CHECKPOINT = "checkpoint"
     FILENAME_DATE_FORMAT = "filename_date_format"
     PATH_DATE_FORMAT = "path_date_format"
     CONTAINER = "container"

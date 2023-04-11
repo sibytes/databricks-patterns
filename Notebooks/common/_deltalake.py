@@ -19,7 +19,6 @@ class DeltaLake(BaseModel):
   _logger: Any = PrivateAttr(default=None)
   _replacements: Dict[JinjaVariables, str] = PrivateAttr(default=None)
   database:str = Field(...)
-  source_table:str = Field(...)
   destination_table:str = Field(...)
   table:str = Field(...)
   container:str = Field(...)
@@ -28,11 +27,12 @@ class DeltaLake(BaseModel):
   options:Union[dict,None] = Field(default=None)
   timeslice:Timeslice = Field(...)
   location:str = Field(default=None)
+  checkpoint:str = Field(default=None)
 
   def _render(self):
     self._replacements = {
       JinjaVariables.TABLE: self.destination_table,
-      JinjaVariables.SOURCE_TABLE: self.source_table,
+      JinjaVariables.CHECKPOINT: self.checkpoint,
       JinjaVariables.DATABASE: self.database,
       JinjaVariables.CONTAINER: self.container
     }

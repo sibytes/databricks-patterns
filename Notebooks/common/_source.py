@@ -43,6 +43,7 @@ class Source(BaseModel):
   spark_schema:StructType = Field(default=None)
   ddl:List[str] = Field(default=None)
   headerless_ddl:List[str] = Field(default=None)
+  checkpoint:str = Field(default=None)
 
   def _render(self):
     self._replacements = {

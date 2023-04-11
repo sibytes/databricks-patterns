@@ -20,7 +20,7 @@ source:
   options:
     # autoloader
     cloudFiles.format: csv
-    cloudFiles.schemaLocation:  /mnt/{{container}}/checkpoint/{{table}}_raw_dbx_patterns_customers
+    cloudFiles.schemaLocation:  /mnt/{{container}}/checkpoint/{{checkpoint}}
     cloudFiles.inferColumnTypes: false
     cloudFiles.schemaHints: ../Schema/{{table}}.yaml
     cloudFiles.schemaEvolutionMode: addNewColumns
@@ -42,7 +42,7 @@ raw:
   root: /mnt/{{container}}/data/raw
   path: "{{database}}/{{table}}"
   options:
-    checkpointLocation: /mnt/{{container}}/checkpoint/{{source_table}}_{{database}}_{{table}}
+    checkpointLocation: /mnt/{{container}}/checkpoint/{{checkpoint}}
     mergeSchema: true
 
 base:
