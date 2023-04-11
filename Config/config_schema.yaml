@@ -1,0 +1,63 @@
+tables:
+  - Balance:
+      raw: balance
+      base: balance_inserts
+  - balancepriceupdates:
+      raw: balance
+      base: balance_price_updates
+  - balanceupdates:
+      raw: balance
+      base: balance_updates
+  - price-deleteupdates:
+      raw: price
+      base: price_delete_updates
+  - price-inserts:
+      raw: price
+      base: price_inserts
+  - reconciliationprices:
+      raw: reconciliation_prices
+      base: reconciliation_prices
+
+source:
+  trigger: FNZDataAPI-pricesbalancescomplete-{{filename_date_format}}*.flg
+  trigger_type: file
+  database: landing_fnz_pb
+  table: "{{table.lower()}}"
+  container: landing
+  root: "/mnt/{{container}}/FNZ/default/{{table}}/{{path_date_format}}"
+  filename: "FNZDataAPI-{{table.lower()}}-{{filename_date_format}}*.dat"
+  filename_date_format: "%Y%m%d"
+  path_date_format: "%Y/%m/%d"
+  format: cloudFiles
+  schema: ../Schema/{{table.lower()}}.json
+  options:
+    # schema
+    inferSchema: false
+    # csv
+    header: false
+    mode: PERMISSIVE
+    encoding: windows-1252
+    delimiter: ","
+    escape: '"'
+    nullValue: ""
+    quote: '"'
+    emptyValue: ""
+    
+
+raw:
+  database: raw_fnz_pb
+  table: "{{table}}"
+  container: lake
+  root: /mnt/{{container}}/deltalake/raw
+  path: "{{database}}/{{table}}"
+  options:
+    checkpointLocation: /mnt/{{container}}/checkpoint/{{database}}_{{table}}
+    mergeSchema: true
+
+base:
+  database: base_fnz_pb
+  table: "{{table}}"
+  container: lake
+  root: /mnt/{{container}}/deltalake/base
+  path: "{{database}}/{{table}}"
+  options: null
