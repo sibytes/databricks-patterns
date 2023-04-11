@@ -6,7 +6,7 @@
 from common import Config, Timeslice
 timeslice = Timeslice(day=1, month=1, year=2023)
 config = Config(timeslice=timeslice)
-table_stages = config.tables[0]
+table_stages = config.tables[1]
 
 
 # COMMAND ----------
@@ -31,10 +31,10 @@ def load(
   print(stream.columns)
 
   stream_data:StreamingQuery = (stream
-    .where("LOAD_FLAG  NOT IN ('H','F')")
+    .where("flag  NOT IN ('H','F')")
     .select(
       "*",
-      fn.current_timestamp().alias("_LOAD_DATE"),
+      fn.current_timestamp().alias("_load_date"),
       "_metadata.*"
     )
     .writeStream
@@ -45,14 +45,14 @@ def load(
 
   table_hf = "headerfooter"
   options_hf = {
-    "checkpointLocation": f"/mnt/{destination.container}/checkpoint/{destination.database}_{table_hf}"
+    "checkpointLocation": f"/mnt/{destination.container}/checkpoint/{source.table}_{destination.database}_{table_hf}"
   }
 
   stream_hf:StreamingQuery = (stream
-    .where("LOAD_FLAG  IN ('H','F')")
+    .where("flag  IN ('H','F')")
     .select(
       "*",
-      fn.current_timestamp().alias("_LOAD_DATE"),
+      fn.current_timestamp().alias("_load_date"),
       "_metadata.*"
     )
     .writeStream
@@ -86,7 +86,12 @@ load(source, raw)
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from raw_fnz_pb.balance
+# MAGIC select * from raw_dbx_patterns.customers
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from raw_dbx_patterns.headerfooter
 
 # COMMAND ----------
 
@@ -94,10 +99,11 @@ dbutils.notebook.exit("Succeeded")
 
 # COMMAND ----------
 
-dbutils.fs.rm("/mnt/lake/deltalake/raw", True)
-dbutils.fs.rm("/mnt/lake/checkpoint", True)
-dbutils.fs.rm("/mnt/landing/checkpoint", True)
-spark.sql("drop database if exists raw_fnz_pb CASCADE")
+dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns/customers", True)
+dbutils.fs.rm("/mnt/datalake/checkpoint/raw_dbx_patterns_customers", True)
+dbutils.fs.rm("/mnt/datalake/checkpoint/raw_dbx_patterns_headerfooter", True)
+spark.sql("drop database if exists raw_dbx_patterns CASCADE")
+spark.sql("drop database if exists base_dbx_patterns CASCADE")
 
 # COMMAND ----------
 
