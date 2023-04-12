@@ -17,6 +17,7 @@ class TriggerType(Enum):
 class Source(BaseModel):
 
   _OPTION_CF_SCHEMA_HINTS = "cloudFiles.schemaHints"
+  _OPTION_CORRUPT_RECORD_NAME = "columnNameOfCorruptRecord"
 
   def __init__(self, **data: Any) -> None:
     super().__init__(**data)
@@ -40,7 +41,7 @@ class Source(BaseModel):
   timeslice:Timeslice = Field(...)
   format:str = Field(...)
   path:str = Field(default=None)
-  spark_schema:StructType = Field(default=None)
+  spark_schema:Union[StructType, str] = Field(default=None)
   ddl:List[str] = Field(default=None)
   headerless_ddl:List[str] = Field(default=None)
   checkpoint:str = Field(default=None)
@@ -69,6 +70,18 @@ class Source(BaseModel):
       for option, value in self.options.items():
         self.options[option] = render_jinja(value, self._replacements)
 
+    self._config_schema_hints()
+
+    if isinstance(self.spark_schema, str):
+      path = self.spark_schema
+      self.spark_schema = render_jinja(self.spark_schema, self._replacements)
+      self._load_schema(path)
+
+    corrupt_record_name = self.options.get(self._OPTION_CORRUPT_RECORD_NAME, None)
+    if isinstance(self.spark_schema, StructType) and corrupt_record_name:
+      self.spark_schema.add(field=corrupt_record_name, data_type="string")
+
+  def _config_schema_hints(self):
     path = self.options.get(self._OPTION_CF_SCHEMA_HINTS, None)
     if path and "/" in path:
       self._load_schema(path)

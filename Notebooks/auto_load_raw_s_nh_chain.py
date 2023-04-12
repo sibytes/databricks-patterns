@@ -4,8 +4,10 @@
 # COMMAND ----------
 
 from common import Config, Timeslice
-timeslice = Timeslice(day=2, month=1, year=2023)
-config = Config(timeslice=timeslice)
+pattern = "auto_load_schema"
+config_path = f"../Config/{pattern}"
+timeslice = Timeslice(day="*", month="*", year="*")
+config = Config(timeslice=timeslice, config_path=config_path)
 table_stages = config.tables[0]
 
 
@@ -22,12 +24,12 @@ def load(
 ):
 
   stream = (spark.readStream
+    .schema(source.spak_schema)
     .format(source.format)
     .options(**source.options)
     .load(source.path)
   )
 
-  stream:StreamingQuery = source.rename_headerless(stream)
   print(stream.columns)
 
   stream_data:StreamingQuery = (stream
@@ -43,19 +45,35 @@ def load(
     .toTable(f"`{destination.database}`.`{destination.table}`")
   )
 
+  
+  if await_termination:
+    stream_data.awaitTermination()
+
+
+# COMMAND ----------
+
+from pyspark.sql import functions as fn
+from pyspark.sql.types import StructType
+from pyspark.sql.streaming import StreamingQuery
+
+def load_hf(
+  source:str,
+  destination:str,
+  await_termination:bool = True
+):
+
   table_hf = "headerfooter"
   checkpoint = f"{source.database}.{source.table}-{destination.database}.{table_hf}"
   options_hf = {
     "checkpointLocation": f"/mnt/{destination.container}/checkpoint/{checkpoint}"
   }
 
-  stream_hf:StreamingQuery = (stream
-    .where("flag  IN ('H','F')")
-    .select(
-      "*",
-      fn.current_timestamp().alias("_load_date"),
-      "_metadata.*"
-    )
+  # https://docs.databricks.com/delta/delta-change-data-feed.html
+  stream_hf:StreamingQuery = (spark.readStream
+    .format("delta") 
+    .option("readChangeFeed", "true")
+    .table(f"`{destination.database}`.`{destination.table}`")
+    where("_change_type = 'insert'")
     .writeStream
     .options(**options_hf)
     .trigger(availableNow=True)
@@ -63,10 +81,7 @@ def load(
   )
   
   if await_termination:
-    stream_data.awaitTermination()
     stream_hf.awaitTermination()
-
-
 
 # COMMAND ----------
 
@@ -84,6 +99,10 @@ pprint(raw.dict())
 # COMMAND ----------
 
 load(source, raw)
+
+# COMMAND ----------
+
+load_hf(source, raw)
 
 # COMMAND ----------
 
@@ -106,30 +125,3 @@ dbutils.fs.rm("/mnt/datalake/checkpoint", True)
 spark.sql("drop database if exists raw_dbx_patterns CASCADE")
 spark.sql("drop database if exists base_dbx_patterns CASCADE")
 
-# COMMAND ----------
-
-dbutils.fs.ls("/mnt/datalake/checkpoint")
-
-# COMMAND ----------
-
-options = {
-  'delimiter': ',',
-  'emptyValue': '',
-  'inferSchema': False,
-  'encoding': 'windows-1252',
-  'escape': '"',
-  'header': False,
-  'mode': 'PERMISSIVE',
-  'nullValue': '',
-  'quote': '"'
-}
-from common._utils import load_schema
-schema = load_schema('../Schema/balance.json')
-schema.add(field="_corrupt_record", data_type="string")
-df = spark.read.format("csv").schema(schema).options(**options).load("/mnt/landing/FNZ/default/Balance/2023/01/01/FNZDataAPI-balance-20230101*.dat")
-
-display(df.where("LOAD_FLAG in ('H','F')"))
-
-# COMMAND ----------
-
-display(df.where("LOAD_FLAG not in ('H','F')"))
