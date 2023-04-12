@@ -44,8 +44,9 @@ def load(
   )
 
   table_hf = "headerfooter"
+  checkpoint = f"{source.database}.{source.table}-{destination.database}.{table_hf}"
   options_hf = {
-    "checkpointLocation": f"/mnt/{destination.container}/checkpoint/{source.table}_{destination.database}_{table_hf}"
+    "checkpointLocation": f"/mnt/{destination.container}/checkpoint/{checkpoint}"
   }
 
   stream_hf:StreamingQuery = (stream
@@ -70,7 +71,8 @@ def load(
 # COMMAND ----------
 
 source = config.get_source(table=table_stages.source)
-raw = config.get_raw(source_table=table_stages.source, table=table_stages.raw)
+raw = config.get_raw(table=table_stages.raw)
+config.link_checkpoint(source, raw)
 
 
 # COMMAND ----------

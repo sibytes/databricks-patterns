@@ -55,7 +55,8 @@ class Source(BaseModel):
       ),
       JinjaVariables.TABLE: self.destination_table,
       JinjaVariables.DATABASE: self.database,
-      JinjaVariables.CONTAINER: self.container
+      JinjaVariables.CONTAINER: self.container,
+      JinjaVariables.CHECKPOINT: self.checkpoint
     }
 
     self.root = render_jinja(self.root, self._replacements)
@@ -69,7 +70,7 @@ class Source(BaseModel):
         self.options[option] = render_jinja(value, self._replacements)
 
     path = self.options.get(self._OPTION_CF_SCHEMA_HINTS, None)
-    if path:
+    if path and "/" in path:
       self._load_schema(path)
 
       if self.options.get("header"):

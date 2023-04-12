@@ -16,8 +16,16 @@ def render_jinja(data: str, replacements: dict[JinjaVariables, str]):
 
     if data and isinstance(data, str):
         replace = {k.value: v for (k, v) in replacements.items()}
-        template: jinja2.Template = jinja2.Template(data)
-        data = template.render(replace)
+        skip = False
+        for k, v in replace.items():
+
+          if v is None and "{{" + k + "}}" in data.replace(" ", ""):
+            skip = True
+            break
+
+        if not skip:
+          template: jinja2.Template = jinja2.Template(data)
+          data = template.render(replace)
 
     return data
 

@@ -32,9 +32,9 @@ class DeltaLake(BaseModel):
   def _render(self):
     self._replacements = {
       JinjaVariables.TABLE: self.destination_table,
-      JinjaVariables.CHECKPOINT: self.checkpoint,
       JinjaVariables.DATABASE: self.database,
-      JinjaVariables.CONTAINER: self.container
+      JinjaVariables.CONTAINER: self.container,
+      JinjaVariables.CHECKPOINT: self.checkpoint
     }
 
     self.root = render_jinja(self.root, self._replacements)
