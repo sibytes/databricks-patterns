@@ -12,8 +12,8 @@ source:
   database: landing_dbx_patterns
   table: "{{table}}"
   container: datalake
-  root: "/mnt/{{container}}/data/landing/dbx_patterns/{{table}}/*"
-  filename: "{{table}}-*.csv"
+  root: "/mnt/{{container}}/data/landing/dbx_patterns/{{table}}/{{path_date_format}}"
+  filename: "{{table}}-{{filename_date_format}}*.csv"
   filename_date_format: "%Y%m%d"
   path_date_format: "%Y%m%d"
   format: cloudFiles

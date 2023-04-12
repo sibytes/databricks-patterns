@@ -64,11 +64,18 @@ class Config:
     base = DeltaLake(**base)
     return base
 
-  def link_checkpoint(self, source:Union[Source, DeltaLake], destination:DeltaLake):
-    checkpoint = f"{source.database}.{source.table}-{destination.database}.{destination.table}"
-    source.checkpoint = checkpoint
+  def link_checkpoint(
+    self, 
+    source:Union[Source, DeltaLake], 
+    destination:DeltaLake, 
+    checkpoint_name:str=None
+  ):
+    if not checkpoint_name:
+      checkpoint_name = f"{source.database}.{source.table}-{destination.database}.{destination.table}"
+
+    source.checkpoint = checkpoint_name
     source._render()
-    destination.checkpoint = checkpoint
+    destination.checkpoint = checkpoint_name
     destination._render()
 
 

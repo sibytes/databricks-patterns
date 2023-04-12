@@ -4,9 +4,9 @@
 # COMMAND ----------
 
 from common import Config, Timeslice
-timeslice = Timeslice(day=1, month=1, year=2023)
+timeslice = Timeslice(day=2, month=1, year=2023)
 config = Config(timeslice=timeslice)
-table_stages = config.tables[1]
+table_stages = config.tables[0]
 
 
 # COMMAND ----------
@@ -87,6 +87,10 @@ load(source, raw)
 
 # COMMAND ----------
 
+dbutils.notebook.exit("Succeeded")
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC select * from raw_dbx_patterns.customers
 
@@ -97,19 +101,14 @@ load(source, raw)
 
 # COMMAND ----------
 
-dbutils.notebook.exit("Succeeded")
-
-# COMMAND ----------
-
 dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns/customers", True)
-dbutils.fs.rm("/mnt/datalake/checkpoint/raw_dbx_patterns_customers", True)
-dbutils.fs.rm("/mnt/datalake/checkpoint/raw_dbx_patterns_headerfooter", True)
+dbutils.fs.rm("/mnt/datalake/checkpoint", True)
 spark.sql("drop database if exists raw_dbx_patterns CASCADE")
 spark.sql("drop database if exists base_dbx_patterns CASCADE")
 
 # COMMAND ----------
 
-dbutils.fs.ls("/mnt/lake/checkpoint")
+dbutils.fs.ls("/mnt/datalake/checkpoint")
 
 # COMMAND ----------
 
