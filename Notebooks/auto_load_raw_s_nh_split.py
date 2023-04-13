@@ -5,7 +5,7 @@
 
 from common import Config, Timeslice
 pattern = "auto_load_schema"
-config_path = f"../Config/{pattern}"
+config_path = f"../Config/{pattern}.yaml"
 timeslice = Timeslice(day="*", month="*", year="*")
 config = Config(timeslice=timeslice, config_path=config_path)
 table_stages = config.tables[0]

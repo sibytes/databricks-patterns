@@ -74,7 +74,7 @@ class Source(BaseModel):
 
     if isinstance(self.spark_schema, str):
       path = self.spark_schema
-      self.spark_schema = render_jinja(self.spark_schema, self._replacements)
+      path = render_jinja(self.spark_schema, self._replacements)
       self._load_schema(path)
 
     corrupt_record_name = self.options.get(self._OPTION_CORRUPT_RECORD_NAME, None)
@@ -92,7 +92,7 @@ class Source(BaseModel):
         self.options[self._OPTION_CF_SCHEMA_HINTS] = ", ".join(self.headerless_ddl)
 
   def _load_schema(self, path:str):
-    if not self.spark_schema:
+    if not self.spark_schema or isinstance(self.spark_schema, str):
       self.spark_schema = load_schema(path)
     if not self.ddl:
       self.ddl = get_ddl(self.spark_schema, header=True)
