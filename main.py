@@ -1,4 +1,4 @@
-from common import Config, Timeslice, StageType
+from dbxconfig import Config, Timeslice, StageType
 import json
 
 pattern = "auto_load_schema"
