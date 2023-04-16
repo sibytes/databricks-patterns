@@ -1,12 +1,6 @@
-tables:
-  - customer_details_1:
-      raw: customers
-      base: customer_details_1
-  - customer_details_2:
-      raw: customers
-      base: customer_details_1
+tables: ./Config/tables.yaml
 
-source:
+landing:
   trigger: customerdetailscomplete-{{filename_date_format}}*.flg
   trigger_type: file
   database: landing_dbx_patterns

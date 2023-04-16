@@ -109,7 +109,6 @@ class Timeslice(BaseModel):
         format_code: Union[list, str],
         default=0,
     ):
-
         if datepart == _WILDCARD:
             if isinstance(format_code, str):
                 format = format.replace(format_code, f"{_WILDCARD}")

@@ -1,0 +1,26 @@
+
+landing:
+  landing_dbx_patterns:
+    customer_details_1: null
+    customer_details_2: null
+
+raw:
+  raw_dbx_patterns:
+    customers:
+      ids: id
+      depends_on:
+        - landing.landing_dbx_patterns.customer_details_1
+        - landing.landing_dbx_patterns.customer_details_2
+
+base:
+  base_dbx_patterns:
+    customer_details_1:
+      ids: id
+      depends_on:
+        - raw.raw_dbx_patterns.customers
+    customer_details_2:
+      ids: id
+      depends_on:
+        - raw.raw_dbx_patterns.customers
+
+
