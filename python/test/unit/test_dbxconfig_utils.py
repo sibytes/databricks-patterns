@@ -6,7 +6,6 @@ from pyspark.sql.types import (
     IntegerType,
     DecimalType,
     LongType,
-    MapType,
 )
 from dbxconfig import _utils as utils
 
@@ -56,7 +55,7 @@ def test_utils_get_dll_header(spark_schema):
     assert actual == expected
 
 
-def test_utils_get_dll_(spark_schema):
+def test_utils_get_dll_noheader(spark_schema):
     actual = utils.get_ddl(spark_schema=spark_schema, header=False)
     expected = [
         "_c0 string",
