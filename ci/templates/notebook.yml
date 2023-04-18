@@ -45,7 +45,7 @@ steps:
       DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
       ROOT_DIR: $(System.DefaultWorkingDirectory)
       NOTEBOOK_DIR: Databricks/Notebooks
-      WORKSPACE_SUBDIRS: "Bronze, Silver, Gold"
+      WORKSPACE_SUBDIRS: "Bronze, Config, Schema, Utils"
       WORKSPACE_ROOT: "autobricks"
       AUTOBRICKS_LOGGING: INFO
       SSL_VERIFY: True
