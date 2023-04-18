@@ -1,14 +1,18 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic
+# MAGIC %pip install pyaml pydantic dbxconfig==1.0.5
 
 # COMMAND ----------
 
-from common import Config, Timeslice
+from dbxconfig import Config, Timeslice, StageType
+import json
+
 pattern = "auto_load_schema"
 config_path = f"../Config/{pattern}.yaml"
 timeslice = Timeslice(day="*", month="*", year="*")
-config = Config(timeslice=timeslice, config_path=config_path)
-table_stages = config.tables[0]
+config = Config(config_path=config_path)
+table_mapping = config.get_table_mapping(timeslice=timeslice, stage=StageType.raw, table="customers")
+
+table_mapping.destination
 
 
 # COMMAND ----------
@@ -24,7 +28,7 @@ def load(
 ):
 
   stream = (spark.readStream
-    .schema(source.spak_schema)
+    .schema(source.spark_schema)
     .format(source.format)
     .options(**source.options)
     .load(source.path)
@@ -33,7 +37,6 @@ def load(
   print(stream.columns)
 
   stream_data:StreamingQuery = (stream
-    .where("flag  NOT IN ('H','F')")
     .select(
       "*",
       fn.current_timestamp().alias("_load_date"),
@@ -73,7 +76,7 @@ def load_hf(
     .format("delta") 
     .option("readChangeFeed", "true")
     .table(f"`{destination.database}`.`{destination.table}`")
-    where("_change_type = 'insert'")
+    .where("_change_type = 'insert' and flag  IN ('H','F')")
     .writeStream
     .options(**options_hf)
     .trigger(availableNow=True)
@@ -85,9 +88,9 @@ def load_hf(
 
 # COMMAND ----------
 
-source = config.get_source(table=table_stages.source)
-raw = config.get_raw(table=table_stages.raw)
-config.link_checkpoint(source, raw)
+source = table_mapping.source["customer_details_1"]
+raw = table_mapping.destination
+config.link_checkpoint(source=source, destination=raw)
 
 
 # COMMAND ----------

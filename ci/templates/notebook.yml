@@ -1,0 +1,50 @@
+
+parameters:
+  azureResourceManagerConnection: none
+  KeyVaultName: none
+  SubscriptionId: none
+  ResourceGroup: none
+  DbxWorkspaceName: none
+  DbxWorkspaceUrl: none
+  DbxWorkspaceSubDirs: none
+  DbxWorkspaceRoot: none
+
+steps:
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.8'
+    displayName: 'Use Python 3.8'
+
+  - task: AzureKeyVault@1
+    inputs:
+      azureSubscription: ${{ parameters.azureResourceManagerConnection }}
+      KeyVaultName: ${{ parameters.KeyVaultName }}
+      SecretsFilter: '*'
+      RunAsPreJob: true
+
+  - task: CmdLine@2
+    displayName: "install wheel"
+    inputs:
+        script: |
+                python -m pip install autobricks==0.1.5
+
+  - task: PythonScript@0
+    displayName: "upload notebooks to DBX"
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: ci/python/upload_notebooks_to_dbx.py
+    env:
+      AUTH_TYPE: "SERVICE_PRINCIPAL_MGMT_ENDPOINT"
+      TENANT_ID: $(AZURE-ID)
+      SP_CLIENT_ID: $(DATALAKE-SPN-APPID)
+      SP_CLIENT_SECRET: $(DATALAKE-SPN-CREDENTIAL)
+      WORKSPACE_NAME: ${{ parameters.DbxWorkspaceName }}
+      RESOURCE_GROUP: ${{ parameters.ResourceGroup }}
+      SUBSCRIPTION_ID: ${{ parameters.SubscriptionId }}
+      DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
+      ROOT_DIR: $(System.DefaultWorkingDirectory)
+      WORKSPACE_SUBDIRS: "Bronze, Silver, Gold"
+      WORKSPACE_ROOT: "autobricks"
+      AUTOBRICKS_LOGGING: INFO
+      SSL_VERIFY: True

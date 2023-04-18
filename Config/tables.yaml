@@ -1,10 +1,39 @@
 
+# deltalake table properties
+# https://docs.databricks.com/delta/table-properties.html
+
+# delta.appendOnly: false
+# delta.autoOptimize.autoCompact: none    
+# delta.autoOptimize.optimizeWrite: none    
+# delta.checkpoint.writeStatsAsJson: true
+# delta.checkpoint.writeStatsAsStruct: none
+# delta.columnMapping.mode: false
+# delta.compatibility.symlinkFormatManifest.enabled: false
+# delta.dataSkippingNumIndexedCols 32
+# delta.deletedFileRetentionDuration: interval 1 week
+# delta.enableChangeDataFeed: false
+# delta.isolationLevel:  WriteSerializable
+# delta.logRetentionDuration: interval 30 days
+# delta.minReaderVersion: 1
+# delta.minWriterVersion: 2
+# delta.randomizeFilePrefixes: false
+# delta.randomPrefixLength: 2
+# delta.setTransactionRetentionDuration: none
+# delta.tuneFileSizesForRewrites: none
+
 landing:
+  # delta table properties can be set at stage level or table level
   landing_dbx_patterns:
     customer_details_1: null
     customer_details_2: null
 
 raw:
+  # delta table properties can be set at stage level or table level
+  table_properties:
+    delta.appendOnly: true
+    delta.autoOptimize.autoCompact: true    
+    delta.autoOptimize.optimizeWrite: true  
+    delta.enableChangeDataFeed: true
   raw_dbx_patterns:
     customers:
       ids: id
@@ -13,6 +42,11 @@ raw:
         - landing.landing_dbx_patterns.customer_details_2
 
 base:
+  table_properties:
+    delta.appendOnly: true
+    delta.autoOptimize.autoCompact: true    
+    delta.autoOptimize.optimizeWrite: true  
+    delta.enableChangeDataFeed: true
   base_dbx_patterns:
     customer_details_1:
       ids: id
