@@ -3,15 +3,19 @@
 
 # COMMAND ----------
 
+from dbxconfig import Config, Timeslice, StageType, Read, DeltaLake
+from pyspark.sql import functions as fn
+from pyspark.sql.streaming import StreamingQuery
+from dbxconfig import DeltaLake
+
+# COMMAND ----------
+
 import os
 
 os.chdir("/Workspace/autobricks/")
 os.getcwd()
 
 # COMMAND ----------
-
-from dbxconfig import Config, Timeslice, StageType
-import json
 
 pattern = "auto_load_schema"
 config_path = f"./Config/{pattern}.yaml"
@@ -23,10 +27,6 @@ table_mapping.destination
 
 
 # COMMAND ----------
-
-from pyspark.sql import functions as fn
-from pyspark.sql.types import StructType
-from pyspark.sql.streaming import StreamingQuery
 
 def load(
   source:str,
@@ -61,11 +61,6 @@ def load(
 
 
 # COMMAND ----------
-
-from pyspark.sql import functions as fn
-from pyspark.sql.types import StructType
-from pyspark.sql.streaming import StreamingQuery
-from dbxconfig import DeltaLake
 
 def load_hf(
   source:str,
