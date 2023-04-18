@@ -14,7 +14,7 @@ from dbxconfig import Config, Timeslice, StageType
 import json
 
 pattern = "auto_load_schema"
-config_path = f"../Config/{pattern}.yaml"
+config_path = f"./Config/{pattern}.yaml"
 timeslice = Timeslice(day="*", month="*", year="*")
 config = Config(config_path=config_path)
 table_mapping = config.get_table_mapping(timeslice=timeslice, stage=StageType.raw, table="customers")
@@ -47,7 +47,7 @@ def load(
     .select(
       "*",
       fn.current_timestamp().alias("_load_date"),
-      "_metadata.*"
+      "_metadata"
     )
     .writeStream
     .options(**destination.options)
@@ -65,25 +65,46 @@ def load(
 from pyspark.sql import functions as fn
 from pyspark.sql.types import StructType
 from pyspark.sql.streaming import StreamingQuery
+from dbxconfig import DeltaLake
 
 def load_hf(
   source:str,
-  destination:str,
+  destination:DeltaLake,
   await_termination:bool = True
 ):
 
   table_hf = "headerfooter"
   checkpoint = f"{source.database}.{source.table}-{destination.database}.{table_hf}"
   options_hf = {
-    "checkpointLocation": f"/mnt/{destination.container}/checkpoint/{checkpoint}"
+    "checkpointLocation": f"/mnt/{destination.container}/checkpoint/{checkpoint}",
+    "mergeSchema": True
   }
 
+  location = destination.location.replace(destination.table, table_hf)
+  spark.sql(f"""
+  CREATE TABLE IF NOT EXISTS `{destination.database}`.`{table_hf}`
+  USING DELTA
+  LOCATION '{location}'
+  TBLPROPERTIES (
+    delta.appendOnly = true,
+    delta.autoOptimize.autoCompact = true,
+    delta.autoOptimize.optimizeWrite = true
+  )
+  """)
+
+  columns = [
+    "flag",
+    "_corrupt_record as data",
+    "_load_date",
+    "_metadata"
+  ]
   # https://docs.databricks.com/delta/delta-change-data-feed.html
   stream_hf:StreamingQuery = (spark.readStream
     .format("delta") 
     .option("readChangeFeed", "true")
     .table(f"`{destination.database}`.`{destination.table}`")
     .where("_change_type = 'insert' and flag  IN ('H','F')")
+    .selectExpr(*columns)
     .writeStream
     .options(**options_hf)
     .trigger(availableNow=True)
@@ -130,7 +151,7 @@ dbutils.notebook.exit("Succeeded")
 
 # COMMAND ----------
 
-dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns/customers", True)
+dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns", True)
 dbutils.fs.rm("/mnt/datalake/checkpoint", True)
 spark.sql("drop database if exists raw_dbx_patterns CASCADE")
 spark.sql("drop database if exists base_dbx_patterns CASCADE")
