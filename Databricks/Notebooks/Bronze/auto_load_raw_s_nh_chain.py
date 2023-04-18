@@ -3,6 +3,13 @@
 
 # COMMAND ----------
 
+import os
+
+os.chdir("/Workspace/autobricks/")
+os.getcwd()
+
+# COMMAND ----------
+
 from dbxconfig import Config, Timeslice, StageType
 import json
 
