@@ -44,6 +44,7 @@ steps:
       SUBSCRIPTION_ID: ${{ parameters.SubscriptionId }}
       DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
       ROOT_DIR: $(System.DefaultWorkingDirectory)
+      NOTEBOOK_DIR: Databricks/Notebooks
       WORKSPACE_SUBDIRS: "Bronze, Silver, Gold"
       WORKSPACE_ROOT: "autobricks"
       AUTOBRICKS_LOGGING: INFO

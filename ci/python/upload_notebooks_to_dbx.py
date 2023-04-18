@@ -4,8 +4,9 @@ from autobricks import Workspace
 ROOT_DIR = os.getenv("ROOT_DIR")
 WORKSPACE_ROOT = os.getenv("WORKSPACE_ROOT")
 WORKSPACE_SUBDIRS:str = os.getenv("WORKSPACE_SUBDIRS")
+NOTEBOOK_DIR:str = os.getenv("NOTEBOOK_DIR")
 
-from_notebook_root = f"{ROOT_DIR}/Databricks/Notebooks/"
+from_notebook_root = f"{ROOT_DIR}/{NOTEBOOK_DIR}/"
 target_dir = f"/{WORKSPACE_ROOT}"
 sub_folders = [f"/{d.strip()}" for d in WORKSPACE_SUBDIRS.split(",")]
 
