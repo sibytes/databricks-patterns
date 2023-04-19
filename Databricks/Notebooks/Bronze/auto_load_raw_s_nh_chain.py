@@ -1,36 +1,36 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic dbxconfig==1.0.9
+# MAGIC %pip install pyaml pydantic dbxconfig==2.0.0
 
 # COMMAND ----------
 
-from dbxconfig import Config, Timeslice, StageType, Read, DeltaLake
+from dbxconfig import (
+  Config, Timeslice, StageType, Read, DeltaLake
+)
 from pyspark.sql import functions as fn
 from pyspark.sql.streaming import StreamingQuery
 from dbxconfig import DeltaLake
-
-# COMMAND ----------
-
 import os
-
-os.chdir("/Workspace/autobricks/")
-os.getcwd()
 
 # COMMAND ----------
 
 pattern = "auto_load_schema"
-config_path = f"./Config/{pattern}.yaml"
+workspace_path = "/Workspace/autobricks"
+config_path = "../Config"
+if os.path.exists(workspace_path):
+  config_path = f"{workspace_path}/Config"
+
+config_path
+# COMMAND ----------
+
 timeslice = Timeslice(day="*", month="*", year="*")
-config = Config(config_path=config_path)
+config = Config(config_path=config_path, pattern=pattern)
 table_mapping = config.get_table_mapping(timeslice=timeslice, stage=StageType.raw, table="customers")
-
-table_mapping.destination
-
 
 # COMMAND ----------
 
 def load(
-  source:str,
-  destination:str,
+  source:Read,
+  destination:DeltaLake,
   await_termination:bool = True
 ):
 
@@ -63,7 +63,7 @@ def load(
 # COMMAND ----------
 
 def load_hf(
-  source:str,
+  source:Read,
   destination:DeltaLake,
   await_termination:bool = True
 ):
@@ -113,7 +113,7 @@ def load_hf(
 
 source = table_mapping.source["customer_details_1"]
 raw = table_mapping.destination
-config.link_checkpoint(source=source, destination=raw)
+config.set_checkpoint(source=source, destination=raw)
 
 
 # COMMAND ----------
