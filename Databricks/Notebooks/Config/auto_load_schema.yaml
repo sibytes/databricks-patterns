@@ -1,4 +1,5 @@
-tables: ./Config/tables.yaml
+# paths here are relative to this configuration document
+tables: ./tables.yaml
 
 landing:
   trigger: customerdetailscomplete-{{filename_date_format}}*.flg
@@ -11,7 +12,7 @@ landing:
   filename_date_format: "%Y%m%d"
   path_date_format: "%Y%m%d"
   format: cloudFiles
-  spark_schema: ./Schema/{{table.lower()}}.yaml
+  spark_schema: ../Schema/{{table.lower()}}.yaml
   options:
     # autoloader
     cloudFiles.format: csv
