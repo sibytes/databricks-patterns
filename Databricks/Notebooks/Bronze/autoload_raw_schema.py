@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic dbxconfig==2.0.0
+# MAGIC %pip install pyaml pydantic dbxconfig==2.1.1
 
 # COMMAND ----------
 
@@ -27,7 +27,18 @@ print(f"""
 
 # COMMAND ----------
 
-pattern = "auto_load_schema"
+def clear_down():
+  dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns", True)
+  dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns_control", True)
+  dbutils.fs.rm("/mnt/datalake/checkpoint", True)
+  dbutils.fs.rm("landing_dbx_patterns.customer_details_1-raw_dbx_patterns.customers", True)
+  spark.sql("drop database if exists raw_dbx_patterns CASCADE")
+  spark.sql("drop database if exists raw_dbx_patterns_control CASCADE")
+clear_down()
+
+# COMMAND ----------
+
+pattern = "autoload_raw_schema"
 workspace_path = "/Workspace/autobricks"
 repo_path = "/Workspace/Repos"
 config_path = "../Config"
@@ -62,6 +73,7 @@ def load(
   sys_cols = [c for c in stream.columns if c.startswith("_")]
 
   columns = src_cols + sys_cols + [
+    "if(_corrupt_record is null, true, false) as _is_valid",
     f"cast({process_id} as long) as _process_id",
     "current_timestamp() as _load_date",
     "_metadata"
@@ -84,13 +96,13 @@ def load(
 # COMMAND ----------
 
 def load_hf(
-  source:Read,
   destination:DeltaLake,
+  audit_db:str = "_control",
+  table_hf:str = "header_footer",
   await_termination:bool = True
 ):
 
-  table_hf = "headerfooter"
-  checkpoint = f"{source.database}.{source.table}-{destination.database}.{table_hf}"
+  checkpoint = f"{destination.database}.{table_hf}"
   options_hf = {
     "checkpointLocation": f"/mnt/{destination.container}/checkpoint/{checkpoint}",
     "mergeSchema": True
@@ -109,9 +121,13 @@ def load_hf(
     "period long"
   ])
 
+  database = f"{destination.database}{audit_db}"
+  database_table = f"`{database}`.`{table_hf}`"
   location = destination.location.replace(destination.table, table_hf)
-  spark.sql(f"""
-  CREATE TABLE IF NOT EXISTS `{destination.database}`.`{table_hf}`
+  location = location.replace(destination.database, database)
+  sql_db = f"CREATE DATABASE IF NOT EXISTS `{database}`"
+  sql_table = f"""
+  CREATE TABLE IF NOT EXISTS {database_table}
   USING DELTA
   LOCATION '{location}'
   TBLPROPERTIES (
@@ -119,10 +135,13 @@ def load_hf(
     delta.autoOptimize.autoCompact = true,
     delta.autoOptimize.optimizeWrite = true
   )
-  """)
+  """
+  print(sql_table)
+  spark.sql(sql_db)
+  spark.sql(sql_table)
 
   columns = [
-    f"to_json(_corrupt_record, '{header_schema}') as header",
+    f"from_csv(_corrupt_record, '{header_schema}') as header",
     "_corrupt_record as raw_header",
     "_process_id",
     "_load_date",
@@ -138,7 +157,7 @@ def load_hf(
   )
 
   columns = [
-    f"to_json(_corrupt_record, '{footer_schema}') as footer",
+    f"from_csv(_corrupt_record, '{footer_schema}') as footer",
     "_corrupt_record as raw_footer",
     "_process_id as f_process_id",
     "_metadata as f_metadata"
@@ -174,7 +193,7 @@ def load_hf(
     .writeStream
     .options(**options_hf)
     .trigger(availableNow=True)
-    .toTable(f"`{destination.database}`.`{table_hf}`")
+    .toTable(database_table)
   )
   
   if await_termination:
@@ -183,15 +202,22 @@ def load_hf(
 # COMMAND ----------
 
 def load_audit(
+  process_id:int,
   source:Read,
   destination:DeltaLake,
-  await_termination:bool = True
+  audit_db:str = "_control",
+  table_hf:str = "header_footer",
+  table_audit = "etl_audit"
 ):
 
-  table_audit = "etl_audit"
+  database = f"{destination.database}{audit_db}"
+  database_table = f"`{database}`.`{table_audit}`"
   location = destination.location.replace(destination.table, table_audit)
-  spark.sql(f"""
-  CREATE TABLE IF NOT EXISTS `{destination.database}`.`{table_audit}`
+  location = location.replace(destination.database, database)
+
+  sql_db = f"CREATE DATABASE IF NOT EXISTS `{database}`"
+  sql_table = f"""
+  CREATE TABLE IF NOT EXISTS {database_table}
   USING DELTA
   LOCATION '{location}'
   TBLPROPERTIES (
@@ -199,66 +225,143 @@ def load_audit(
     delta.autoOptimize.autoCompact = true,
     delta.autoOptimize.optimizeWrite = true
   )
-  """)
+  """
+  print(sql_table)
+  spark.sql(sql_db)
+  spark.sql(sql_table)
 
-  to_table = f"`{destination.database}`.`headerfooter`"
   df = spark.sql(f"""
     SELECT
       cast(count(*) as long) as total_count,
       cast(sum(if(d._is_valid, 1, 0)) as long) as valid_count,
       cast(sum(if(d._is_valid, 0, 1)) as long) as invalid_count,
+      cast(sum(if(d._is_valid, 0, 1)) as long) div cast(count(*) as long) as invalid_ratio,
       hf.header.row_count as expected_row_count,
-      d._metadata.*
+      hf._process_id,
+      hf._load_date,
+      d._metadata.file_name,
+      d._metadata.file_path,
+      d._metadata.file_size,
+      d._metadata.file_modification_time
     FROM `{destination.database}`.`{destination.table}` as d
-    JOIN {to_table} as hf
+    JOIN `{database}`.`{table_hf}` as hf
       ON hf._process_id = d._process_id
       AND hf._metadata.file_name = d._metadata.file_name
+    WHERE d._process_id = {process_id}
     GROUP BY 
-      hf.header.row_count, 
-      d._metadata.*
+      hf.header.row_count,
+      hf._process_id,
+      hf._load_date,
+      d._metadata.file_name,
+      d._metadata.file_path,
+      d._metadata.file_size,
+      d._metadata.file_modification_time
   """)
+
 
   result = (df.write
     .format("delta")
     .mode("append")
-    .option("schemaMerge", True)
-    .saveAsTable(to_table)
+    .option("mergeSchema", "true")
+    .saveAsTable(database_table)
   )
 
-# COMMAND ----------
-
-raw = table_mapping.destination
-
-if isinstance(table_mapping.source, dict):
-  for _, source in table_mapping.source.items():
-    print(f"""setting checkpoint
-      load: {source.database}.{source.database} to {raw.database}.{raw.database}
-      path: {raw.checkpoint}
-    """)
-    config.set_checkpoint(source=source, destination=raw)
-else:
-  source = table_mapping.source
-  print(f"""setting checkpoint
-    load: {source.database}.{source.database} to {raw.database}.{raw.database}
-    path: {raw.checkpoint}
-  """)
-  config.set_checkpoint(source=source, destination=raw)
 
 
 # COMMAND ----------
 
 from pprint import pprint
+raw = table_mapping.destination
+source = table_mapping.source["customer_details_1"]
+
 pprint(source.dict())
 pprint(raw.dict())
 
 # COMMAND ----------
 
-load(param_process_id, source, raw)
+for _, source in table_mapping.source.items():
+  config.set_checkpoint(source, raw)
+  print(raw.options["checkpointLocation"])
+  load(param_process_id, source, raw)
 
 # COMMAND ----------
 
-load_hf(source, raw)
+load_hf(raw)
 
+
+# COMMAND ----------
+
+load_audit(param_process_id, source, raw)
+
+# COMMAND ----------
+
+def apply_threhsholds(
+  thresholds
+):
+  if thresholds:
+    
+    invalid_ratio_select = ""
+    invalid_ratio_where = ""
+    max_rows_select = "" 
+    max_rows_where = "" 
+
+    min_rows_select = "" 
+    min_rows_where = "" 
+
+    invalid_rows_select = ""
+    invalid_rows_where = ""
+
+    if thresholds.invalid_ratio:
+      invalid_ratio_select = f"{thresholds.invalid_ratio} as threshold_invalid_ratio,"
+      invalid_ratio_where = f"(invalid_count / total_count) > {thresholds.invalid_ratio} OR"
+
+    if thresholds.max_rows:
+        max_rows_select = f"{thresholds.max_rows} as threshold_min_count,"
+        max_rows_where = f"total_count > {thresholds.max_rows} OR"
+
+    if thresholds.max_rows:
+        min_rows_select = f"{thresholds.max_rows} as threshold_max_count,"
+        min_rows_where = f"total_count < {thresholds.min_rows} OR"
+
+    if thresholds.invalid_rows:
+        invalid_rows_select = f"{thresholds.invalid_rows} as threshold_invalid_count,"
+        invalid_rows_where = f"invalid_count > {thresholds.invalid_rows} OR"
+
+    sql = f"""
+      select
+        invalid_count / total_count as invalid_ratio,
+        total_count,
+        expected_row_count,
+        valid_count,
+        invalid_count,
+        {invalid_ratio_select}
+        {min_rows_select}
+        {max_rows_select}
+        {invalid_rows_select}
+        file_name,
+        _process_id
+      from raw_dbx_patterns_control.etl_audit
+      where _process_id = {param_process_id}
+      and (
+        {invalid_ratio_where}
+        {invalid_rows_where}
+        {min_rows_where}
+        {max_rows_where}
+        expected_row_count != valid_count
+      )
+    """
+    df = spark.sql(sql)
+    display(df)
+
+# COMMAND ----------
+
+if raw.exception_thresholds:
+  apply_threhsholds(raw.exception_thresholds)
+
+# COMMAND ----------
+
+if raw.warning_thresholds:
+  apply_threhsholds(raw.warning_thresholds)
 
 # COMMAND ----------
 
@@ -267,17 +370,23 @@ dbutils.notebook.exit("Succeeded")
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from raw_dbx_patterns.customers
+# MAGIC select * from raw_dbx_patterns.customers 
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from raw_dbx_patterns.headerfooter
+# MAGIC select count(*), `_metadata`.file_name  from raw_dbx_patterns.customers group by `_metadata`.file_name
 
 # COMMAND ----------
 
-dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns", True)
-dbutils.fs.rm("/mnt/datalake/checkpoint", True)
-spark.sql("drop database if exists raw_dbx_patterns CASCADE")
-spark.sql("drop database if exists base_dbx_patterns CASCADE")
+# MAGIC %sql
+# MAGIC select * from raw_dbx_patterns_control.header_footer
 
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC select * from raw_dbx_patterns_control.etl_audit
+
+# COMMAND ----------
+
+display(dbutils.fs.ls("/"))
