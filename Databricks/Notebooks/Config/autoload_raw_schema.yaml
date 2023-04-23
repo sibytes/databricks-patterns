@@ -42,6 +42,13 @@ raw:
   checkpoint_location: "/mnt/{{container}}/checkpoint/{{checkpoint}}"
   options:
     mergeSchema: true
+      # optional leave it out if you don't want them
+  warning_thresholds:
+    invalid_rows: 0
+  # optional leave it out if you don't want them
+  exception_thresholds:
+    invalid_rows: 2
+
 
 base:
   database: "{{database}}"

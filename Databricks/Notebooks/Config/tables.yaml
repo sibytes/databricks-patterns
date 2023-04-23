@@ -40,18 +40,18 @@ raw:
       depends_on:
         - landing.landing_dbx_patterns.customer_details_1
         - landing.landing_dbx_patterns.customer_details_2
-      # optional leave it out if you don't want them
-      warning_thresholds:
-        invalid_ratio: 0.2
-        invalid_rows: 0
-        max_rows: 100
-        min_rows: 5
-      # optional leave it out if you don't want them
-      exception_thresholds:
-        invalid_ratio: 0.3
-        invalid_rows: 2
-        max_rows: 1000
-        min_rows: 0
+      # # optional leave it out if you don't want them
+      # warning_thresholds:
+      #   invalid_ratio: 0.2
+      #   invalid_rows: 0
+      #   max_rows: 100
+      #   min_rows: 5
+      # # optional leave it out if you don't want them
+      # exception_thresholds:
+      #   invalid_ratio: 0.3
+      #   invalid_rows: 2
+      #   max_rows: 1000
+      #   min_rows: 0
 
 base:
   table_properties:

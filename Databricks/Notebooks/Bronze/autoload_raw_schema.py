@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic dbxconfig==2.1.1
+# MAGIC %pip install pyaml pydantic dbxconfig==2.2.0
 
 # COMMAND ----------
 
@@ -31,7 +31,6 @@ def clear_down():
   dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns", True)
   dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns_control", True)
   dbutils.fs.rm("/mnt/datalake/checkpoint", True)
-  dbutils.fs.rm("landing_dbx_patterns.customer_details_1-raw_dbx_patterns.customers", True)
   spark.sql("drop database if exists raw_dbx_patterns CASCADE")
   spark.sql("drop database if exists raw_dbx_patterns_control CASCADE")
 clear_down()
@@ -235,7 +234,9 @@ def load_audit(
       cast(count(*) as long) as total_count,
       cast(sum(if(d._is_valid, 1, 0)) as long) as valid_count,
       cast(sum(if(d._is_valid, 0, 1)) as long) as invalid_count,
-      cast(sum(if(d._is_valid, 0, 1)) as long) div cast(count(*) as long) as invalid_ratio,
+      if(ifnull(cast(count(*) as long), 0)=0, 0.0,
+        cast(sum(if(d._is_valid, 0, 1)) as long) / cast(count(*) as long)
+      ) as invalid_ratio,
       hf.header.row_count as expected_row_count,
       hf._process_id,
       hf._load_date,
@@ -304,32 +305,30 @@ def apply_threhsholds(
     invalid_ratio_where = ""
     max_rows_select = "" 
     max_rows_where = "" 
-
     min_rows_select = "" 
     min_rows_where = "" 
-
     invalid_rows_select = ""
     invalid_rows_where = ""
 
-    if thresholds.invalid_ratio:
+    if thresholds.invalid_ratio is not None:
       invalid_ratio_select = f"{thresholds.invalid_ratio} as threshold_invalid_ratio,"
-      invalid_ratio_where = f"(invalid_count / total_count) > {thresholds.invalid_ratio} OR"
+      invalid_ratio_where = f"invalid_ratio > {thresholds.invalid_ratio} OR"
 
-    if thresholds.max_rows:
+    if thresholds.max_rows is not None:
         max_rows_select = f"{thresholds.max_rows} as threshold_min_count,"
         max_rows_where = f"total_count > {thresholds.max_rows} OR"
 
-    if thresholds.max_rows:
+    if thresholds.max_rows is not None:
         min_rows_select = f"{thresholds.max_rows} as threshold_max_count,"
         min_rows_where = f"total_count < {thresholds.min_rows} OR"
 
-    if thresholds.invalid_rows:
+    if thresholds.invalid_rows is not None:
         invalid_rows_select = f"{thresholds.invalid_rows} as threshold_invalid_count,"
         invalid_rows_where = f"invalid_count > {thresholds.invalid_rows} OR"
 
     sql = f"""
       select
-        invalid_count / total_count as invalid_ratio,
+        invalid_ratio,
         total_count,
         expected_row_count,
         valid_count,
@@ -351,17 +350,25 @@ def apply_threhsholds(
       )
     """
     df = spark.sql(sql)
-    display(df)
+    return df
 
 # COMMAND ----------
 
 if raw.exception_thresholds:
-  apply_threhsholds(raw.exception_thresholds)
+  df = apply_threhsholds(raw.exception_thresholds)
+  display(df)
+  if df.count() > 0:
+    msg = f"Exception thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
+    raise Exception(msg)
 
 # COMMAND ----------
 
 if raw.warning_thresholds:
-  apply_threhsholds(raw.warning_thresholds)
+  df = apply_threhsholds(raw.warning_thresholds)
+  display(df)
+  if df.count() > 0:
+    msg = f"Warning: thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
+    print(msg)
 
 # COMMAND ----------
 
@@ -386,7 +393,3 @@ dbutils.notebook.exit("Succeeded")
 
 # MAGIC %sql
 # MAGIC select * from raw_dbx_patterns_control.etl_audit
-
-# COMMAND ----------
-
-display(dbutils.fs.ls("/"))
