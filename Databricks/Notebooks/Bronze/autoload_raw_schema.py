@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic dbxconfig==2.2.0
+# MAGIC %pip install pyaml pydantic dbxconfig==2.2.2
 
 # COMMAND ----------
 
@@ -9,7 +9,7 @@ dbutils.widgets.text("table", "customers")
 # COMMAND ----------
 
 from dbxconfig import (
-  Config, Timeslice, StageType, Read, DeltaLake
+  Config, Timeslice, StageType, Read, DeltaLake, ValidationThreshold
 )
 from pyspark.sql import functions as fn
 from pyspark.sql.streaming import StreamingQuery
@@ -172,8 +172,8 @@ def load_hf(
   columns = [
     "header",
     "raw_header",
-    "raw_footer",
     "footer",
+    "raw_footer",
     "_process_id",
     "_load_date",
     "_metadata"
@@ -296,66 +296,68 @@ load_audit(param_process_id, source, raw)
 
 # COMMAND ----------
 
-def apply_threhsholds(
-  thresholds
+def create_threhsholds_views(
+  destination:DeltaLake,
+  thresholds,
+  threshold_type:str,
+  audit_db:str = "_control",
+  table_audit = "etl_audit"
 ):
   if thresholds:
     
-    invalid_ratio_select = ""
-    invalid_ratio_where = ""
-    max_rows_select = "" 
-    max_rows_where = "" 
-    min_rows_select = "" 
-    min_rows_where = "" 
-    invalid_rows_select = ""
-    invalid_rows_where = ""
+    database = f"{destination.database}{audit_db}"
+    view = f"{threshold_type}_{destination.table}"
 
+    select = []
+    where = []
     if thresholds.invalid_ratio is not None:
-      invalid_ratio_select = f"{thresholds.invalid_ratio} as threshold_invalid_ratio,"
-      invalid_ratio_where = f"invalid_ratio > {thresholds.invalid_ratio} OR"
+      select.append(f"{thresholds.invalid_ratio} as threshold_invalid_ratio,")
+      where.append(f"invalid_ratio > {thresholds.invalid_ratio}")
 
     if thresholds.max_rows is not None:
-        max_rows_select = f"{thresholds.max_rows} as threshold_min_count,"
-        max_rows_where = f"total_count > {thresholds.max_rows} OR"
+      select.append(f"{thresholds.max_rows} as threshold_min_count,")
+      where.append(f"total_count > {thresholds.max_rows}")
 
     if thresholds.max_rows is not None:
-        min_rows_select = f"{thresholds.max_rows} as threshold_max_count,"
-        min_rows_where = f"total_count < {thresholds.min_rows} OR"
+      select.append(f"{thresholds.max_rows} as threshold_max_count,")
+      where.append(f"total_count < {thresholds.min_rows}")
 
     if thresholds.invalid_rows is not None:
-        invalid_rows_select = f"{thresholds.invalid_rows} as threshold_invalid_count,"
-        invalid_rows_where = f"invalid_count > {thresholds.invalid_rows} OR"
+      select.append(f"{thresholds.invalid_rows} as threshold_invalid_count,")
+      where.append(f"invalid_count > {thresholds.invalid_rows}")
+
+    select = "\\n".join(select)
+    where = "OR\\n".join(where)
 
     sql = f"""
+      CREATE OR REPLACE VIEW `{database}`.`{view}`
+      AS 
       select
         invalid_ratio,
         total_count,
         expected_row_count,
         valid_count,
         invalid_count,
-        {invalid_ratio_select}
-        {min_rows_select}
-        {max_rows_select}
-        {invalid_rows_select}
+        {select}
         file_name,
         _process_id
-      from raw_dbx_patterns_control.etl_audit
+      from `{database}`.`{table_audit}`
       where _process_id = {param_process_id}
       and (
-        {invalid_ratio_where}
-        {invalid_rows_where}
-        {min_rows_where}
-        {max_rows_where}
+        {where} OR
         expected_row_count != valid_count
-      )
+      );
     """
-    df = spark.sql(sql)
+    print(sql)
+    spark.sql(sql)
+    df = spark.sql(f"select * from `{database}`.`{view}`")
+
     return df
 
 # COMMAND ----------
 
 if raw.exception_thresholds:
-  df = apply_threhsholds(raw.exception_thresholds)
+  df = create_threhsholds_views(raw, raw.exception_thresholds, "threshold_exception")
   display(df)
   if df.count() > 0:
     msg = f"Exception thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
@@ -364,11 +366,11 @@ if raw.exception_thresholds:
 # COMMAND ----------
 
 if raw.warning_thresholds:
-  df = apply_threhsholds(raw.warning_thresholds)
+  df = create_threhsholds_views(raw, raw.warning_thresholds, "threshold_warning")
   display(df)
-  if df.count() > 0:
-    msg = f"Warning: thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
-    print(msg)
+  # if df.count() > 0:
+  #   msg = f"Warning: thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
+  #   print(msg)
 
 # COMMAND ----------
 
