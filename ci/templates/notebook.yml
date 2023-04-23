@@ -27,7 +27,7 @@ steps:
     displayName: "install wheel"
     inputs:
         script: |
-                python -m pip install autobricks==0.1.5
+                python -m pip install autobricks==0.2.0
 
   - task: PythonScript@0
     displayName: "upload notebooks to DBX"
