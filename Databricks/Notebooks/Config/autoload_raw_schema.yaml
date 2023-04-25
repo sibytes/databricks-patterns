@@ -1,5 +1,5 @@
 # paths here are relative to this configuration document
-tables: ./tables.yaml
+tables: ./tables_1to1.yaml
 
 landing:
   trigger: customerdetailscomplete-{{filename_date_format}}*.flg
