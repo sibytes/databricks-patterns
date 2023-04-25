@@ -18,6 +18,12 @@
         "no_alert_for_canceled_runs": false
     },
     "timeout_seconds": 0,
+    "trigger": {
+        "pause_status": "UNPAUSED",
+        "file_arrival": {
+            "url": "abfss://development@datalakegeneva.dfs.core.windows.net/data/triggers/dbx-patterns-autoloader-raw-schema/"
+        }
+    },
     "max_concurrent_runs": 1,
     "tasks": [
         {
