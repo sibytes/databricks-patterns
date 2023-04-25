@@ -1,4 +1,5 @@
-tables: ./Config/tables.yaml
+# paths here are relative to this configuration document
+tables: ./tables_1to1.yaml
 
 landing:
   trigger: customerdetailscomplete-{{filename_date_format}}*.flg
@@ -11,7 +12,7 @@ landing:
   filename_date_format: "%Y%m%d"
   path_date_format: "%Y%m%d"
   format: cloudFiles
-  spark_schema: ./Schema/{{table.lower()}}.yaml
+  spark_schema: ../Schema/{{table.lower()}}.yaml
   options:
     # autoloader
     cloudFiles.format: csv
@@ -38,9 +39,16 @@ raw:
   container: datalake
   root: /mnt/{{container}}/data/raw
   path: "{{database}}/{{table}}"
+  checkpoint_location: "/mnt/{{container}}/checkpoint/{{checkpoint}}"
   options:
-    checkpointLocation: /mnt/{{container}}/checkpoint/{{database}}_{{table}}
     mergeSchema: true
+      # optional leave it out if you don't want them
+  warning_thresholds:
+    invalid_rows: 0
+  # optional leave it out if you don't want them
+  exception_thresholds:
+    invalid_rows: 2
+
 
 base:
   database: "{{database}}"
