@@ -38,3 +38,20 @@ stages:
                     DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
 
+      - deployment: deployWorkflows
+        displayName: Deploy Dbx Workflows
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - template: ../ci/templates/workflows.yml
+                  parameters:
+                    azureResourceManagerConnection: 'development_subscription'
+                    keyVaultName: '$(KEY_VAULT)'
+                    SubscriptionId: '$(SUBSCRIPTION_ID)'
+                    ResourceGroup: '$(RESOURCE_GROUP)'
+                    DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
+                    DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
+                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'

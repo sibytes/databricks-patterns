@@ -6,7 +6,6 @@ parameters:
   ResourceGroup: none
   DbxWorkspaceName: none
   DbxWorkspaceUrl: none
-  DbxWorkspaceSubDirs: none
   DbxWorkspaceRoot: none
 
 steps:
@@ -30,10 +29,10 @@ steps:
                 python -m pip install autobricks==0.4.0
 
   - task: PythonScript@0
-    displayName: "deploy notebooks"
+    displayName: "Deploy DBX Workflows"
     inputs:
       scriptSource: 'filePath'
-      scriptPath: ci/python/deploy_notebooks.py
+      scriptPath: ci/python/deploy_workflows.py
     env:
       AUTH_TYPE: "SERVICE_PRINCIPAL_MGMT_ENDPOINT"
       TENANT_ID: $(AZURE-ID)
@@ -44,8 +43,7 @@ steps:
       SUBSCRIPTION_ID: ${{ parameters.SubscriptionId }}
       DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
       ROOT_DIR: $(System.DefaultWorkingDirectory)
-      NOTEBOOK_DIR: Databricks/Notebooks
-      WORKSPACE_SUBDIRS: "Bronze, Config, Schema, Misc"
+      SUB_DIR: Databricks/Workflows/
       WORKSPACE_ROOT: "autobricks"
       AUTOBRICKS_LOGGING: INFO
       SSL_VERIFY: True
