@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic dbxconfig==2.2.2
+# MAGIC %pip install pyaml pydantic dbxconfig==2.2.3
 
 # COMMAND ----------
 
@@ -22,7 +22,9 @@ dbutils.widgets.text("timeout", "3600")
 from dbxconfig import (
   Config, Timeslice, StageType, Tables
 )
-from workflow import execute_notebooks, Notebook
+from dbxconfig.workflow import (
+  execute_notebooks, Notebook
+)
 from pyspark.sql import functions as fn
 from pyspark.sql.streaming import StreamingQuery
 from dbxconfig import DeltaLake
