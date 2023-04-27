@@ -29,7 +29,7 @@ landing:
 
 raw:
   # delta table properties can be set at stage level or table level
-  table_properties:
+  delta_properties:
     delta.appendOnly: true
     delta.autoOptimize.autoCompact: true    
     delta.autoOptimize.optimizeWrite: true  
@@ -59,7 +59,7 @@ raw:
       #   min_rows: 0
 
 base:
-  table_properties:
+  delta_properties:
     delta.appendOnly: true
     delta.autoOptimize.autoCompact: true    
     delta.autoOptimize.optimizeWrite: true  
