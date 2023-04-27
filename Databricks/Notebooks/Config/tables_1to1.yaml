@@ -39,10 +39,12 @@ raw:
       ids: id
       depends_on:
         - landing.landing_dbx_patterns.customer_details_1
+      process_group: 1
     customer_details_2:
       ids: id
       depends_on:
         - landing.landing_dbx_patterns.customer_details_2
+      process_group: 1
       # # optional leave it out if you don't want them
       # warning_thresholds:
       #   invalid_ratio: 0.2

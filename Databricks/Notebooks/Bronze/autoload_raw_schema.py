@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic dbxconfig==2.2.2
+# MAGIC %pip install pyaml pydantic dbxconfig==2.4.0
 
 # COMMAND ----------
 
@@ -16,7 +16,6 @@ def clear_down():
 dbutils.widgets.text("process_id", "-1")
 dbutils.widgets.text("table", "customers")
 # demo only don't use this in production
-dbutils.widgets.text("cleardown", "0")
 
 # COMMAND ----------
 
@@ -36,7 +35,6 @@ param_cleardown = int(dbutils.widgets.get("cleardown"))
 print(f"""
   param_process_id: {param_process_id}
   param_table: {param_table}
-  param_cleardown: {param_cleardown}
 """)
 if param_cleardown == 1:
   print("clearing down")
@@ -155,22 +153,6 @@ def load_hf(
 
   database = f"{destination.database}{audit_db}"
   database_table = f"`{database}`.`{table_hf}`"
-  # location = destination.location.replace(destination.table, table_hf)
-  # location = location.replace(destination.database, database)
-  # sql_db = f"CREATE DATABASE IF NOT EXISTS `{database}`"
-  # sql_table = f"""
-  # CREATE TABLE IF NOT EXISTS {database_table}
-  # USING DELTA
-  # LOCATION '{location}'
-  # TBLPROPERTIES (
-  #   delta.appendOnly = true,
-  #   delta.autoOptimize.autoCompact = true,
-  #   delta.autoOptimize.optimizeWrite = true
-  # )
-  # """
-  # print(sql_table)
-  # spark.sql(sql_db)
-  # spark.sql(sql_table)
 
   columns = [
     f"from_csv(_corrupt_record, '{header_schema}') as header",
@@ -243,23 +225,6 @@ def load_audit(
 
   database = f"{destination.database}{audit_db}"
   database_table = f"`{database}`.`{table_audit}`"
-  # location = destination.location.replace(destination.table, table_audit)
-  # location = location.replace(destination.database, database)
-
-  # sql_db = f"CREATE DATABASE IF NOT EXISTS `{database}`"
-  # sql_table = f"""
-  # CREATE TABLE IF NOT EXISTS {database_table}
-  # USING DELTA
-  # LOCATION '{location}'
-  # TBLPROPERTIES (
-  #   delta.appendOnly = true,
-  #   delta.autoOptimize.autoCompact = true,
-  #   delta.autoOptimize.optimizeWrite = true
-  # )
-  # """
-  # print(sql_table)
-  # spark.sql(sql_db)
-  # spark.sql(sql_table)
 
   df = spark.sql(f"""
     SELECT
@@ -307,7 +272,6 @@ def load_audit(
   result = (df.select(*columns).write
     .format("delta")
     .mode("append")
-    # .option("mergeSchema", "true")
     .saveAsTable(database_table)
   )
 

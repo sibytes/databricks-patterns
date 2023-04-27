@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic dbxconfig==2.2.3
+# MAGIC %pip install pyaml pydantic dbxconfig==2.4.0
 
 # COMMAND ----------
 
@@ -16,6 +16,7 @@ clear_down()
 dbutils.widgets.text("process_id", "-1")
 dbutils.widgets.text("max_parallel", "4")
 dbutils.widgets.text("timeout", "3600")
+dbutils.widgets.text("process_group", "1")
 
 # COMMAND ----------
 
@@ -35,10 +36,12 @@ import os
 param_process_id = int(dbutils.widgets.get("process_id"))
 param_max_parallel = int(dbutils.widgets.get("max_parallel"))
 param_timeout = int(dbutils.widgets.get("timeout"))
+param_process_group= int(dbutils.widgets.get("process_group"))
 print(f"""
   param_process_id: {param_process_id}
   param_max_parallel: {param_max_parallel}
   param_timeout: {param_timeout}
+  process_group: {param_process_group}
 """)
 
 # COMMAND ----------
@@ -55,7 +58,11 @@ config_path
 # COMMAND ----------
 
 config = Config(config_path=config_path, pattern=pattern)
-tables = config.tables.lookup_table(index=Tables.get_index(StageType.raw), first_match=False)
+tables = config.tables.lookup_table(
+  stage=StageType.raw, 
+  first_match=False,
+  process_group=param_process_group
+)
 msg_tables = '\n'.join([f"{t.database}.{t.name}" for t in tables])
 print(f"{msg_tables}")
 
