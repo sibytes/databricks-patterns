@@ -22,58 +22,61 @@
 # delta.tuneFileSizesForRewrites: none
 
 landing:
-  # delta table properties can be set at stage level or table level
-  landing_dbx_patterns:
-    customer_details_1: null
-    customer_details_2: null
+  read:
+    # delta table properties can be set at stage level or table level
+    landing_dbx_patterns:
+      customer_details_1: null
+      customer_details_2: null
 
 raw:
-  # delta table properties can be set at stage level or table level
-  delta_properties:
-    delta.appendOnly: true
-    delta.autoOptimize.autoCompact: true    
-    delta.autoOptimize.optimizeWrite: true  
-    delta.enableChangeDataFeed: true
-  raw_dbx_patterns:
-    customer_details_1:
-      ids: id
-      depends_on:
-        - landing.landing_dbx_patterns.customer_details_1
-      custom_properties:
-        process_group: 1
-    customer_details_2:
-      ids: id
-      depends_on:
-        - landing.landing_dbx_patterns.customer_details_2
-      custom_properties:
-        process_group: 1
-      # # optional leave it out if you don't want them
-      # warning_thresholds:
-      #   invalid_ratio: 0.2
-      #   invalid_rows: 0
-      #   max_rows: 100
-      #   min_rows: 5
-      # # optional leave it out if you don't want them
-      # exception_thresholds:
-      #   invalid_ratio: 0.3
-      #   invalid_rows: 2
-      #   max_rows: 1000
-      #   min_rows: 0
+  delta_lake:
+    # delta table properties can be set at stage level or table level
+    delta_properties:
+      delta.appendOnly: true
+      delta.autoOptimize.autoCompact: true    
+      delta.autoOptimize.optimizeWrite: true  
+      delta.enableChangeDataFeed: true
+    raw_dbx_patterns:
+      customer_details_1:
+        ids: id
+        depends_on:
+          - landing.landing_dbx_patterns.customer_details_1
+        custom_properties:
+          process_group: 1
+      customer_details_2:
+        ids: id
+        depends_on:
+          - landing.landing_dbx_patterns.customer_details_2
+        custom_properties:
+          process_group: 1
+        # # optional leave it out if you don't want them
+        # warning_thresholds:
+        #   invalid_ratio: 0.2
+        #   invalid_rows: 0
+        #   max_rows: 100
+        #   min_rows: 5
+        # # optional leave it out if you don't want them
+        # exception_thresholds:
+        #   invalid_ratio: 0.3
+        #   invalid_rows: 2
+        #   max_rows: 1000
+        #   min_rows: 0
 
 base:
-  delta_properties:
-    delta.appendOnly: true
-    delta.autoOptimize.autoCompact: true    
-    delta.autoOptimize.optimizeWrite: true  
-    delta.enableChangeDataFeed: true
-  base_dbx_patterns:
-    customer_details_1:
-      ids: id
-      depends_on:
-        - raw.raw_dbx_patterns.customers
-    customer_details_2:
-      ids: id
-      depends_on:
-        - raw.raw_dbx_patterns.customers
+  delta_lake:
+    delta_properties:
+      delta.appendOnly: true
+      delta.autoOptimize.autoCompact: true    
+      delta.autoOptimize.optimizeWrite: true  
+      delta.enableChangeDataFeed: true
+    base_dbx_patterns:
+      customer_details_1:
+        ids: id
+        depends_on:
+          - raw.raw_dbx_patterns.customers
+      customer_details_2:
+        ids: id
+        depends_on:
+          - raw.raw_dbx_patterns.customers
 
 

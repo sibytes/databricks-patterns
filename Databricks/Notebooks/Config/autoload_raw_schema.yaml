@@ -2,58 +2,61 @@
 tables: ./tables_1to1.yaml
 
 landing:
-  trigger: customerdetailscomplete-{{filename_date_format}}*.flg
-  trigger_type: file
-  database: "{{database}}"
-  table: "{{table}}"
-  container: datalake
-  root: "/mnt/{{container}}/data/landing/dbx_patterns/{{table}}/{{path_date_format}}"
-  filename: "{{table}}-{{filename_date_format}}*.csv"
-  filename_date_format: "%Y%m%d"
-  path_date_format: "%Y%m%d"
-  format: cloudFiles
-  spark_schema: ../Schema/{{table.lower()}}.yaml
-  options:
-    # autoloader
-    cloudFiles.format: csv
-    cloudFiles.schemaLocation:  /mnt/{{container}}/checkpoint/{{checkpoint}}
-    cloudFiles.useIncrementalListing: auto
-    # schema
-    inferSchema: false
-    enforceSchema: true
-    columnNameOfCorruptRecord: _corrupt_record
-    # csv
-    header: false
-    mode: PERMISSIVE
-    encoding: windows-1252
-    delimiter: ","
-    escape: '"'
-    nullValue: ""
-    quote: '"'
-    emptyValue: ""
+  read:
+    trigger: customerdetailscomplete-{{filename_date_format}}*.flg
+    trigger_type: file
+    database: "{{database}}"
+    table: "{{table}}"
+    container: datalake
+    root: "/mnt/{{container}}/data/landing/dbx_patterns/{{table}}/{{path_date_format}}"
+    filename: "{{table}}-{{filename_date_format}}*.csv"
+    filename_date_format: "%Y%m%d"
+    path_date_format: "%Y%m%d"
+    format: cloudFiles
+    spark_schema: ../Schema/{{table.lower()}}.yaml
+    options:
+      # autoloader
+      cloudFiles.format: csv
+      cloudFiles.schemaLocation:  /mnt/{{container}}/checkpoint/{{checkpoint}}
+      cloudFiles.useIncrementalListing: auto
+      # schema
+      inferSchema: false
+      enforceSchema: true
+      columnNameOfCorruptRecord: _corrupt_record
+      # csv
+      header: false
+      mode: PERMISSIVE
+      encoding: windows-1252
+      delimiter: ","
+      escape: '"'
+      nullValue: ""
+      quote: '"'
+      emptyValue: ""
     
 
 raw:
-  database: "{{database}}"
-  table: "{{table}}"
-  container: datalake
-  root: /mnt/{{container}}/data/raw
-  path: "{{database}}/{{table}}"
-  checkpoint_location: "/mnt/{{container}}/checkpoint/{{checkpoint}}"
-  options:
-    mergeSchema: true
-      # optional leave it out if you don't want them
-  warning_thresholds:
-    invalid_rows: 0
-  # optional leave it out if you don't want them
-  exception_thresholds:
-    invalid_rows: 2
+  delta_lake:
+    database: "{{database}}"
+    table: "{{table}}"
+    container: datalake
+    root: /mnt/{{container}}/data/raw
+    path: "{{database}}/{{table}}"
+    checkpoint_location: "/mnt/{{container}}/checkpoint/{{checkpoint}}"
+    options:
+      mergeSchema: true
+        # optional leave it out if you don't want them
+    warning_thresholds:
+      invalid_rows: 0
+    # optional leave it out if you don't want them
+    exception_thresholds:
+      invalid_rows: 2
 
 
 base:
-  database: "{{database}}"
-  table: "{{table}}"
-  container: datalake
-  root: /mnt/{{container}}/data/base
-  path: "{{database}}/{{table}}"
-  options: null
+  delta_lake:
+    database: "{{database}}"
+    table: "{{table}}"
+    container: datalake
+    root: /mnt/{{container}}/data/base
+    path: "{{database}}/{{table}}"
+    options: null

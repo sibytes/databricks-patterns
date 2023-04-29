@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic dbxconfig==2.4.0
+# MAGIC %pip install pyaml pydantic dbxconfig==3.0.0
 
 # COMMAND ----------
 
