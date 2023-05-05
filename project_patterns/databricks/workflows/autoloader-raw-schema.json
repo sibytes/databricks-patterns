@@ -29,7 +29,7 @@
         {
             "task_key": "load_raw",
             "notebook_task": {
-                "notebook_path": "/autobricks/Bronze/raw_load",
+                "notebook_path": "/project_patterns/databricks/notebooks/Bronze/raw_load",
                 "base_parameters": {
                     "process_id": "{{job_id}}"
                 },
