@@ -8,7 +8,7 @@ dbutils.widgets.text("table", "customer_details_1")
 
 # COMMAND ----------
 
-from dbxconfig import (
+from yetl import (
   Config, Timeslice, StageType, Read, DeltaLake #, ValidationThreshold
 )
 from pyspark.sql import functions as fn
@@ -98,8 +98,6 @@ def hash_value(value:str):
   return hex_dig
 
 
-hash_value("test")
-
 # COMMAND ----------
 
 
@@ -114,7 +112,7 @@ def load_hf(
 
   if isinstance(source, dict):
     source_chk_name = "|".join(list(source.keys()))
-    source_chk_name = hash_value(source_chk_name)
+    source_chk_name = hash_value(source_chk_name)[:7]
   elif isinstance(source, Read):
     source_chk_name = f"{source.database}.{source.table}"
   else:

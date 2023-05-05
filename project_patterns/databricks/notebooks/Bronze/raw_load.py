@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic dbxconfig==5.0.1
+# MAGIC %pip install pyaml pydantic yetl-framework==1.0.2
 
 # COMMAND ----------
 
@@ -20,15 +20,15 @@ dbutils.widgets.text("process_group", "1")
 
 # COMMAND ----------
 
-from dbxconfig import (
+from yetl import (
   Config, Timeslice, StageType, Tables
 )
-from dbxconfig.workflow import (
+from yetl.workflow import (
   execute_notebooks, Notebook
 )
 from pyspark.sql import functions as fn
 from pyspark.sql.streaming import StreamingQuery
-from dbxconfig import DeltaLake
+from yetl import DeltaLake
 import os
 
 # COMMAND ----------
@@ -46,25 +46,21 @@ print(f"""
 
 # COMMAND ----------
 
-pattern = "autoload_raw_schema"
-workspace_path = "/Workspace/autobricks"
-repo_path = "/Workspace/Repos"
-config_path = "../Config"
-if os.path.exists(workspace_path) and not os.getcwd().startswith(repo_path):
-  config_path = f"{workspace_path}/Config"
+project = "project_patterns"
+pipeline = "autoload_raw_schema"
 
-config_path
-
-# COMMAND ----------
-
-config = Config(config_path=config_path, pattern=pattern)
+config = Config(
+  project=project, 
+  pipeline=pipeline
+)
 tables = config.tables.lookup_table(
   stage=StageType.raw, 
   first_match=False,
   process_group=param_process_group
 )
-msg_tables = '\n'.join([f"{t.database}.{t.name}" for t in tables])
+msg_tables = '\n'.join([f"{t.database}.{t.table}" for t in tables])
 print(f"{msg_tables}")
+
 
 # COMMAND ----------
 
