@@ -1,4 +1,4 @@
-version: 5.0.1
+version: 1.0.1
 # paths here are relative to this configuration document
 tables: ./tables_1to1.yaml
 

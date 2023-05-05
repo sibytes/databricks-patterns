@@ -1,4 +1,4 @@
-version: 5.0.1
+version: 1.0.1
 # deltalake table properties
 # https://docs.databricks.com/delta/table-properties.html
 
