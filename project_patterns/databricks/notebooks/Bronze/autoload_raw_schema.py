@@ -1,26 +1,15 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic dbxconfig==3.0.0
-
-# COMMAND ----------
-
-def clear_down():
-  dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns", True)
-  dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns_control", True)
-  dbutils.fs.rm("/mnt/datalake/checkpoint", True)
-  spark.sql("drop database if exists raw_dbx_patterns CASCADE")
-  spark.sql("drop database if exists raw_dbx_patterns_control CASCADE")
-
+# MAGIC %pip install pyaml pydantic dbxconfig==5.0.5
 
 # COMMAND ----------
 
 dbutils.widgets.text("process_id", "-1")
-dbutils.widgets.text("table", "customers")
-# demo only don't use this in production
+dbutils.widgets.text("table", "customer_details_1")
 
 # COMMAND ----------
 
 from dbxconfig import (
-  Config, Timeslice, StageType, Read, DeltaLake, ValidationThreshold
+  Config, Timeslice, StageType, Read, DeltaLake #, ValidationThreshold
 )
 from pyspark.sql import functions as fn
 from pyspark.sql.streaming import StreamingQuery
@@ -31,31 +20,32 @@ from typing import Union, Dict
 
 param_process_id = int(dbutils.widgets.get("process_id"))
 param_table = dbutils.widgets.get("table")
-param_cleardown = int(dbutils.widgets.get("cleardown"))
+
 print(f"""
   param_process_id: {param_process_id}
   param_table: {param_table}
 """)
-if param_cleardown == 1:
-  print("clearing down")
-  clear_down()
 
-# COMMAND ----------
-
-pattern = "autoload_raw_schema"
-workspace_path = "/Workspace/autobricks"
-repo_path = "/Workspace/Repos"
-config_path = "../Config"
-if os.path.exists(workspace_path) and not os.getcwd().startswith(repo_path):
-  config_path = f"{workspace_path}/Config"
-
-config_path
 
 # COMMAND ----------
 
 timeslice = Timeslice(day="*", month="*", year="*")
-config = Config(config_path=config_path, pattern=pattern)
-table_mapping = config.get_table_mapping(timeslice=timeslice, stage=StageType.raw, table=param_table)
+project = "project_patterns"
+pipeline = "autoload_raw_schema"
+
+config = Config(
+  project=project, 
+  pipeline=pipeline
+)
+
+table_mapping = config.get_table_mapping(
+  timeslice=timeslice, 
+  stage=StageType.raw, 
+  table=param_table
+)
+
+from pprint import pprint
+pprint(table_mapping.dict())
 
 # COMMAND ----------
 

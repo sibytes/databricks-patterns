@@ -11,7 +11,7 @@ import io
 
 # COMMAND ----------
 
-class Test2SampleTests1(unittest.TestCase):
+class Test1SampleTests1(unittest.TestCase):
   def tests_always_succeeds(self):
     self.assertTrue(True)
   
@@ -20,7 +20,7 @@ class Test2SampleTests1(unittest.TestCase):
 
 # COMMAND ----------
 
-class Test2SampleTests2(unittest.TestCase):
+class Test1SampleTests2(unittest.TestCase):
   def tests_always_succeeds(self):
     self.assertTrue(True)
   

@@ -1,11 +1,11 @@
-# paths here are relative to this configuration document
-tables: ./tables_1to1.yaml
+version: 5.0.1
+tables: ./tables.yaml
 
 landing:
   read:
     trigger: customerdetailscomplete-{{filename_date_format}}*.flg
     trigger_type: file
-    database: "{{database}}"
+    database: landing_dbx_patterns
     table: "{{table}}"
     container: datalake
     root: "/mnt/{{container}}/data/landing/dbx_patterns/{{table}}/{{path_date_format}}"
@@ -13,48 +13,38 @@ landing:
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
     format: cloudFiles
-    spark_schema: ../Schema/{{table.lower()}}.yaml
     options:
       # autoloader
       cloudFiles.format: csv
       cloudFiles.schemaLocation:  /mnt/{{container}}/checkpoint/{{checkpoint}}
+      cloudFiles.inferColumnTypes: false
+      cloudFiles.schemaHints: ../schema/{{table}}.yaml
+      cloudFiles.schemaEvolutionMode: addNewColumns
       cloudFiles.useIncrementalListing: auto
-      # schema
-      inferSchema: false
-      enforceSchema: true
-      columnNameOfCorruptRecord: _corrupt_record
       # csv
       header: false
       mode: PERMISSIVE
-      encoding: windows-1252
+      # encoding: windows-1252
       delimiter: ","
-      escape: '"'
+      escape: \
       nullValue: ""
       quote: '"'
       emptyValue: ""
-    
 
 raw:
   delta_lake:
-    database: "{{database}}"
+    database: raw_dbx_patterns
     table: "{{table}}"
     container: datalake
     root: /mnt/{{container}}/data/raw
     path: "{{database}}/{{table}}"
-    checkpoint_location: "/mnt/{{container}}/checkpoint/{{checkpoint}}"
     options:
+      checkpointLocation: /mnt/{{container}}/checkpoint/{{checkpoint}}
       mergeSchema: true
-        # optional leave it out if you don't want them
-    warning_thresholds:
-      invalid_rows: 0
-    # optional leave it out if you don't want them
-    exception_thresholds:
-      invalid_rows: 2
-
 
 base:
   delta_lake:
-    database: "{{database}}"
+    database: base_dbx_patterns
     table: "{{table}}"
     container: datalake
     root: /mnt/{{container}}/data/base
