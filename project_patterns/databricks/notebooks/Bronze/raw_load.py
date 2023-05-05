@@ -113,7 +113,7 @@ params = {"process_id": str(param_process_id)}
 notebooks = [
   Notebook(
     path=f"{task_root}/autoload_raw_schema", 
-    parameters={"process_id": str(param_process_id), "table": t.name, "cleardown": 0}, 
+    parameters={"process_id": str(param_process_id), "table": t.table}, 
     timeout=param_timeout, 
     retry=0, 
     enabled=True) for t in tables
