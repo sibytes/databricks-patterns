@@ -9,7 +9,7 @@
             "name": "Python: Main",
             "type": "python",
             "request": "launch",
-            "program": "./ci/python/deploy_workflows.py",
+            "program": "./ci/python/deploy_notebooks.py",
             "console": "integratedTerminal",
             "envFile": "${workspaceFolder}/.env",
             "args": [],

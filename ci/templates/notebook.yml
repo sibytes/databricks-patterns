@@ -43,9 +43,8 @@ steps:
       RESOURCE_GROUP: ${{ parameters.ResourceGroup }}
       SUBSCRIPTION_ID: ${{ parameters.SubscriptionId }}
       DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
-      ROOT_DIR: $(System.DefaultWorkingDirectory)
-      NOTEBOOK_DIR: project_patterns
-      WORKSPACE_SUBDIRS: "Bronze, Config, Schema, Misc"
-      WORKSPACE_ROOT: "project_patterns"
+      FROM_ROOT: $(System.DefaultWorkingDirectory)
+      FROM_DIR: project_patterns
+      TO_WORKSPACE_DIR: "project_patterns"
       AUTOBRICKS_LOGGING: INFO
       SSL_VERIFY: True
