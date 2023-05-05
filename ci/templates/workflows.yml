@@ -43,7 +43,7 @@ steps:
       SUBSCRIPTION_ID: ${{ parameters.SubscriptionId }}
       DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
       ROOT_DIR: $(System.DefaultWorkingDirectory)
-      SUB_DIR: Databricks/Workflows/
+      SUB_DIR: project_patterns/databricks/workflows
       WORKSPACE_ROOT: "autobricks"
       AUTOBRICKS_LOGGING: INFO
       SSL_VERIFY: True

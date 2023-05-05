@@ -44,8 +44,8 @@ steps:
       SUBSCRIPTION_ID: ${{ parameters.SubscriptionId }}
       DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
       ROOT_DIR: $(System.DefaultWorkingDirectory)
-      NOTEBOOK_DIR: Databricks/Notebooks
+      NOTEBOOK_DIR: project_patterns
       WORKSPACE_SUBDIRS: "Bronze, Config, Schema, Misc"
-      WORKSPACE_ROOT: "autobricks"
+      WORKSPACE_ROOT: "project_patterns"
       AUTOBRICKS_LOGGING: INFO
       SSL_VERIFY: True
