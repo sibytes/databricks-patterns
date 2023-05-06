@@ -2,6 +2,21 @@ version: 1.2.0
 # paths here are relative to this configuration document
 tables: ./tables_1to1.yaml
 
+audit_control:
+  delta_lake:
+    # delta table properties can be set at stage level or table level
+    delta_properties:
+        delta.appendOnly: true
+        delta.autoOptimize.autoCompact: true
+        delta.autoOptimize.optimizeWrite: true
+    managed: false
+    create_table: true
+    container: datalake
+    location: /mnt/{{container}}/data/raw
+    path: "{{database}}/{{table}}"
+    options:
+      checkpointLocation: /mnt/{{container}}/checkpoint/{{database}}-{{table}}
+
 landing:
   read:
     trigger: customerdetailscomplete-{{filename_date_format}}*.flg
