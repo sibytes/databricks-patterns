@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.2.0
+# MAGIC %pip install pyaml pydantic yetl-framework==1.2.1
 
 # COMMAND ----------
 
@@ -111,16 +111,16 @@ def load_hf(
   await_termination:bool = True
 ):
 
-  # if isinstance(source, dict):
-  #   source_chk_name = "|".join(list(source.keys()))
-  #   source_chk_name = hash_value(source_chk_name)[:7]
-  # elif isinstance(source, Read):
-  #   source_chk_name = f"{source.database}.{source.table}"
-  # else:
-  #   raise Exception("Source is invalid type")
+  if isinstance(source, dict):
+    source_chk_name = "|".join(list(source.keys()))
+    source_chk_name = hash_value(source_chk_name)[:7]
+  elif isinstance(source, Read):
+    source_chk_name = f"{source.database}.{source.table}"
+  else:
+    raise Exception("Source is invalid type")
 
-  # checkpoint = f"{source_chk_name}-{destination.database}.{table_hf}"
-  checkpoint = f"{destination.database}.{table_hf}"
+  checkpoint = f"{source_chk_name}-{destination.database}.{table_hf}"
+
   checkpoint = f"/mnt/{destination.container}/checkpoint/{checkpoint}"
   options_hf = {
     "checkpointLocation": checkpoint #,
@@ -210,7 +210,7 @@ def load_audit(
   destination:DeltaLake,
   audit_db:str = "_control",
   table_hf:str = "header_footer",
-  table_audit = "etl_audit"
+  table_audit = "raw_audit"
 ):
 
   database = f"{destination.database}{audit_db}"
@@ -298,7 +298,7 @@ def create_threhsholds_views(
   thresholds,
   threshold_type:str,
   audit_db:str = "_control",
-  table_audit = "etl_audit"
+  table_audit = "raw_audit"
 ):
   if thresholds:
     
@@ -394,4 +394,4 @@ dbutils.notebook.exit(msg)
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from raw_dbx_patterns_control.etl_audit
+# MAGIC select * from raw_dbx_patterns_control.raw_audit

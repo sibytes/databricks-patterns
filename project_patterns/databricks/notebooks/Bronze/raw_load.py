@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.2.0
+# MAGIC %pip install pyaml pydantic yetl-framework==1.2.2
 
 # COMMAND ----------
 
@@ -56,16 +56,6 @@ config = Config(
 
 # COMMAND ----------
 
-# audit_tables = config.tables.lookup_table(
-#   stage=StageType.audit, 
-#   first_match=False,
-#   process_group=param_process_group
-# )
-# msg_tables = '\n'.join([f"{t.database}.{t.table}" for t in audit_tables])
-# print(f"{msg_tables}")
-
-# COMMAND ----------
-
 tables = config.tables.lookup_table(
   stage=StageType.raw, 
   first_match=False,
@@ -101,3 +91,13 @@ results = execute_notebooks(
 
 msg = "\n".join(results)
 print(msg)
+
+# COMMAND ----------
+
+dbutils.notebook.exit("Success")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
+# MAGIC describe table extended raw_dbx_patterns.customer_details_1
