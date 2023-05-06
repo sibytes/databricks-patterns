@@ -1,4 +1,4 @@
-version: 1.0.1
+version: 1.0.5
 # paths here are relative to this configuration document
 tables: ./tables_1to1.yaml
 
@@ -9,7 +9,7 @@ landing:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    root: "/mnt/{{container}}/data/landing/dbx_patterns/{{table}}/{{path_date_format}}"
+    location: "/mnt/{{container}}/data/landing/dbx_patterns/{{table}}/{{path_date_format}}"
     filename: "{{table}}-{{filename_date_format}}*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
@@ -40,7 +40,7 @@ raw:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    root: /mnt/{{container}}/data/raw
+    location: /mnt/{{container}}/data/raw
     path: "{{database}}/{{table}}"
     checkpoint_location: "/mnt/{{container}}/checkpoint/{{checkpoint}}"
     options:
@@ -58,6 +58,6 @@ base:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    root: /mnt/{{container}}/data/base
+    location: /mnt/{{container}}/data/base
     path: "{{database}}/{{table}}"
     options: null
