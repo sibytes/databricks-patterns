@@ -35,11 +35,12 @@ pipeline = "autoload_raw_schema"
 
 config = Config(
   project=project, 
-  pipeline=pipeline
+  pipeline=pipeline,
+  timeslice=timeslice
 )
 
 table_mapping = config.get_table_mapping(
-  timeslice=timeslice, 
+
   stage=StageType.raw, 
   table=param_table
 )
