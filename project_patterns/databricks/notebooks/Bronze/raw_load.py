@@ -53,6 +53,19 @@ config = Config(
   project=project, 
   pipeline=pipeline
 )
+
+# COMMAND ----------
+
+# audit_tables = config.tables.lookup_table(
+#   stage=StageType.audit, 
+#   first_match=False,
+#   process_group=param_process_group
+# )
+# msg_tables = '\n'.join([f"{t.database}.{t.table}" for t in audit_tables])
+# print(f"{msg_tables}")
+
+# COMMAND ----------
+
 tables = config.tables.lookup_table(
   stage=StageType.raw, 
   first_match=False,
@@ -60,50 +73,6 @@ tables = config.tables.lookup_table(
 )
 msg_tables = '\n'.join([f"{t.database}.{t.table}" for t in tables])
 print(f"{msg_tables}")
-
-
-# COMMAND ----------
-
-# MAGIC   %sql
-# MAGIC   CREATE DATABASE IF NOT EXISTS `raw_dbx_patterns_control`;
-# MAGIC   CREATE TABLE IF NOT EXISTS `raw_dbx_patterns_control`.`header_footer`
-# MAGIC   (
-# MAGIC     header struct<flag:string,row_count:bigint,period:bigint,batch:string>,
-# MAGIC     raw_header string,
-# MAGIC     footer struct<flag:string,name:string,period:bigint>,
-# MAGIC     raw_footer string,
-# MAGIC     _process_id bigint,
-# MAGIC     _load_date timestamp,
-# MAGIC     _metadata struct<file_path:string,file_name:string,file_size:bigint,file_modification_time:timestamp>
-# MAGIC   )
-# MAGIC   USING DELTA
-# MAGIC   LOCATION '/mnt/datalake/data/raw/raw_dbx_patterns_control/header_footer'
-# MAGIC   TBLPROPERTIES (
-# MAGIC     delta.appendOnly = true,
-# MAGIC     delta.autoOptimize.autoCompact = true,
-# MAGIC     delta.autoOptimize.optimizeWrite = true
-# MAGIC   );
-# MAGIC   CREATE TABLE IF NOT EXISTS `raw_dbx_patterns_control`.`etl_audit`
-# MAGIC   (
-# MAGIC     total_count bigint,
-# MAGIC     valid_count bigint,
-# MAGIC     invalid_count bigint,
-# MAGIC     invalid_ratio double,
-# MAGIC     expected_row_count bigint,
-# MAGIC     _process_id bigint,
-# MAGIC     _load_date timestamp,
-# MAGIC     file_name string,
-# MAGIC     file_path string,
-# MAGIC     file_size bigint,
-# MAGIC     file_modification_time timestamp
-# MAGIC   )
-# MAGIC   USING DELTA
-# MAGIC   LOCATION '/mnt/datalake/data/raw/raw_dbx_patterns_control/etl_audit'
-# MAGIC   TBLPROPERTIES (
-# MAGIC     delta.appendOnly = true,
-# MAGIC     delta.autoOptimize.autoCompact = true,
-# MAGIC     delta.autoOptimize.optimizeWrite = true
-# MAGIC   )
 
 # COMMAND ----------
 
