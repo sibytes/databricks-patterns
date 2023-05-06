@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.2.1
+# MAGIC %pip install pyaml pydantic yetl-framework==1.2.4
 
 # COMMAND ----------
 
@@ -104,29 +104,10 @@ def hash_value(value:str):
 
 
 def load_hf(
-  source:Union[Read, Dict[str, Read]],
+  source:DeltaLake,
   destination:DeltaLake,
-  audit_db:str = "_control",
-  table_hf:str = "header_footer",
   await_termination:bool = True
 ):
-
-  if isinstance(source, dict):
-    source_chk_name = "|".join(list(source.keys()))
-    source_chk_name = hash_value(source_chk_name)[:7]
-  elif isinstance(source, Read):
-    source_chk_name = f"{source.database}.{source.table}"
-  else:
-    raise Exception("Source is invalid type")
-
-  checkpoint = f"{source_chk_name}-{destination.database}.{table_hf}"
-
-  checkpoint = f"/mnt/{destination.container}/checkpoint/{checkpoint}"
-  options_hf = {
-    "checkpointLocation": checkpoint #,
-    # "mergeSchema": True
-  }
-  print(options_hf)
 
   header_schema = ",".join([
   "flag string",
@@ -141,9 +122,6 @@ def load_hf(
     "period long"
   ])
 
-  database = f"{destination.database}{audit_db}"
-  database_table = f"`{database}`.`{table_hf}`"
-
   columns = [
     f"from_csv(_corrupt_record, '{header_schema}') as header",
     "_corrupt_record as raw_header",
@@ -155,7 +133,7 @@ def load_hf(
   stream_header:StreamingQuery = (spark.readStream
     .format("delta") 
     .option("readChangeFeed", "true")
-    .table(f"`{destination.database}`.`{destination.table}`")
+    .table(f"`{source.database}`.`{source.table}`")
     .where("_change_type = 'insert' and flag = 'H'")
     .selectExpr(*columns)
   )
@@ -169,7 +147,7 @@ def load_hf(
   stream_footer:StreamingQuery = (spark.readStream
     .format("delta") 
     .option("readChangeFeed", "true")
-    .table(f"`{destination.database}`.`{destination.table}`")
+    .table(f"`{source.database}`.`{source.table}`")
     .where("_change_type = 'insert' and flag = 'F'")
     .selectExpr(*columns)
   )
@@ -195,9 +173,9 @@ def load_hf(
 
   stream_write = (stream_joined
     .writeStream
-    .options(**options_hf)
+    .options(**destination.options)
     .trigger(availableNow=True)
-    .toTable(database_table)
+    .toTable(f"`{destination.database}`.`{destination.table}`")
   )
   
   if await_termination:
@@ -207,14 +185,10 @@ def load_hf(
 
 def load_audit(
   process_id:int,
-  destination:DeltaLake,
-  audit_db:str = "_control",
-  table_hf:str = "header_footer",
-  table_audit = "raw_audit"
+  source:DeltaLake,
+  source_hf:DeltaLake,
+  destination:DeltaLake
 ):
-
-  database = f"{destination.database}{audit_db}"
-  database_table = f"`{database}`.`{table_audit}`"
 
   df = spark.sql(f"""
     SELECT
@@ -231,8 +205,8 @@ def load_audit(
       d._metadata.file_path,
       d._metadata.file_size,
       d._metadata.file_modification_time
-    FROM `{destination.database}`.`{destination.table}` as d
-    JOIN `{database}`.`{table_hf}` as hf
+    FROM `{source.database}`.`{source.table}` as d
+    JOIN `{source_hf.database}`.`{source_hf.table}` as hf
       ON hf._process_id = d._process_id
       AND hf._metadata.file_name = d._metadata.file_name
     WHERE d._process_id = {process_id}
@@ -262,7 +236,7 @@ def load_audit(
   result = (df.select(*columns).write
     .format("delta")
     .mode("append")
-    .saveAsTable(database_table)
+    .saveAsTable(f"`{destination.database}`.`{destination.table}`")
   )
 
 
@@ -271,7 +245,7 @@ def load_audit(
 
 raw = table_mapping.destination
 if isinstance(table_mapping.source, dict):
-
+  # TODO: needs to be multi-threaded
   for _, source in table_mapping.source.items():
     config.set_checkpoint(source, raw)
     print(raw.options["checkpointLocation"])
@@ -284,25 +258,55 @@ else:
 
 # COMMAND ----------
 
-load_hf(table_mapping.source, raw)
+table_mapping_hf = config.get_table_mapping(
+
+  stage=StageType.audit_control, 
+  table="header_footer"
+)
+
+source_hf:DeltaLake = table_mapping_hf.source[table_mapping.source.table]
+destination_hf:DeltaLake = table_mapping_hf.destination
+config.set_checkpoint(source_hf, destination_hf)
+print(destination_hf.options["checkpointLocation"])
 
 
 # COMMAND ----------
 
-load_audit(param_process_id, raw)
+
+load_hf(source_hf, destination_hf)
+
+
+# COMMAND ----------
+
+table_mapping_audit = config.get_table_mapping(
+
+  stage=StageType.audit_control, 
+  table="raw_audit"
+)
+
+source_audit:DeltaLake = table_mapping_audit.source[table_mapping.source.table]
+destination_audit:DeltaLake = table_mapping_audit.destination
+config.set_checkpoint(source_audit, destination_audit)
+print(destination_hf.options["checkpointLocation"])
+
+# COMMAND ----------
+
+load_audit(
+  param_process_id, 
+  source_audit, 
+  destination_hf, 
+  destination_audit
+)
 
 # COMMAND ----------
 
 def create_threhsholds_views(
   destination:DeltaLake,
   thresholds,
-  threshold_type:str,
-  audit_db:str = "_control",
-  table_audit = "raw_audit"
+  threshold_type:str
 ):
   if thresholds:
     
-    database = f"{destination.database}{audit_db}"
     view = f"{threshold_type}_{destination.table}"
 
     select = []
@@ -327,7 +331,7 @@ def create_threhsholds_views(
     where = "OR\\n".join(where)
 
     sql = f"""
-      CREATE OR REPLACE VIEW `{database}`.`{view}`
+      CREATE OR REPLACE VIEW `{destination.database}`.`{view}`
       AS 
       select
         invalid_ratio,
@@ -338,7 +342,7 @@ def create_threhsholds_views(
         {select}
         file_name,
         _process_id
-      from `{database}`.`{table_audit}`
+      from `{destination.database}`.`{destination.table}`
       where _process_id = {param_process_id}
       and (
         {where} OR
@@ -347,14 +351,14 @@ def create_threhsholds_views(
     """
     print(sql)
     spark.sql(sql)
-    df = spark.sql(f"select * from `{database}`.`{view}`")
+    df = spark.sql(f"select * from `{destination.database}`.`{view}`")
 
     return df
 
 # COMMAND ----------
 
 if raw.exception_thresholds:
-  df = create_threhsholds_views(raw, raw.exception_thresholds, "threshold_exception")
+  df = create_threhsholds_views(destination_audit, raw.exception_thresholds, "threshold_exception")
   display(df)
   if df.count() > 0:
     msg = f"Exception thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
@@ -363,7 +367,7 @@ if raw.exception_thresholds:
 # COMMAND ----------
 
 if raw.warning_thresholds:
-  df = create_threhsholds_views(raw, raw.warning_thresholds, "threshold_warning")
+  df = create_threhsholds_views(destination_audit, raw.warning_thresholds, "threshold_warning")
   display(df)
   # if df.count() > 0:
   #   msg = f"Warning: thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
