@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.1.0
+# MAGIC %pip install pyaml pydantic yetl-framework==1.2.0
 
 # COMMAND ----------
 
@@ -111,15 +111,16 @@ def load_hf(
   await_termination:bool = True
 ):
 
-  if isinstance(source, dict):
-    source_chk_name = "|".join(list(source.keys()))
-    source_chk_name = hash_value(source_chk_name)[:7]
-  elif isinstance(source, Read):
-    source_chk_name = f"{source.database}.{source.table}"
-  else:
-    raise Exception("Source is invalid type")
+  # if isinstance(source, dict):
+  #   source_chk_name = "|".join(list(source.keys()))
+  #   source_chk_name = hash_value(source_chk_name)[:7]
+  # elif isinstance(source, Read):
+  #   source_chk_name = f"{source.database}.{source.table}"
+  # else:
+  #   raise Exception("Source is invalid type")
 
-  checkpoint = f"{source_chk_name}-{destination.database}.{table_hf}"
+  # checkpoint = f"{source_chk_name}-{destination.database}.{table_hf}"
+  checkpoint = f"{destination.database}.{table_hf}"
   checkpoint = f"/mnt/{destination.container}/checkpoint/{checkpoint}"
   options_hf = {
     "checkpointLocation": checkpoint #,
