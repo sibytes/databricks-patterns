@@ -8,13 +8,13 @@
     invalid_count bigint,
     invalid_ratio double,
     expected_row_count bigint,
-    validation_thresholds<
+    validation_thresholds struct<
       invalid_ratio:double,
       invalid_rows:bigint,
       max_rows:bigint,
       min_rows:bigint
     >
-    exception_thresholds<
+    exception_thresholds struct<
       invalid_ratio:double,
       invalid_rows:bigint,
       max_rows:bigint,

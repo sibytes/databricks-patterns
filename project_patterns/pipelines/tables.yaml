@@ -33,10 +33,6 @@ audit_control:
         depends_on:
           - raw.raw_dbx_patterns.*
           - raw.raw_dbx_patterns_control.header_footer
-      raw_audit_threshold:
-        sql: ../sql/{{database}}/{{table}}.sql
-        depends_on:
-          - raw.raw_dbx_patterns.*
 
 
 landing:
