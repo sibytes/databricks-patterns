@@ -9,12 +9,8 @@ dbutils.widgets.text("table", "customer_details_1")
 # COMMAND ----------
 
 from yetl import (
-  Config, Timeslice, StageType, Read, DeltaLake, ValidationThreshold
+  Config, Timeslice, StageType, DeltaLake
 )
-from pyspark.sql import functions as fn
-from pyspark.sql.streaming import StreamingQuery
-import os
-from typing import Union, Dict
 
 # COMMAND ----------
 
@@ -59,7 +55,7 @@ load(
 # COMMAND ----------
 
 # load the headers and footers
-from pipelines import load_header_footer
+from etl import load_header_footer
 
 table_mapping_hf = config.get_table_mapping(
   stage=StageType.audit_control, 
@@ -81,7 +77,7 @@ load_header_footer(
 # COMMAND ----------
 
 # load the audit table
-from pipelines import load_audit
+from etl import load_audit
 
 table_mapping_audit = config.get_table_mapping(
   stage=StageType.audit_control, 
