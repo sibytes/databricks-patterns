@@ -95,9 +95,3 @@ print(msg)
 # COMMAND ----------
 
 dbutils.notebook.exit("Success")
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC
-# MAGIC describe table extended raw_dbx_patterns.customer_details_1
