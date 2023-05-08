@@ -12,9 +12,11 @@ def load_audit(
 
   df = spark.sql(f"""
     SELECT
-      '{source.database}' as `database`,
-      '{source.table}' as `table`,
       d._metadata.file_name,
+      '{source.database}' as `source_database`,
+      '{source.table}' as `source_table`,
+      '{destination.database}' as `database`,
+      '{destination.table}' as `table`,
       
       cast(count(*) as long) as total_count,
       cast(sum(if(d._is_valid, 1, 0)) as long) as valid_count,
