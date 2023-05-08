@@ -2,6 +2,7 @@
   (
     `database` string,
     `table` string,
+    `file_name` string,
     total_count bigint,
     valid_count bigint,
     invalid_count bigint,
@@ -19,12 +20,11 @@
       max_rows:bigint,
       min_rows:bigint
     >
-    _process_id bigint,
-    _load_date timestamp,
-    file_name string,
     file_path string,
     file_size bigint,
-    file_modification_time timestamp
+    file_modification_time timestamp,
+    _process_id bigint,
+    _load_date timestamp
   )
   USING DELTA
   LOCATION '{{location}}'
