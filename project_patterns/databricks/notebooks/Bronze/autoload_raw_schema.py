@@ -9,7 +9,7 @@ dbutils.widgets.text("table", "customer_details_1")
 # COMMAND ----------
 
 from yetl import (
-  Config, Timeslice, StageType, Read, DeltaLake #, ValidationThreshold
+  Config, Timeslice, StageType, Read, DeltaLake, ValidationThreshold
 )
 from pyspark.sql import functions as fn
 from pyspark.sql.streaming import StreamingQuery
@@ -39,326 +39,78 @@ config = Config(
   timeslice=timeslice
 )
 
-table_mapping = config.get_table_mapping(
+# COMMAND ----------
 
+# Load the data
+from pipelines import load
+
+table_mapping = config.get_table_mapping(
   stage=StageType.raw, 
   table=param_table
 )
-
-from pprint import pprint
-pprint(table_mapping.dict())
-
-# COMMAND ----------
-
-def load(
-  process_id:int,
-  source:Read,
-  destination:DeltaLake,
-  await_termination:bool = True
-):
-
-  stream = (spark.readStream
-    .schema(source.spark_schema)
-    .format(source.format)
-    .options(**source.options)
-    .load(source.path)
-  )
-
-  src_cols = [c for c in stream.columns if not c.startswith("_")]
-  sys_cols = [c for c in stream.columns if c.startswith("_")]
-
-  columns = src_cols + sys_cols + [
-    "if(_corrupt_record is null, true, false) as _is_valid",
-    f"cast({process_id} as long) as _process_id",
-    "current_timestamp() as _load_date",
-    "_metadata"
-  ]
-  print("\n".join(columns))
-
-  stream_data:StreamingQuery = (stream
-    .selectExpr(*columns)
-    .writeStream
-    .options(**destination.options)
-    .trigger(availableNow=True)
-    .toTable(f"`{destination.database}`.`{destination.table}`")
-  )
-
-  
-  if await_termination:
-    stream_data.awaitTermination()
-
+config.set_checkpoint(
+  table_mapping.source, table_mapping.destination
+)
+print(table_mapping.destination.options["checkpointLocation"])
+load(
+  param_process_id, table_mapping.source, table_mapping.destination
+)
 
 # COMMAND ----------
 
-import hashlib
-
-def hash_value(value:str):
-
-  hash_object = hashlib.sha224(f"{value}".encode('utf-8'))
-  hex_dig = hash_object.hexdigest()
-  return hex_dig
-
-
-# COMMAND ----------
-
-
-
-def load_hf(
-  source:DeltaLake,
-  destination:DeltaLake,
-  await_termination:bool = True
-):
-
-  header_schema = ",".join([
-  "flag string",
-  "row_count long",
-  "period long",
-  "batch string"
-  ])
-
-  footer_schema = ",".join([
-    "flag string",
-    "name string",
-    "period long"
-  ])
-
-  columns = [
-    f"from_csv(_corrupt_record, '{header_schema}') as header",
-    "_corrupt_record as raw_header",
-    "_process_id",
-    "_load_date",
-    "_metadata"
-  ]
-  # https://docs.databricks.com/delta/delta-change-data-feed.html
-  stream_header:StreamingQuery = (spark.readStream
-    .format("delta") 
-    .option("readChangeFeed", "true")
-    .table(f"`{source.database}`.`{source.table}`")
-    .where("_change_type = 'insert' and flag = 'H'")
-    .selectExpr(*columns)
-  )
-
-  columns = [
-    f"from_csv(_corrupt_record, '{footer_schema}') as footer",
-    "_corrupt_record as raw_footer",
-    "_process_id as f_process_id",
-    "_metadata as f_metadata"
-  ]
-  stream_footer:StreamingQuery = (spark.readStream
-    .format("delta") 
-    .option("readChangeFeed", "true")
-    .table(f"`{source.database}`.`{source.table}`")
-    .where("_change_type = 'insert' and flag = 'F'")
-    .selectExpr(*columns)
-  )
-
-  columns = [
-    "header",
-    "raw_header",
-    "footer",
-    "raw_footer",
-    "_process_id",
-    "_load_date",
-    "_metadata"
-  ]
-  stream_joined = (stream_header
-    .join(
-      stream_footer, 
-      fn.expr("""
-        _process_id = f_process_id AND
-        _metadata.file_name = f_metadata.file_name
-      """))
-    .selectExpr(*columns)
-  )
-
-  stream_write = (stream_joined
-    .writeStream
-    .options(**destination.options)
-    .trigger(availableNow=True)
-    .toTable(f"`{destination.database}`.`{destination.table}`")
-  )
-  
-  if await_termination:
-    stream_write.awaitTermination()
-
-# COMMAND ----------
-
-def load_audit(
-  process_id:int,
-  source:DeltaLake,
-  source_hf:DeltaLake,
-  destination:DeltaLake
-):
-
-  df = spark.sql(f"""
-    SELECT
-      cast(count(*) as long) as total_count,
-      cast(sum(if(d._is_valid, 1, 0)) as long) as valid_count,
-      cast(sum(if(d._is_valid, 0, 1)) as long) as invalid_count,
-      if(ifnull(cast(count(*) as long), 0)=0, 0.0,
-        cast(sum(if(d._is_valid, 0, 1)) as long) / cast(count(*) as long)
-      ) as invalid_ratio,
-      hf.header.row_count as expected_row_count,
-      hf._process_id,
-      hf._load_date,
-      d._metadata.file_name,
-      d._metadata.file_path,
-      d._metadata.file_size,
-      d._metadata.file_modification_time
-    FROM `{source.database}`.`{source.table}` as d
-    JOIN `{source_hf.database}`.`{source_hf.table}` as hf
-      ON hf._process_id = d._process_id
-      AND hf._metadata.file_name = d._metadata.file_name
-    WHERE d._process_id = {process_id}
-    GROUP BY 
-      hf.header.row_count,
-      hf._process_id,
-      hf._load_date,
-      d._metadata.file_name,
-      d._metadata.file_path,
-      d._metadata.file_size,
-      d._metadata.file_modification_time
-  """)
-
-  columns = [
-    "total_count",
-    "valid_count",
-    "invalid_count",
-    "invalid_ratio",
-    "expected_row_count",
-    "_process_id",
-    "_load_date",
-    "file_name",
-    "file_path",
-    "file_size",
-    "file_modification_time"
-  ]
-  result = (df.select(*columns).write
-    .format("delta")
-    .mode("append")
-    .saveAsTable(f"`{destination.database}`.`{destination.table}`")
-  )
-
-
-
-# COMMAND ----------
-
-raw = table_mapping.destination
-if isinstance(table_mapping.source, dict):
-  # TODO: needs to be multi-threaded
-  for _, source in table_mapping.source.items():
-    config.set_checkpoint(source, raw)
-    print(raw.options["checkpointLocation"])
-    load(param_process_id, source, raw)
-
-else:
-  config.set_checkpoint(table_mapping.source, raw)
-  print(raw.options["checkpointLocation"])
-  load(param_process_id, table_mapping.source, raw)
-
-# COMMAND ----------
+# load the headers and footers
+from pipelines import load_header_footer
 
 table_mapping_hf = config.get_table_mapping(
-
   stage=StageType.audit_control, 
   table="header_footer"
 )
 
 source_hf:DeltaLake = table_mapping_hf.source[table_mapping.source.table]
-destination_hf:DeltaLake = table_mapping_hf.destination
-config.set_checkpoint(source_hf, destination_hf)
-print(destination_hf.options["checkpointLocation"])
+config.set_checkpoint(
+  source_hf, 
+  table_mapping_hf.destination
+)
+print(table_mapping_hf.destination.options["checkpointLocation"])
+
+load_header_footer(
+  source_hf, 
+  table_mapping_hf.destination
+)
 
 
 # COMMAND ----------
 
-
-load_hf(source_hf, destination_hf)
-
-
-# COMMAND ----------
+# load the audit table
+from pipelines import load_audit
 
 table_mapping_audit = config.get_table_mapping(
-
   stage=StageType.audit_control, 
   table="raw_audit"
 )
 
 source_audit:DeltaLake = table_mapping_audit.source[table_mapping.source.table]
-destination_audit:DeltaLake = table_mapping_audit.destination
-config.set_checkpoint(source_audit, destination_audit)
-print(destination_hf.options["checkpointLocation"])
-
-# COMMAND ----------
+config.set_checkpoint(source_audit, table_mapping_audit.destination)
+print(table_mapping_audit.destination.options["checkpointLocation"])
 
 load_audit(
   param_process_id, 
   source_audit, 
-  destination_hf, 
-  destination_audit
+  table_mapping_hf.destination, 
+  table_mapping_audit.destination
 )
 
 # COMMAND ----------
 
-def create_threhsholds_views(
-  destination:DeltaLake,
-  thresholds,
-  threshold_type:str
-):
-  if thresholds:
-    
-    view = f"{threshold_type}_{destination.table}"
+from pipelines import create_threhsholds_views
 
-    select = []
-    where = []
-    if thresholds.invalid_ratio is not None:
-      select.append(f"{thresholds.invalid_ratio} as threshold_invalid_ratio,")
-      where.append(f"invalid_ratio > {thresholds.invalid_ratio}")
-
-    if thresholds.max_rows is not None:
-      select.append(f"{thresholds.max_rows} as threshold_min_count,")
-      where.append(f"total_count > {thresholds.max_rows}")
-
-    if thresholds.max_rows is not None:
-      select.append(f"{thresholds.max_rows} as threshold_max_count,")
-      where.append(f"total_count < {thresholds.min_rows}")
-
-    if thresholds.invalid_rows is not None:
-      select.append(f"{thresholds.invalid_rows} as threshold_invalid_count,")
-      where.append(f"invalid_count > {thresholds.invalid_rows}")
-
-    select = "\\n".join(select)
-    where = "OR\\n".join(where)
-
-    sql = f"""
-      CREATE OR REPLACE VIEW `{destination.database}`.`{view}`
-      AS 
-      select
-        invalid_ratio,
-        total_count,
-        expected_row_count,
-        valid_count,
-        invalid_count,
-        {select}
-        file_name,
-        _process_id
-      from `{destination.database}`.`{destination.table}`
-      where _process_id = {param_process_id}
-      and (
-        {where} OR
-        expected_row_count != valid_count
-      );
-    """
-    print(sql)
-    spark.sql(sql)
-    df = spark.sql(f"select * from `{destination.database}`.`{view}`")
-
-    return df
-
-# COMMAND ----------
-
-if raw.exception_thresholds:
-  df = create_threhsholds_views(destination_audit, raw.exception_thresholds, "threshold_exception")
+if table_mapping.destination.exception_thresholds:
+  df = create_threhsholds_views(
+    param_process_id,
+    table_mapping_audit.destination, 
+    table_mapping.destination.exception_thresholds, 
+    "threshold_exception"
+  )
   display(df)
   if df.count() > 0:
     msg = f"Exception thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
@@ -366,8 +118,13 @@ if raw.exception_thresholds:
 
 # COMMAND ----------
 
-if raw.warning_thresholds:
-  df = create_threhsholds_views(destination_audit, raw.warning_thresholds, "threshold_warning")
+if table_mapping.destination.warning_thresholds:
+  df = create_threhsholds_views(
+    param_process_id,
+    table_mapping_audit.destination, 
+    table_mapping.destination.warning_thresholds, 
+    "warning_thresholds"
+  )
   display(df)
   # if df.count() > 0:
   #   msg = f"Warning: thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
@@ -375,7 +132,7 @@ if raw.warning_thresholds:
 
 # COMMAND ----------
 
-msg = f"Succeeded: {raw.database}.{raw.table}"
+msg = f"Succeeded: {table_mapping.destination.database}.{table_mapping.destination.table}"
 dbutils.notebook.exit(msg)
 
 # COMMAND ----------

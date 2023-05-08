@@ -1,6 +1,6 @@
 version: 1.2.0
 # paths here are relative to this configuration document
-tables: ./tables_1to1.yaml
+tables: ./tables.yaml
 
 audit_control:
   delta_lake:
