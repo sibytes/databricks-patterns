@@ -78,7 +78,6 @@ load_header_footer(
   table_mapping_hf.destination
 )
 
-
 # COMMAND ----------
 
 # load the audit table
@@ -90,8 +89,7 @@ table_mapping_audit = config.get_table_mapping(
 )
 
 source_audit:DeltaLake = table_mapping_audit.source[table_mapping.source.table]
-config.set_checkpoint(source_audit, table_mapping_audit.destination)
-print(table_mapping_audit.destination.options["checkpointLocation"])
+source_hf:DeltaLake = table_mapping_audit.source["header_footer"]
 
 load_audit(
   param_process_id, 
@@ -99,36 +97,6 @@ load_audit(
   table_mapping_hf.destination, 
   table_mapping_audit.destination
 )
-
-# COMMAND ----------
-
-from pipelines import create_threhsholds_views
-
-if table_mapping.destination.exception_thresholds:
-  df = create_threhsholds_views(
-    param_process_id,
-    table_mapping_audit.destination, 
-    table_mapping.destination.exception_thresholds, 
-    "threshold_exception"
-  )
-  display(df)
-  if df.count() > 0:
-    msg = f"Exception thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
-    raise Exception(msg)
-
-# COMMAND ----------
-
-if table_mapping.destination.warning_thresholds:
-  df = create_threhsholds_views(
-    param_process_id,
-    table_mapping_audit.destination, 
-    table_mapping.destination.warning_thresholds, 
-    "warning_thresholds"
-  )
-  display(df)
-  # if df.count() > 0:
-  #   msg = f"Warning: thresholds have been exceeded {table_mapping.destination.database}.{table_mapping.destination.table}"
-  #   print(msg)
 
 # COMMAND ----------
 

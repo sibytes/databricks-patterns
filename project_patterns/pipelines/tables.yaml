@@ -27,13 +27,17 @@ audit_control:
       header_footer:
         sql: ../sql/{{database}}/{{table}}.sql
         depends_on:
-          - raw.raw_dbx_patterns.customer_details_1
-          - raw.raw_dbx_patterns.customer_details_2
+          - raw.raw_dbx_patterns.*
       raw_audit:
         sql: ../sql/{{database}}/{{table}}.sql
         depends_on:
-          - raw.raw_dbx_patterns.customer_details_1
-          - raw.raw_dbx_patterns.customer_details_2
+          - raw.raw_dbx_patterns.*
+          - raw.raw_dbx_patterns_control.header_footer
+      raw_audit_threshold:
+        sql: ../sql/{{database}}/{{table}}.sql
+        depends_on:
+          - raw.raw_dbx_patterns.*
+
 
 landing:
   read:
