@@ -15,12 +15,14 @@ def load_audit(
       '{source.database}' as `database`,
       '{source.table}' as `table`,
       d._metadata.file_name,
+      
       cast(count(*) as long) as total_count,
       cast(sum(if(d._is_valid, 1, 0)) as long) as valid_count,
       cast(sum(if(d._is_valid, 0, 1)) as long) as invalid_count,
       if(ifnull(cast(count(*) as long), 0)=0, 0.0,
         cast(sum(if(d._is_valid, 0, 1)) as long) / cast(count(*) as long)
       ) as invalid_ratio,
+
       hf.header.row_count as expected_row_count,
       {warning_thresholds_sql} as warning_thresholds,
       {exception_thresholds_sql} as exception_thresholds,
@@ -36,12 +38,14 @@ def load_audit(
     WHERE d._process_id = {process_id}
     GROUP BY 
       hf.header.row_count,
-      hf._process_id,
-      hf._load_date,
+      warning_thresholds,
+      exception_thresholds,
       d._metadata.file_name,
       d._metadata.file_path,
       d._metadata.file_size,
-      d._metadata.file_modification_time
+      d._metadata.file_modification_time,
+      hf._process_id,
+      hf._load_date
   """)
 
   result = (df.write
