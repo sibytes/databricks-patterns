@@ -62,7 +62,7 @@ def load_audit(
     """
 
 
-    _logger.info(sql)
+    _logger.debug(sql)
     _logger.info(f"loading table `{destination.database}`.`{destination.table}`")
 
     df = spark.sql(sql)

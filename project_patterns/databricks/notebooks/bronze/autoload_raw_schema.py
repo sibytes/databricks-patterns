@@ -102,34 +102,5 @@ load_audit(
 
 # COMMAND ----------
 
-raw.exception_thresholds
-
-# COMMAND ----------
-
-print(raw.exception_thresholds.select_sql())
-
-# COMMAND ----------
-
 msg = f"Succeeded: {table_mapping.destination.database}.{table_mapping.destination.table}"
 dbutils.notebook.exit(msg)
-
-# COMMAND ----------
-
-# MAGIC %sql
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC -- select * from raw_dbx_patterns.customers
-# MAGIC -- select * from raw_dbx_patterns.customer_details_1
-# MAGIC select * from raw_dbx_patterns.customer_details_1
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC select * from raw_dbx_patterns_control.header_footer
-
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC select * from raw_dbx_patterns_control.raw_audit
