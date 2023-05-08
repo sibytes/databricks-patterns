@@ -44,20 +44,7 @@ def load_audit(
       d._metadata.file_modification_time
   """)
 
-  columns = [
-    "total_count",
-    "valid_count",
-    "invalid_count",
-    "invalid_ratio",
-    "expected_row_count",
-    "_process_id",
-    "_load_date",
-    "file_name",
-    "file_path",
-    "file_size",
-    "file_modification_time"
-  ]
-  result = (df.select(*columns).write
+  result = (df.write
     .format("delta")
     .mode("append")
     .saveAsTable(f"`{destination.database}`.`{destination.table}`")
