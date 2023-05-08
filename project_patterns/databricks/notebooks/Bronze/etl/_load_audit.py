@@ -1,23 +1,29 @@
 from yetl import DeltaLake, ValidationThresholdType
 from databricks.sdk.runtime import spark
 
-def load_audit(
-  process_id:int,
-  source:DeltaLake,
-  source_hf:DeltaLake,
-  destination:DeltaLake
-):
-  exception_thresholds_sql = destination.thresholds_select_sql(ValidationThresholdType.exception)
-  warning_thresholds_sql = destination.thresholds_select_sql(ValidationThresholdType.warning)
 
-  df = spark.sql(f"""
+def load_audit(
+    process_id: int,
+    source: DeltaLake,
+    source_hf: DeltaLake,
+    destination: DeltaLake
+):
+    exception_thresholds_sql = destination.thresholds_select_sql(
+        ValidationThresholdType.exception
+    )
+    warning_thresholds_sql = destination.thresholds_select_sql(
+        ValidationThresholdType.warning
+    )
+
+    df = spark.sql(
+        f"""
     SELECT
       d._metadata.file_name,
       '{source.database}' as `source_database`,
       '{source.table}' as `source_table`,
       '{destination.database}' as `database`,
       '{destination.table}' as `table`,
-      
+
       cast(count(*) as long) as total_count,
       cast(sum(if(d._is_valid, 1, 0)) as long) as valid_count,
       cast(sum(if(d._is_valid, 0, 1)) as long) as invalid_count,
@@ -38,7 +44,7 @@ def load_audit(
       ON hf._process_id = d._process_id
       AND hf._metadata.file_name = d._metadata.file_name
     WHERE d._process_id = {process_id}
-    GROUP BY 
+    GROUP BY
       hf.header.row_count,
       warning_thresholds,
       exception_thresholds,
@@ -48,13 +54,12 @@ def load_audit(
       d._metadata.file_modification_time,
       hf._process_id,
       hf._load_date
-  """)
+  """
+    )
 
-  result = (df.write
-    .format("delta")
-    .mode("append")
-    .saveAsTable(f"`{destination.database}`.`{destination.table}`")
-  )
-  return result
-
-
+    result = (
+        df.write.format("delta")
+        .mode("append")
+        .saveAsTable(f"`{destination.database}`.`{destination.table}`")
+    )
+    return result
