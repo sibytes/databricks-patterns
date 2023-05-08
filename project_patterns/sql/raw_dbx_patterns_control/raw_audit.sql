@@ -6,7 +6,6 @@
     source_table string,
     `database` string,
     `table` string,
-
     total_count bigint,
     valid_count bigint,
     invalid_count bigint,
