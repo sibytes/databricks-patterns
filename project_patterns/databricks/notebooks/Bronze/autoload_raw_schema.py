@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.2.4
+# MAGIC %pip install pyaml pydantic yetl-framework==1.3.0
 
 # COMMAND ----------
 
@@ -38,7 +38,7 @@ config = Config(
 # COMMAND ----------
 
 # Load the data
-from pipelines import load
+from etl import load
 
 table_mapping = config.get_table_mapping(
   stage=StageType.raw, 
@@ -87,12 +87,26 @@ table_mapping_audit = config.get_table_mapping(
 source_audit:DeltaLake = table_mapping_audit.source[table_mapping.source.table]
 source_hf:DeltaLake = table_mapping_audit.source["header_footer"]
 
+landing = table_mapping.source
+raw = table_mapping.destination
+header_footer = table_mapping_audit.source["header_footer"]
+destination = table_mapping_audit.destination
+
 load_audit(
   param_process_id, 
-  source_audit, 
-  table_mapping_hf.destination, 
-  table_mapping_audit.destination
+  landing, 
+  raw, 
+  header_footer,
+  destination
 )
+
+# COMMAND ----------
+
+raw.exception_thresholds
+
+# COMMAND ----------
+
+print(raw.exception_thresholds.select_sql())
 
 # COMMAND ----------
 
@@ -102,14 +116,13 @@ dbutils.notebook.exit(msg)
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC -- select * from raw_dbx_patterns.customers
-# MAGIC -- select * from raw_dbx_patterns.customer_details_1
-# MAGIC select * from raw_dbx_patterns.customer_details_2
 
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select count(*), `_metadata`.file_name  from raw_dbx_patterns.customers group by `_metadata`.file_name
+# MAGIC -- select * from raw_dbx_patterns.customers
+# MAGIC -- select * from raw_dbx_patterns.customer_details_1
+# MAGIC select * from raw_dbx_patterns.customer_details_1
 
 # COMMAND ----------
 
