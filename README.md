@@ -1,6 +1,6 @@
 # Databricks Patterns
 
-This project contains various databricks patterns for operating and developing databricks platform patterns.
+This project contains various databricks patterns for operating and developing databricks solutions.
 
 # Data Engineering Patterns
 
