@@ -44,7 +44,7 @@ steps:
       SUBSCRIPTION_ID: ${{ parameters.SubscriptionId }}
       DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
       FROM_ROOT: $(System.DefaultWorkingDirectory)
-      FROM_DIR: project_patterns
-      TO_WORKSPACE_DIR: "project_patterns"
+      FROM_DIR: header_footer
+      TO_WORKSPACE_DIR: "header_footer"
       AUTOBRICKS_LOGGING: INFO
       SSL_VERIFY: True
