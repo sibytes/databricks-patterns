@@ -28,11 +28,31 @@
     "tasks": [
         {
             "task_key": "load_raw",
+            "depends_on": [
+                {
+                    "task_key": "setup"
+                }
+            ],
             "notebook_task": {
                 "notebook_path": "/header_footer/databricks/notebooks/bronze/raw_load",
                 "base_parameters": {
                     "process_id": "{{job_id}}"
                 },
+                "source": "WORKSPACE"
+            },
+            "job_cluster_key": "dbx_patterns_job_cluster",
+            "timeout_seconds": 0,
+            "email_notifications": {},
+            "notification_settings": {
+                "no_alert_for_skipped_runs": false,
+                "no_alert_for_canceled_runs": false,
+                "alert_on_last_attempt": false
+            }
+        },
+        {
+            "task_key": "setup",
+            "notebook_task": {
+                "notebook_path": "/header_footer/databricks/notebooks/setup",
                 "source": "WORKSPACE"
             },
             "job_cluster_key": "dbx_patterns_job_cluster",
