@@ -41,6 +41,7 @@ landing:
     landing_header_footer:
       customer_details_1: null
       customer_details_2: null
+      customer_preferences: null
 
 raw:
   delta_lake:
@@ -51,6 +52,12 @@ raw:
       delta.autoOptimize.optimizeWrite: true  
       delta.enableChangeDataFeed: true
     raw_header_footer:
+      customer_preferences:
+        ids: id
+        depends_on:
+          - landing.landing_header_footer.customer_preferences
+        custom_properties:
+          process_group: 1
       customer_details_1:
         ids: id
         depends_on:
@@ -84,13 +91,13 @@ base:
       delta.autoOptimize.optimizeWrite: true  
       delta.enableChangeDataFeed: true
     base_header_footer:
-      customer_details_1:
+      customers:
         ids: id
         depends_on:
-          - raw.raw_header_footer.customers
-      customer_details_2:
+          - raw.raw_header_footer.customer_details_*
+      customer_preferences:
         ids: id
         depends_on:
-          - raw.raw_header_footer.customers
+          - raw.raw_header_footer.customer_preferences
 
 
