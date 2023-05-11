@@ -1,4 +1,4 @@
-# databricks-patterns
+# Databricks Patterns
 
 This project contains various databricks patterns for operating and developing databricks platform patterns.
 
