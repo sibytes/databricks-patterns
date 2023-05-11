@@ -7,7 +7,7 @@ This project contains various databricks patterns for operating and developing d
 
 ## Customer Details - Header Footer
 
-This example pattern shows data pipelines loading a difficult file provision to from landing to raw and base (TODO).
+This example pattern shows data pipelines loading a difficult file provision to from landing to raw using autoloader.
 
 The data files can be seen here:
 
