@@ -3,16 +3,6 @@
 
 # COMMAND ----------
 
-def clear_down():
-  dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns", True)
-  dbutils.fs.rm("/mnt/datalake/data/raw/raw_dbx_patterns_control", True)
-  dbutils.fs.rm("/mnt/datalake/checkpoint", True)
-  spark.sql("drop database if exists raw_dbx_patterns CASCADE")
-  spark.sql("drop database if exists raw_dbx_patterns_control CASCADE")
-clear_down()
-
-# COMMAND ----------
-
 dbutils.widgets.text("process_id", "-1")
 dbutils.widgets.text("max_parallel", "4")
 dbutils.widgets.text("timeout", "3600")
