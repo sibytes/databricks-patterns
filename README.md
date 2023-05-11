@@ -59,7 +59,8 @@ This structure is described as follows from `./header_footer`:
 |databricks/notebooks/bronze/autoload_raw_schema.py  | notebook to load a raw table using the config in `.pipelines`|
 |databricks/notebooks/bronze/load_raw.py             | notebook to load all raw tables using the config in `.pipelines`, calls autoload_raw_schema.py|
 |databricks/notebooks/etl                            | contains reusable python functions to load tables |
-|pipelines/autoload_raw_schema.yaml                  | contains configuration to load the datalake house using autoloader |
+|databricks/workflow/etl                             | contains reusable python functions to load tables |
+|pipelines/autoloader-raw-schema.json                | contains a databricks workflow definition for executing the raw load |
 |pipelines/tables.yaml                               | contains configuration that describes the tables and landing files to load |
 |schema                                              | contains the spark schema for schema on read or schema hinting when loading the landing files |
 |sql/control_header_footer                           | contains SQL table create scripts for tables we want to declare explicitly, in this case the audit tables we'll create |
