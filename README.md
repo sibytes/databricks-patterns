@@ -4,6 +4,7 @@ This project contains various databricks patterns for operating and developing d
 
 # Data Engineering Patterns
 
+Patterns for data engineers to load data into the data lakehouse.
 
 ## Customer Details - Header Footer
 
