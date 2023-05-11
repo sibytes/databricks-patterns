@@ -1,5 +1,5 @@
 
-CREATE TABLE IF NOT EXISTS `raw_dbx_patterns_control`.`header_footer`
+CREATE TABLE IF NOT EXISTS `control_header_footer`.`header_footer`
 (
     header struct<flag:string,row_count:bigint,period:bigint,batch:string>,
     raw_header string,

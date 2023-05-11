@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.3.0
+# MAGIC %pip install pyaml pydantic yetl-framework==1.3.1
 
 # COMMAND ----------
 
@@ -47,7 +47,7 @@ table_mapping = config.get_table_mapping(
 config.set_checkpoint(
   table_mapping.source, table_mapping.destination
 )
-print(table_mapping.destination.options["checkpointLocation"])
+
 load(
   param_process_id, table_mapping.source, table_mapping.destination
 )
@@ -67,7 +67,6 @@ config.set_checkpoint(
   source_hf, 
   table_mapping_hf.destination
 )
-print(table_mapping_hf.destination.options["checkpointLocation"])
 
 load_header_footer(
   source_hf, 

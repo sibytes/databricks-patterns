@@ -1,4 +1,4 @@
-  CREATE TABLE IF NOT EXISTS `raw_dbx_patterns_control`.`raw_audit`
+  CREATE TABLE IF NOT EXISTS `control_header_footer`.`raw_audit`
   (
 
     `file_name` string,

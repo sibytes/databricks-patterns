@@ -31,7 +31,7 @@ audit_control:
       raw_audit:
         sql: ../sql/{{database}}/{{table}}.sql
         depends_on:
-          - raw.raw_dbx_patterns.*
+          - raw.raw_header_footer.*
           - audit_control.control_header_footer.header_footer
 
 
