@@ -14,5 +14,5 @@ fields:
 -   metadata: {}
     name: contact_allowed
     nullable: true
-    type: bool
+    type: boolean
 type: struct
