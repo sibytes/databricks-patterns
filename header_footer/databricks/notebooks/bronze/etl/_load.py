@@ -2,6 +2,7 @@ from yetl import Read, DeltaLake
 from databricks.sdk.runtime import spark
 from pyspark.sql.streaming import StreamingQuery
 import hashlib
+from pyspark.sql import DataFrame
 
 
 def hash_value(value: str):
@@ -13,8 +14,7 @@ def hash_value(value: str):
 def stream_load(
     process_id: int,
     source: Read,
-    destination: DeltaLake,
-    await_termination: bool = True,
+    destination: DeltaLake
 ):
     stream = (
         spark.readStream.schema(source.spark_schema)
@@ -45,14 +45,44 @@ def stream_load(
         .toTable(f"`{destination.database}`.`{destination.table}`")
     )
 
-    if await_termination:
-        stream_data.awaitTermination()
+    stream_data.awaitTermination()
 
 
 def batch_load(
     process_id: int,
     source: Read,
-    destination: DeltaLake,
-    await_termination: bool = True,
+    destination: DeltaLake
 ):
-    pass
+    df:DataFrame = (
+        spark.read.schema(source.spark_schema)
+        .format(source.format)
+        .options(**source.options)
+        .load(source.path)
+    )
+
+    src_cols = [c for c in df.columns if not c.startswith("_")]
+    sys_cols = [c for c in df.columns if c.startswith("_")]
+
+    columns = (
+        src_cols
+        + sys_cols
+        + [
+            "if(_corrupt_record is null, true, false) as _is_valid",
+            f"cast({process_id} as long) as _process_id",
+            "current_timestamp() as _load_date",
+            "_metadata",
+        ]
+    )
+    print("\n".join(columns))
+
+    audit:DataFrame = (df
+        .selectExpr(*columns)
+        .write
+        .options(**destination.options)
+        .mode("append")
+        .toTable(f"`{destination.database}`.`{destination.table}`")
+    )
+
+    return audit
+
+
