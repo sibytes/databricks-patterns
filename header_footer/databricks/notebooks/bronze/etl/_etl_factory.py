@@ -1,7 +1,7 @@
 
-from ._load import _stream_load, _batch_load
-from ._load_audit import _load_audit
-from ._load_header_footer import _stream_load_header_footer, _batch_load_header_footer
+from ._load import stream_load, batch_load
+from ._load_audit import load_audit
+from ._load_header_footer import stream_load_header_footer, batch_load_header_footer
 from ._load_type import LoadType
 from enum import Enum
 
@@ -12,15 +12,15 @@ class LoadFunction(Enum):
 
 
 _registered_autoload_fn = {
-    "load": _stream_load,
-    "load_audit": _load_audit,
-    "load_header_footer": _stream_load_header_footer
+    "load": stream_load,
+    "load_audit": load_audit,
+    "load_header_footer": stream_load_header_footer
 }
 
 _registered_batch_fn = {
-    "load": _batch_load,
-    "load_audit": _load_audit,
-    "load_header_footer": _batch_load_header_footer
+    "load": batch_load,
+    "load_audit": load_audit,
+    "load_header_footer": batch_load_header_footer
 }
 
 

@@ -10,7 +10,7 @@ def hash_value(value: str):
     return hex_dig
 
 
-def _stream_load(
+def stream_load(
     process_id: int,
     source: Read,
     destination: DeltaLake,
@@ -47,3 +47,12 @@ def _stream_load(
 
     if await_termination:
         stream_data.awaitTermination()
+
+
+def batch_load(
+    process_id: int,
+    source: Read,
+    destination: DeltaLake,
+    await_termination: bool = True,
+):
+    pass

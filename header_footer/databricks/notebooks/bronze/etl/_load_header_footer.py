@@ -4,7 +4,7 @@ from pyspark.sql import functions as fn
 from pyspark.sql.streaming import StreamingQuery
 
 
-def _stream_load_header_footer(
+def stream_load_header_footer(
     source: DeltaLake, destination: DeltaLake, await_termination: bool = True
 ):
     header_schema = ",".join(
@@ -70,3 +70,8 @@ def _stream_load_header_footer(
 
     if await_termination:
         stream_write.awaitTermination()
+
+def batch_load_header_footer(
+    source: DeltaLake, destination: DeltaLake, await_termination: bool = True
+):
+    pass
