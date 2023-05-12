@@ -7,31 +7,39 @@ dbutils.widgets.text("process_id", "-1")
 dbutils.widgets.text("max_parallel", "4")
 dbutils.widgets.text("timeout", "3600")
 dbutils.widgets.text("process_group", "1")
+dbutils.widgets.text("load_type", "autoloader")
+dbutils.widgets.text("timeslice", "*")
 
 # COMMAND ----------
-
+from etl import LoadType
 from yetl import (
-  Config, Timeslice, StageType, Tables
+  Config, Timeslice, StageType
 )
 from yetl.workflow import (
   execute_notebooks, Notebook
 )
-from pyspark.sql import functions as fn
-from pyspark.sql.streaming import StreamingQuery
-from yetl import DeltaLake
-import os
 
 # COMMAND ----------
 
 param_process_id = int(dbutils.widgets.get("process_id"))
 param_max_parallel = int(dbutils.widgets.get("max_parallel"))
 param_timeout = int(dbutils.widgets.get("timeout"))
-param_process_group= int(dbutils.widgets.get("process_group"))
+param_process_group = int(dbutils.widgets.get("process_group"))
+param_load_type = dbutils.widgets.get("timeout")
+param_timeslice = dbutils.widgets.get("timeslice")
+
+try:
+  load_type:LoadType = LoadType(param_load_type)
+except Exception as e:
+   raise Exception(f"load_type parameter {param_load_type} is not valid")
+
 print(f"""
   param_process_id: {param_process_id}
   param_max_parallel: {param_max_parallel}
   param_timeout: {param_timeout}
   process_group: {param_process_group}
+  load_type: {str(load_type)}
+  timeslice: {param_timeslice}
 """)
 
 # COMMAND ----------
@@ -61,7 +69,7 @@ task_root = "."
 params = {"process_id": str(param_process_id)}
 notebooks = [
   Notebook(
-    path=f"{task_root}/autoload_raw_schema", 
+    path=f"{task_root}/{load_type}", 
     parameters={"process_id": str(param_process_id), "table": t.table}, 
     timeout=param_timeout, 
     retry=0, 

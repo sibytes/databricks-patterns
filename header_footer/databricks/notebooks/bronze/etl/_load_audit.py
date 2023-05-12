@@ -3,9 +3,7 @@ from databricks.sdk.runtime import spark
 import logging
 
 
-
-
-def load_audit(
+def _load_audit(
     process_id: int,
     landing: DeltaLake,
     raw: DeltaLake,

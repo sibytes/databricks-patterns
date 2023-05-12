@@ -10,7 +10,7 @@ def hash_value(value: str):
     return hex_dig
 
 
-def load(
+def _stream_load(
     process_id: int,
     source: Read,
     destination: DeltaLake,
