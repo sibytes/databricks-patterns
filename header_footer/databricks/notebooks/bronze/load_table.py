@@ -38,7 +38,7 @@ print(f"""
 
 timeslice = Timeslice(day="*", month="*", year="*")
 project = "header_footer"
-pipeline = "autoload_raw_schema"
+pipeline = str(load_type)
 
 config = Config(
   project=project, 
