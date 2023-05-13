@@ -10,6 +10,21 @@ def hash_value(value: str):
     hex_dig = hash_object.hexdigest()
     return hex_dig
 
+def z_order_by(
+    process_id: int,
+    destination: DeltaLake
+):
+
+    z_order_by = ",".join(destination.z_order_by)
+    print("Optimizing")
+    sql = f"""
+        OPTIMIZE `{destination.database}`.`{destination.table}`
+        ZORDER BY ({z_order_by})
+    """
+    print(sql)
+    spark.sql(sql)
+
+
 
 def stream_load(
     process_id: int,
@@ -46,6 +61,8 @@ def stream_load(
     )
 
     stream_data.awaitTermination()
+    if destination.z_order_by:
+      z_order_by(process_id, destination)
 
 
 def batch_load(
@@ -82,7 +99,7 @@ def batch_load(
         .mode("append")
         .saveAsTable(name=f"`{destination.database}`.`{destination.table}`")
     )
+    if destination.z_order_by:
+      z_order_by(process_id, destination)
 
     return audit
-
-

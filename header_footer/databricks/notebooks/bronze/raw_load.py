@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.3.2
+# MAGIC %pip install pyaml pydantic yetl-framework==1.3.3
 
 # COMMAND ----------
 
@@ -64,8 +64,7 @@ tables = config.tables.lookup_table(
   # either for filtering or to use in pipelines
   process_group=param_process_group
 )
-msg_tables = '\n'.join([f"{t.database}.{t.table}" for t in tables])
-print(f"{msg_tables}")
+
 
 # COMMAND ----------
 
@@ -74,7 +73,7 @@ task_root = "."
 params = {"process_id": str(param_process_id)}
 notebooks = [
   Notebook(
-    path=f"{task_root}/{load_type}", 
+    path=f"{task_root}/load_table", 
     parameters={
       "process_id": str(param_process_id), 
       "table": t.table,

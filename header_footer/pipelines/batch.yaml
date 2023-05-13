@@ -52,6 +52,8 @@ raw:
     container: datalake
     location: /mnt/{{container}}/data/raw
     path: "{{database}}/{{table}}"
+    z_order_by:
+      - _load_date
     options:
       mergeSchema: true
         # optional leave it out if you don't want them
