@@ -80,7 +80,7 @@ def batch_load(
         .write
         .options(**destination.options)
         .mode("append")
-        .toTable(f"`{destination.database}`.`{destination.table}`")
+        .saveAsTable(name=f"`{destination.database}`.`{destination.table}`")
     )
 
     return audit
