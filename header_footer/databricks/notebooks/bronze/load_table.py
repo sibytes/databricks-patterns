@@ -19,7 +19,7 @@ from etl import LoadType, LoadFunction, get_load
 
 param_process_id = int(dbutils.widgets.get("process_id"))
 param_table = dbutils.widgets.get("table")
-param_load_type = dbutils.widgets.get("timeout")
+param_load_type = dbutils.widgets.get("load_type")
 param_timeslice = dbutils.widgets.get("timeslice")
 
 try:
@@ -38,7 +38,7 @@ print(f"""
 
 timeslice = Timeslice(day="*", month="*", year="*")
 project = "header_footer"
-pipeline = str(load_type)
+pipeline = load_type.value
 
 config = Config(
   project=project, 
@@ -60,6 +60,7 @@ config.set_checkpoint(
   table_mapping.source, table_mapping.destination
 )
 
+print(load)
 load(
   param_process_id, table_mapping.source, table_mapping.destination
 )
