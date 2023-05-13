@@ -58,6 +58,8 @@ raw:
     container: datalake
     location: /mnt/{{container}}/data/raw
     path: "{{database}}/{{table}}"
+    z_order_by:
+      - _load_date
     checkpoint_location: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
     options:
       mergeSchema: true

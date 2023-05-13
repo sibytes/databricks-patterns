@@ -1,5 +1,4 @@
-from ._load_audit import load_audit
-from ._load_header_footer import load_header_footer
-from ._load import load
+from ._load_type import LoadType
+from ._etl_factory import LoadFunction, get_load
 
-__all__ = ["load_audit", "load_header_footer", "load"]
+__all__ = ["LoadType", "LoadFunction", "get_load"]

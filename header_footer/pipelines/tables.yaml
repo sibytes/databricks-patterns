@@ -57,7 +57,7 @@ raw:
         depends_on:
           - landing.landing_header_footer.customer_preferences
         custom_properties:
-          process_group: 1
+          process_group: 2
       customer_details_1:
         ids: id
         depends_on:
