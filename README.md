@@ -75,17 +75,18 @@ Follow these steps to execute the pipeline:
 - execute the notebook `./header_footer/databricks/notebooks/setup.py`, this will clear down if you've run it previously or copy the landing data into the correct location.
 - execute the notebook `./header_footer/databricks/notebooks/bronze/load_raw.py` with the default parameters, this will load the data using autoloader into the datalake house and audit tables. Note the following parameters:
 
-| name | default | description |
-|-|-|-|
-| process_id    | -1   | unique process id stamped against the tables, when scheduled can be the {{job_id}} |
-| max_parallel  | 4    | maximum number of parallel tables to load using the notebook |
-| timeout       | 3600 | execution timeout in seconds |
-| process_group | 1    | tables with the customer property process_group will be executed. The framework allows custom properties to be set on tables. You can use them as a lookup filter or as properties to use in the ETL process. This one is used to filter the tables to execute. Assigning a process_group properties would allow us to break up large amounts of tables across different job clusters without being limited to a single table perd job cluster.
-| load_type     | autoloader | The load pattern you want to use, there are 2 load patterns in this project. In `./pipelines/header_footer` there is `autoloader.yaml` and `batch.yaml` declared, use the file name of the pattern without the extension in parameter to switch between them.
-| timeslice | * | when using the batch load pattern a timeslice can be provided to indicate which timeslice to load from landing. * will load everything. Other examples are 2023-01-01, *-01-01, *-01-* |
+| name | default | type | description |
+|-|-|-|-|
+| process_id    | long | -1   | unique process id stamped against the tables, when scheduled can be the {{job_id}} |
+| max_parallel  | int  | 4    | maximum number of parallel tables to load using the notebook |
+| timeout       | int  | 3600 | execution timeout in seconds |
+| process_group | int  | 1    | tables with the customer property process_group will be executed. The framework allows custom properties to be set on tables. You can use them as a lookup filter or as properties to use in the ETL process. This one is used to filter the tables to execute. Assigning a process_group properties would allow us to break up large amounts of tables across different job clusters without being limited to a single table perd job cluster.
+| load_type     | string: autoloader, batch | autoloader | The load pattern you want to use, there are 2 load patterns in this project. In `./pipelines/header_footer` there is `autoloader.yaml` and `batch.yaml` declared, use the file name of the pattern without the extension in parameter to switch between them.
+| timeslice | string YYYY-mm-dd | * | when using the batch load pattern a timeslice can be provided to indicate which timeslice to load from landing. * will load everything. Other examples are 2023-01-01, 2023-01-\*, 2023-\*-\* |
 
 - execute the notebook `./header_footer/databricks/notebooks/bronze/load_raw.py` this time setting `process_group = 2` and `process_id = -2`. This will load the tables with the custom property `process_group = 2` defined in `./pipelines/header_footer/pipelines/tables.yaml`. The data will be stamped against with `process_id = -2`. On manual runs I tend to use -ve number because they can easily be distinguised from automated runs that are +ver numbers.
 
 - execute the notebook `databricks/notebooks/checks.py`, this has simple select statements to explore the data that was just loaded into the raw and audit control tables.
+- execute the notebook `./header_footer/databricks/notebooks/setup.py`, to reset the landing data and clean up delta cataolog and file tables.
 
 
