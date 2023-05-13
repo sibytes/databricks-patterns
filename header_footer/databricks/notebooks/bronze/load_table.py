@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.3.3
+# MAGIC %pip install pyaml pydantic yetl-framework==1.3.4
 
 # COMMAND ----------
 
@@ -17,6 +17,7 @@ from etl import LoadType, LoadFunction, get_load
 
 # COMMAND ----------
 
+# DBTITLE 1,Handle & Validate Parameters
 param_process_id = int(dbutils.widgets.get("process_id"))
 param_table = dbutils.widgets.get("table")
 param_load_type = dbutils.widgets.get("load_type")
@@ -27,16 +28,19 @@ try:
 except Exception as e:
    raise Exception(f"load_type parameter {param_load_type} is not valid")
 
+if load_type == LoadType.autoloader:
+  param_timeslice = "*"
+timeslice = Timeslice.parse_iso_date(param_timeslice)
+
 print(f"""
   param_process_id: {param_process_id}
   param_table: {param_table}
   load_type: {str(load_type)}
-  timeslice: {param_timeslice}
+  timeslice: {timeslice}
 """)
 
 # COMMAND ----------
 
-timeslice = Timeslice(day="*", month="*", year="*")
 project = "header_footer"
 pipeline = load_type.value
 
