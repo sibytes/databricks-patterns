@@ -82,7 +82,10 @@ config.set_checkpoint(
   table_mapping_hf.destination
 )
 
+print(load)
+
 load(
+  param_process_id,
   source_hf, 
   table_mapping_hf.destination
 )

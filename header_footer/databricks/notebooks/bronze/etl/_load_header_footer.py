@@ -6,7 +6,9 @@ from pyspark.sql import DataFrame
 
 
 def stream_load_header_footer(
-    source: DeltaLake, destination: DeltaLake
+    process_id: int,
+    source: DeltaLake, 
+    destination: DeltaLake
 ):
     header_schema = ",".join(
         ["flag string", "row_count long", "period long", "batch string"]
@@ -73,7 +75,9 @@ def stream_load_header_footer(
 
 
 def batch_load_header_footer(
-    source: DeltaLake, destination: DeltaLake
+    process_id: int,
+    source: DeltaLake, 
+    destination: DeltaLake
 ):
     header_schema = ",".join(
         ["flag string", "row_count long", "period long", "batch string"]
@@ -91,9 +95,8 @@ def batch_load_header_footer(
     # https://docs.databricks.com/delta/delta-change-data-feed.html
     df_header: DataFrame = (
         spark.read.format("delta")
-        .option("readChangeFeed", "true")
         .table(f"`{source.database}`.`{source.table}`")
-        .where("_change_type = 'insert' and flag = 'H'")
+        .where(f"_process_id = {process_id} and flag = 'H'")
         .selectExpr(*columns)
     )
 
@@ -105,9 +108,8 @@ def batch_load_header_footer(
     ]
     df_footer: DataFrame = (
         spark.read.format("delta")
-        .option("readChangeFeed", "true")
         .table(f"`{source.database}`.`{source.table}`")
-        .where("_change_type = 'insert' and flag = 'F'")
+        .where(f"_process_id = {process_id} and flag = 'H'")
         .selectExpr(*columns)
     )
 
@@ -122,17 +124,17 @@ def batch_load_header_footer(
     ]
     df_joined = df_header.join(
         df_footer,
-        fn.expr(
-            """
+        fn.expr("""
         _process_id = f_process_id AND
         _metadata.file_name = f_metadata.file_name
-      """
-        ),
+        """),
     ).selectExpr(*columns)
 
-    df_write = (
-        df_joined.write.options(**destination.options)
-        .trigger(availableNow=True)
-        .toTable(f"`{destination.database}`.`{destination.table}`")
+    df_write = df_joined.write
+    if destination.options:
+      df_write = df_write.options(**destination.options)
+    df_write = (df_write
+      .mode("append")
+      .saveAsTable(f"`{destination.database}`.`{destination.table}`")
     )
 
