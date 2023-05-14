@@ -40,6 +40,7 @@ def load_audit(
         d._metadata.file_path,
         d._metadata.file_size,
         d._metadata.file_modification_time,
+        hf._slice_date,
         hf._process_id,
         hf._load_date
       FROM `{raw.database}`.`{raw.table}` as d
@@ -55,6 +56,7 @@ def load_audit(
         d._metadata.file_path,
         d._metadata.file_size,
         d._metadata.file_modification_time,
+        hf._slice_date,
         hf._process_id,
         hf._load_date
     """

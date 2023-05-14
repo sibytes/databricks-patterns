@@ -19,6 +19,7 @@ def stream_load_header_footer(
     columns = [
         f"from_csv(_corrupt_record, '{header_schema}') as header",
         "_corrupt_record as raw_header",
+        "_slice_date",
         "_process_id",
         "_load_date",
         "_metadata",
@@ -35,6 +36,7 @@ def stream_load_header_footer(
     columns = [
         f"from_csv(_corrupt_record, '{footer_schema}') as footer",
         "_corrupt_record as raw_footer",
+        "_slice_date as f_slice_date",
         "_process_id as f_process_id",
         "_metadata as f_metadata",
     ]
@@ -51,6 +53,7 @@ def stream_load_header_footer(
         "raw_header",
         "footer",
         "raw_footer",
+        "_slice_date",
         "_process_id",
         "_load_date",
         "_metadata",
@@ -60,7 +63,8 @@ def stream_load_header_footer(
         fn.expr(
             """
         _process_id = f_process_id AND
-        _metadata.file_name = f_metadata.file_name
+        _metadata.file_name = f_metadata.file_name AND
+        _slice_date = _slice_date
       """
         ),
     ).selectExpr(*columns)
@@ -88,6 +92,7 @@ def batch_load_header_footer(
     columns = [
         f"from_csv(_corrupt_record, '{header_schema}') as header",
         "_corrupt_record as raw_header",
+        "_slice_date",
         "_process_id",
         "_load_date",
         "_metadata",
@@ -103,6 +108,7 @@ def batch_load_header_footer(
     columns = [
         f"from_csv(_corrupt_record, '{footer_schema}') as footer",
         "_corrupt_record as raw_footer",
+        "_slice_date as f_slice_date",
         "_process_id as f_process_id",
         "_metadata as f_metadata",
     ]
@@ -118,6 +124,7 @@ def batch_load_header_footer(
         "raw_header",
         "footer",
         "raw_footer",
+        "_slice_date",
         "_process_id",
         "_load_date",
         "_metadata",
@@ -126,7 +133,8 @@ def batch_load_header_footer(
         df_footer,
         fn.expr("""
         _process_id = f_process_id AND
-        _metadata.file_name = f_metadata.file_name
+        _metadata.file_name = f_metadata.file_name AND
+        _slice_date = f_slice_date
         """),
     ).selectExpr(*columns)
 

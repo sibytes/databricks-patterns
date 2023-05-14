@@ -46,16 +46,20 @@ def stream_load(
         + sys_cols
         + [
             "if(_corrupt_record is null, true, false) as _is_valid",
+            f"cast(null as timestamp) as {source.slice_date_column_name}",
             f"cast({process_id} as long) as _process_id",
             "current_timestamp() as _load_date",
             "_metadata",
         ]
     )
-    print("\n".join(columns))
 
-    stream_data: StreamingQuery = (
-        stream.selectExpr(*columns)
-        .writeStream.options(**destination.options)
+    stream = stream.selectExpr(*columns)
+    stream = source.add_timeslice(stream)
+
+    stream_data: StreamingQuery = (stream
+        .select("*")
+        .writeStream
+        .options(**destination.options)
         .trigger(availableNow=True)
         .toTable(f"`{destination.database}`.`{destination.table}`")
     )
@@ -85,15 +89,18 @@ def batch_load(
         + sys_cols
         + [
             "if(_corrupt_record is null, true, false) as _is_valid",
+            f"cast(null as timestamp) as {source.slice_date_column_name}",
             f"cast({process_id} as long) as _process_id",
             "current_timestamp() as _load_date",
             "_metadata",
         ]
     )
-    print("\n".join(columns))
+
+    df = df.selectExpr(*columns)
+    df = source.add_timeslice(df)
 
     audit:DataFrame = (df
-        .selectExpr(*columns)
+        .select("*")
         .write
         .options(**destination.options)
         .mode("append")
