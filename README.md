@@ -31,7 +31,7 @@ The project structure is as follows:
             bronze
                 etl
                 checks.py
-                autoload_raw_schema.py
+                load_table.py
                 raw_load.py
             setup.py
         workflows
@@ -59,7 +59,7 @@ This structure is described as follows from `./header_footer`:
 |databricks/notebooks/bronze/load_table.py           | notebook to load a raw table using the config in `.pipelines`|
 |databricks/notebooks/bronze/load_raw.py             | notebook to load all raw tables using the config in `.pipelines`, calls autoload_raw_schema.py|
 |databricks/notebooks/etl                            | contains reusable python functions to load tables |
-|databricks/workflow/etl                             | contains reusable python functions to load tables |
+|databricks/workflow/autoloader-raw-schema           | json definition of databricks workflow |
 |pipelines/autoloader.yaml                           | contains a databricks workflow definition for executing the raw load using autoloader |
 |pipelines/batch.yaml                                | contains a databricks workflow definition for executing the raw load using a batch pattern |
 |pipelines/tables.yaml                               | contains configuration that describes the tables and landing files to load |
