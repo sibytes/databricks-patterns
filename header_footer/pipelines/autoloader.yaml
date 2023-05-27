@@ -25,7 +25,7 @@ landing:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: "/mnt/{{container}}/data/landing/customer_details/{{table}}/*"
+    location: "/mnt/{{container}}/data/header_footer/{{table}}/*"
     filename: "{{table}}-*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
