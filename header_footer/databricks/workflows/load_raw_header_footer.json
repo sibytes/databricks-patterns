@@ -1,5 +1,5 @@
 {
-    "name": "dbx-pattern: autoloader-raw-schema",
+    "name": "load_raw_header_footer",
     "email_notifications": {
         "on_start": [
             "sibytes.yetl@gmail.com"
