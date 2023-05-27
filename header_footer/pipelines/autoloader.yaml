@@ -24,7 +24,7 @@ landing:
     trigger_type: file
     database: "{{database}}"
     table: "{{table}}"
-    container: datalake
+    container: landing
     location: "/mnt/{{container}}/data/header_footer/{{table}}/*"
     filename: "{{table}}-*.csv"
     filename_date_format: "%Y%m%d"
