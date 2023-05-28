@@ -45,6 +45,11 @@
         },
         {
             "task_key": "load_raw_1",
+            "depends_on": [
+                {
+                    "task_key": "create_audit_tables"
+                }
+            ],
             "notebook_task": {
                 "notebook_path": "/header_footer/databricks/notebooks/bronze/raw_load",
                 "base_parameters": {
@@ -64,6 +69,11 @@
         },
         {
             "task_key": "load_raw_2",
+            "depends_on": [
+                {
+                    "task_key": "create_audit_tables"
+                }
+            ],
             "notebook_task": {
                 "notebook_path": "/header_footer/databricks/notebooks/bronze/raw_load",
                 "base_parameters": {
