@@ -2,6 +2,7 @@ version: 1.3.7
 # paths here are relative to this configuration document
 tables: ./tables.yaml
 
+
 audit_control:
   delta_lake:
     # delta table properties can be set at stage level or table level
@@ -12,24 +13,22 @@ audit_control:
     managed: false
     container: datalake
     location: /mnt/{{container}}/data/control
-    checkpoint_location: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
     path: "{{database}}/{{table}}"
     options:
       checkpointLocation: default
 
 landing:
   read:
-    trigger: customerdetailscomplete-{{filename_date_format}}*.flg
     trigger_type: file
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/mnt/{{container}}/data/header_footer/{{table}}/*"
-    filename: "{{table}}-*.csv"
+    location: "/mnt/{{container}}/data/{{project}}/{{table.replace('_','-')}}/{{path_date_format}}"
+    filename: "{{table.replace('_','-')}}-{{filename_date_format}}*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
     format: cloudFiles
-    spark_schema: ../schema/{{table.lower()}}.yaml
+    spark_schema: "../schema/{{table.lower()}}.yaml"
     options:
       # autoloader
       cloudFiles.format: csv

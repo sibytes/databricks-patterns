@@ -12,29 +12,23 @@ audit_control:
     managed: false
     container: datalake
     location: /mnt/{{container}}/data/control
-    checkpoint_location: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
     path: "{{database}}/{{table}}"
-    options:
-      checkpointLocation: default
+    options: null
 
 landing:
   read:
-    trigger: customerdetailscomplete-{{filename_date_format}}*.flg
+    # trigger: customerdetailscomplete-{{filename_date_format}}*.flg
     trigger_type: file
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/mnt/{{container}}/data/header_footer/{{table}}/*"
-    filename: "{{table}}-*.csv"
+    location: "/mnt/{{container}}/data/{{project}}/{{table.replace('_','-')}}/{{path_date_format}}"
+    filename: "{{table.replace('_','-')}}-{{filename_date_format}}*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
-    format: cloudFiles
-    spark_schema: ../schema/{{table.lower()}}.yaml
+    format: csv
+    spark_schema: "../schema/{{table.lower()}}.yaml"
     options:
-      # autoloader
-      cloudFiles.format: csv
-      cloudFiles.schemaLocation:  /mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}
-      cloudFiles.useIncrementalListing: auto
       # schema
       inferSchema: false
       enforceSchema: true
@@ -42,7 +36,7 @@ landing:
       # csv
       header: false
       mode: PERMISSIVE
-      encoding: windows-1252
+      encoding: utf-8
       delimiter: ","
       escape: '"'
       nullValue: ""
@@ -59,7 +53,6 @@ raw:
     path: "{{database}}/{{table}}"
     z_order_by:
       - _load_date
-    checkpoint_location: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
     options:
       mergeSchema: true
         # optional leave it out if you don't want them
@@ -67,7 +60,7 @@ raw:
       invalid_rows: 0
     # optional leave it out if you don't want them
     exception_thresholds:
-      invalid_rows: 2
+      invalid_rows: 0
 
 
 base:

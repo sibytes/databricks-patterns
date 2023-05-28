@@ -1,6 +1,6 @@
-version: 1.3.7
+version: 1.3.0
 
-name: header_footer
+name: ad_works_lt
 sql: ./sql
 spark_schema: ./schema
 pipeline: ./pipelines
