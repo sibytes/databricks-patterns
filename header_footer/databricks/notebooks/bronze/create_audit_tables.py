@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.3.4
+# MAGIC %pip install pyaml pydantic yetl-framework==1.3.7.dev1
 
 # COMMAND ----------
 dbutils.widgets.text("load_type", "autoloader")
@@ -36,13 +36,10 @@ config = Config(
 
 # COMMAND ----------
 
-tables = config.tables.lookup_table(
+tables = config.tables.create_table(
   stage=StageType.audit_control, 
   first_match=False
 )
-
-for t in tables:
-   t.create_delta_table()
 
 
 # COMMAND ----------

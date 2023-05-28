@@ -10,7 +10,6 @@ audit_control:
         delta.autoOptimize.autoCompact: true
         delta.autoOptimize.optimizeWrite: true
     managed: false
-    create_table: false
     container: datalake
     location: /mnt/{{container}}/data/control
     checkpoint_location: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
