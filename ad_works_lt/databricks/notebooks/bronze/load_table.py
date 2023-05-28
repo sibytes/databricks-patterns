@@ -1,11 +1,11 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.3.7
+# MAGIC %pip install pyaml pydantic yetl-framework==1.3.9
 
 # COMMAND ----------
 
 dbutils.widgets.text("process_id", "-1")
-dbutils.widgets.text("table", "customer_details_1")
-dbutils.widgets.text("load_type", "autoloader")
+dbutils.widgets.text("table", "address")
+dbutils.widgets.text("load_type", "batch")
 dbutils.widgets.text("timeslice", "*")
 
 # COMMAND ----------
@@ -41,7 +41,7 @@ print(f"""
 
 # COMMAND ----------
 
-project = "header_footer"
+project = "ad_works_lt"
 pipeline = load_type.value
 
 config = Config(
@@ -72,31 +72,6 @@ load(
 
 # COMMAND ----------
 
-# load the headers and footers
-
-load = get_load(LoadFunction.load_header_footer, load_type)
-
-table_mapping_hf = config.get_table_mapping(
-  stage=StageType.audit_control, 
-  table="header_footer"
-)
-
-source_hf:DeltaLake = table_mapping_hf.source[table_mapping.source.table]
-config.set_checkpoint(
-  source_hf, 
-  table_mapping_hf.destination
-)
-
-print(load)
-
-load(
-  param_process_id,
-  source_hf, 
-  table_mapping_hf.destination
-)
-
-# COMMAND ----------
-
 # load the audit table
 load = get_load(LoadFunction.load_audit, load_type)
 
@@ -105,19 +80,14 @@ table_mapping_audit = config.get_table_mapping(
   table="raw_audit"
 )
 
-source_audit:DeltaLake = table_mapping_audit.source[table_mapping.source.table]
-source_hf:DeltaLake = table_mapping_audit.source["header_footer"]
-
 landing = table_mapping.source
 raw = table_mapping.destination
-header_footer = table_mapping_audit.source["header_footer"]
 destination = table_mapping_audit.destination
 
 load(
   param_process_id, 
   landing, 
   raw, 
-  header_footer,
   destination
 )
 

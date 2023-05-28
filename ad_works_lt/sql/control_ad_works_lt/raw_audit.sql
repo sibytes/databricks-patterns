@@ -10,7 +10,6 @@
     valid_count bigint,
     invalid_count bigint,
     invalid_ratio double,
-    expected_row_count bigint,
     warning_thresholds struct<
       invalid_ratio:double,
       invalid_rows:bigint,

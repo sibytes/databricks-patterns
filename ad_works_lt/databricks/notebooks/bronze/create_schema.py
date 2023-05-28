@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.3.7
+# MAGIC %pip install pyaml pydantic yetl-framework==1.3.8
 
 # COMMAND ----------
 
@@ -45,12 +45,11 @@ def create_schema(
     .options(**options)
     .load(source.path)
   )
-  path = os.getcwd()
-  path = f"{path}/../../.."
-  schema_path = f"{path}/schema/{source.table.lower()}.yaml"
+
   schema = yaml.safe_load(df.schema.json())
   schema = yaml.safe_dump(schema, indent=4)
-  with open(schema_path, "w", encoding="utf-8") as f:
+
+  with open(source.spark_schema, "w", encoding="utf-8") as f:
     f.write(schema)
 
 
@@ -73,6 +72,5 @@ tables = config.tables.lookup_table(
 for t in tables:
   table_mapping = config.get_table_mapping(t.stage, t.table, t.database, create_table=False)
   create_schema(table_mapping.source, table_mapping.destination)
-
 
 
