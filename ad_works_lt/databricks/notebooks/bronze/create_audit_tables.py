@@ -2,7 +2,8 @@
 # MAGIC %pip install pyaml pydantic yetl-framework==1.3.7
 
 # COMMAND ----------
-dbutils.widgets.text("load_type", "autoloader")
+
+dbutils.widgets.text("load_type", "batch")
 
 
 # COMMAND ----------
@@ -13,6 +14,7 @@ from yetl import (
 )
 
 # COMMAND ----------
+
 param_load_type = dbutils.widgets.get("load_type")
 
 try:
@@ -26,7 +28,7 @@ print(f"""
 
 # COMMAND ----------
 
-project = "header_footer"
+project = "ad_works_lt"
 pipeline = load_type.value
 
 config = Config(

@@ -22,7 +22,7 @@ landing:
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/mnt/{{container}}/data/{{project}}/{{table.replace('_','-')}}/{{path_date_format}}"
+    location: "/mnt/{{container}}/data/{{project}}/csv/{{table.replace('_','-')}}/{{path_date_format}}"
     filename: "{{table.replace('_','-')}}-{{filename_date_format}}*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
@@ -34,10 +34,10 @@ landing:
       enforceSchema: true
       columnNameOfCorruptRecord: _corrupt_record
       # csv
-      header: false
+      header: true
       mode: PERMISSIVE
       encoding: utf-8
-      delimiter: ","
+      delimiter: "|"
       escape: '"'
       nullValue: ""
       quote: '"'
