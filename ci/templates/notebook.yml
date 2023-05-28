@@ -30,7 +30,7 @@ steps:
                 python -m pip install autobricks
 
   - task: PythonScript@0
-    displayName: "deploy notebooks"
+    displayName: "deploy header_footer"
     inputs:
       scriptSource: 'filePath'
       scriptPath: ci/python/deploy_notebooks.py
@@ -46,5 +46,26 @@ steps:
       FROM_ROOT: $(System.DefaultWorkingDirectory)
       FROM_DIR: header_footer
       TO_WORKSPACE_DIR: "header_footer"
+      AUTOBRICKS_LOGGING: INFO
+      SSL_VERIFY: True
+
+    
+  - task: PythonScript@0
+    displayName: "deploy ad_works_lt"
+    inputs:
+      scriptSource: 'filePath'
+      scriptPath: ci/python/deploy_notebooks.py
+    env:
+      AUTH_TYPE: "SERVICE_PRINCIPAL_MGMT_ENDPOINT"
+      TENANT_ID: $(AZURE-ID)
+      SP_CLIENT_ID: $(DATALAKE-SPN-APPID)
+      SP_CLIENT_SECRET: $(DATALAKE-SPN-CREDENTIAL)
+      WORKSPACE_NAME: ${{ parameters.DbxWorkspaceName }}
+      RESOURCE_GROUP: ${{ parameters.ResourceGroup }}
+      SUBSCRIPTION_ID: ${{ parameters.SubscriptionId }}
+      DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
+      FROM_ROOT: $(System.DefaultWorkingDirectory)
+      FROM_DIR: ad_works_lt
+      TO_WORKSPACE_DIR: "ad_works_lt"
       AUTOBRICKS_LOGGING: INFO
       SSL_VERIFY: True
