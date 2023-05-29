@@ -1,6 +1,6 @@
 version: 1.4.0
 
-name: ad_works_lt
+name: ad_works
 sql: ./sql
 spark_schema: ./schema
 pipeline: ./pipelines
