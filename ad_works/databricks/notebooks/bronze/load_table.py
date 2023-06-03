@@ -10,15 +10,6 @@ dbutils.widgets.text("timeslice", "*")
 
 # COMMAND ----------
 
-print(dbutils.notebook.entry_point.getDbutils().notebook().getContext().currentRunId().toString())
-print(dbutils.notebook.entry_point.getDbutils().notebook().getContext().idInJob().toString())
-print(dbutils.notebook.entry_point.getDbutils().notebook().getContext().jobGroup().toString())
-print(dbutils.notebook.entry_point.getDbutils().notebook().getContext().jobId().toString())
-print(dbutils.notebook.entry_point.getDbutils().notebook().getContext().jobTaskType().toString())
-
-
-# COMMAND ----------
-
 from yetl import (
   Config, Timeslice, StageType, DeltaLake
 )

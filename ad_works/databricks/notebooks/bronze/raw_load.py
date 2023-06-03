@@ -102,7 +102,3 @@ print(msg)
 # COMMAND ----------
 
 dbutils.notebook.exit("Success")
-
-# COMMAND ----------
-
-person_business_entity, hr_department, person_business_entity
