@@ -38,7 +38,7 @@ stages:
                     DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
 
-      - deployment: deployWorkflows
+      - deployment: deployHeaderFooterWorkflows
         displayName: Deploy Dbx header_footer Workflows
         environment: 'development'
         strategy:
@@ -57,7 +57,7 @@ stages:
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
                     SubDir: header_footer/databricks/workflows
 
-      - deployment: deployWorkflows
+      - deployment: deployAdWorksWorkflows
         displayName: Deploy Dbx ad_works Workflows
         environment: 'development'
         strategy:
@@ -76,7 +76,7 @@ stages:
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
                     SubDir: ad_works/databricks/workflows
 
-      - deployment: deployWorkflows
+      - deployment: deployAdWorksLtWorkflows
         displayName: Deploy Dbx ad_works Workflows
         environment: 'development'
         strategy:
