@@ -2,7 +2,7 @@ version: 1.4.5
 
 audit_control:
   delta_lake:
-    raw_ad_works_control:
+    control_ad_works:
       raw_audit:
         depends_on:
         - raw.raw_ad_works.*
