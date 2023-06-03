@@ -1,928 +1,954 @@
-version: 1.4.0
+version: 1.4.4
 
 audit_control:
   delta_lake:
-    control_ad_works:
+    raw_ad_works_control:
       raw_audit:
-        sql: ../sql/{{database}}/{{table}}.sql
         depends_on:
-          - raw.raw_ad_works.*
-
+        - raw.raw_ad_works.*
+        sql: ../sql/{{database}}/{{table}}.sql
+        vacuum: 30
 
 landing:
   read:
-    # delta table properties can be set at stage level or table level
     landing_ad_works:
-      hr_department: null                                      
-      hr_employee: null                                        
-      hr_employee_department_history: null                     
-      hr_employee_pay_history: null                            
-      hr_job_candidate: null                                   
-      hr_shift: null                                           
-      person_address: null                                     
-      person_address_type: null                                
-      person_business_entity: null                             
-      person_business_entity_address: null                     
-      person_business_entity_contact: null                     
-      person_contact_type: null                                
-      person_country_region: null                              
-      person_email_address: null                               
-      person_password: null                                    
-      person_person: null                                      
-      person_personp_phone: null                               
-      person_phone_number_type: null                           
-      person_state_province: null                              
-      production_bill_of_materials: null                       
-      production_culture: null                                 
-      production_document: null                                
-      production_illustration: null                            
-      production_location: null                                
-      production_product: null                                 
-      production_product_category: null                        
-      production_product_costHistory: null                     
-      production_product_description: null                     
-      production_product_document: null                        
-      production_product_inventory: null                       
-      production_product_list_price_history: null              
-      production_product_model: null                           
-      production_product_model_illustration: null              
+      hr_department: null
+      hr_employee: null
+      hr_employee_department_history: null
+      hr_employee_pay_history: null
+      hr_job_candidate: null
+      hr_shift: null
+      person_address: null
+      person_address_type: null
+      person_business_entity: null
+      person_business_entity_address: null
+      person_business_entity_contact: null
+      person_contact_type: null
+      person_country_region: null
+      person_email_address: null
+      person_password: null
+      person_person: null
+      person_personp_phone: null
+      person_phone_number_type: null
+      person_state_province: null
+      production_bill_of_materials: null
+      production_culture: null
+      production_document: null
+      production_illustration: null
+      production_location: null
+      production_product: null
+      production_product_category: null
+      production_product_cost_history: null
+      production_product_description: null
+      production_product_document: null
+      production_product_inventory: null
+      production_product_list_price_history: null
+      production_product_model: null
+      production_product_model_illustration: null
       production_product_model_product_description_culture: null
-      production_product_photo: null                           
-      production_product_product_photo: null                   
-      production_product_review: null                          
-      production_product_subcategory: null                     
-      production_scrap_reason: null                            
-      production_transaction_history: null                     
-      production_transaction_history_archive: null             
-      production_unit_measure: null                            
-      production_work_order: null                              
-      production_work_order_routing: null                      
-      purchasing_product_vendor: null                          
-      purchasing_purchase_order_detail: null                   
-      purchasing_purchase_order_header: null                   
-      purchasing_ship_method: null                             
-      purchasing_vendor: null                                  
-      sales_country_region_currency: null                      
-      sales_credit_card: null                                  
-      sales_currency: null                                     
-      sales_currency_rate: null                                
-      sales_customer: null                                     
-      sales_person_credit_card: null                           
-      sales_sales_order_detail: null                           
-      sales_sales_order_header: null                           
-      sales_sales_order_header_sales_reason: null              
-      sales_sales_person: null                                 
-      sales_sales_person_quota_history: null                   
-      sales_sales_reason: null                                 
-      sales_sales_tax_rate: null                               
-      sales_sales_territory: null                              
-      sales_sales_territory_history: null                      
-      sales_shopping_cart_item: null                           
-      sales_special_offer: null                                
-      sales_special_offer_product: null                        
-      sales_store: null                                        
-
-
-
+      production_product_photo: null
+      production_product_product_photo: null
+      production_product_review: null
+      production_product_subcategory: null
+      production_scrap_reason: null
+      production_transaction_history: null
+      production_transaction_history_archive: null
+      production_unit_measure: null
+      production_work_order: null
+      production_work_order_routing: null
+      purchasing_product_vendor: null
+      purchasing_purchase_order_detail: null
+      purchasing_purchase_order_header: null
+      purchasing_ship_method: null
+      purchasing_vendor: null
+      sales_country_region_currency: null
+      sales_credit_card: null
+      sales_currency: null
+      sales_currency_rate: null
+      sales_customer: null
+      sales_person_credit_card: null
+      sales_sales_order_detail: null
+      sales_sales_order_header: null
+      sales_sales_order_header_sales_reason: null
+      sales_sales_person: null
+      sales_sales_person_quota_history: null
+      sales_sales_reason: null
+      sales_sales_tax_rate: null
+      sales_sales_territory: null
+      sales_sales_territory_history: null
+      sales_shopping_cart_item: null
+      sales_special_offer: null
+      sales_special_offer_product: null
+      sales_store: null
 
 raw:
   delta_lake:
-    # delta table properties can be set at stage level or table level
-    delta_properties:
-      delta.appendOnly: true
-      delta.autoOptimize.autoCompact: true    
-      delta.autoOptimize.optimizeWrite: true  
-      delta.enableChangeDataFeed: true
     raw_ad_works:
-      hr_department: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.hr_department
-        custom_properties:
-          process_group: 1                                      
-      hr_employee: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.hr_employee
-        custom_properties:
-          process_group: 1                                        
-      hr_employee_department_history: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.hr_employee_department_history
-        custom_properties:
-          process_group: 1                     
-      hr_employee_pay_history: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.hr_employee_pay_history
-        custom_properties:
-          process_group: 1                            
-      hr_job_candidate: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.hr_job_candidate
-        custom_properties:
-          process_group: 1                                   
-      hr_shift: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.hr_shift
-        custom_properties:
-          process_group: 1                                           
-      person_address: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_address
-        custom_properties:
-          process_group: 1                                     
-      person_address_type: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_address_type
-        custom_properties:
-          process_group: 1                                
-      person_business_entity: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_business_entity
-        custom_properties:
-          process_group: 1                             
-      person_business_entity_address: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_business_entity_address
-        custom_properties:
-          process_group: 1                     
-      person_business_entity_contact: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_business_entity_contact
-        custom_properties:
-          process_group: 1                     
-      person_contact_type: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_contact_type
-        custom_properties:
-          process_group: 1                                
-      person_country_region: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_country_region
-        custom_properties:
-          process_group: 1                              
-      person_email_address: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_email_address
-        custom_properties:
-          process_group: 1                               
-      person_password: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_password
-        custom_properties:
-          process_group: 1                                    
-      person_person: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_person
-        custom_properties:
-          process_group: 1                                      
-      person_personp_phone: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_personp_phone
-        custom_properties:
-          process_group: 1                               
-      person_phone_number_type: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_phone_number_type
-        custom_properties:
-          process_group: 1                           
-      person_state_province: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.person_state_province
-        custom_properties:
-          process_group: 1                              
-      production_bill_of_materials: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_bill_of_materials
-        custom_properties:
-          process_group: 1                       
-      production_culture: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_culture
-        custom_properties:
-          process_group: 1                                 
-      production_document: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_document
-        custom_properties:
-          process_group: 1                                
-      production_illustration: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_illustration
-        custom_properties:
-          process_group: 1                            
-      production_location: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_location
-        custom_properties:
-          process_group: 1                                
-      production_product: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_product
-        custom_properties:
-          process_group: 1                                 
-      production_product_category: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_product_category
-        custom_properties:
-          process_group: 1                        
-      production_product_cost_history: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_product_cost_history
-        custom_properties:
-          process_group: 1                     
-      production_product_description: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_product_description
-        custom_properties:
-          process_group: 1                     
-      production_product_document: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_product_document
-        custom_properties:
-          process_group: 1                        
-      production_product_inventory: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_product_inventory
-        custom_properties:
-          process_group: 1                       
-      production_product_list_price_history: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_product_list_price_history
-        custom_properties:
-          process_group: 1              
-      production_product_model: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_product_model
-        custom_properties:
-          process_group: 1                           
-      production_product_model_illustration: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_product_model_illustration
-        custom_properties:
-          process_group: 1              
-      production_product_model_product_description_culture: 
-        ids: id
-        depends_on:
-          - landing.landing_ad_works.production_product_model_product_description_culture
+      Production_work_order:
         custom_properties:
           process_group: 1
-      production_product_photo: 
-        ids: id
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.production_product_photo
+        - landing.landing_ad_works.production_work_order
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: WorkOrderID
+        vacuum: 30
+        z_order_by: _load_date
+      hr_department:
         custom_properties:
-          process_group: 1                           
-      production_product_product_photo: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.production_product_product_photo
+        - landing.landing_ad_works.hr_department
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: DepartmentID
+        vacuum: 30
+        z_order_by: _load_date
+      hr_employee:
         custom_properties:
-          process_group: 1                   
-      production_product_review: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.production_product_review
+        - landing.landing_ad_works.hr_employee
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: BusinessEntityID
+        vacuum: 30
+        z_order_by: _load_date
+      hr_employee_department_history:
         custom_properties:
-          process_group: 1                          
-      production_product_subcategory: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.production_product_subcategory
+        - landing.landing_ad_works.hr_employee_department_history
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - BusinessEntityID
+        - DepartmentID
+        - ShiftID
+        - StartDate
+        vacuum: 30
+        z_order_by: _load_date
+      hr_employee_pay_history:
         custom_properties:
-          process_group: 1                     
-      production_scrap_reason: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.production_scrap_reason
+        - landing.landing_ad_works.hr_employee_pay_history
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - BusinessEntityID
+        - RateChangeDate
+        vacuum: 30
+        z_order_by: _load_date
+      hr_job_candidate:
         custom_properties:
-          process_group: 1                            
-      production_transaction_history: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.production_transaction_history
+        - landing.landing_ad_works.hr_job_candidate
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: JobCandidateID
+        vacuum: 30
+        z_order_by: _load_date
+      hr_shift:
         custom_properties:
-          process_group: 1                     
-      production_transaction_history_archive: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.production_transaction_history_archive
+        - landing.landing_ad_works.hr_shift
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ShiftID
+        vacuum: 30
+        z_order_by: _load_date
+      person_address:
         custom_properties:
-          process_group: 1             
-      production_unit_measure: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.production_unit_measure
+        - landing.landing_ad_works.person_address
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: AddressID
+        vacuum: 30
+        z_order_by: _load_date
+      person_address_type:
         custom_properties:
-          process_group: 1                            
-      production_work_order: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.production_work_order
+        - landing.landing_ad_works.person_address_type
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: AddressTypeID
+        vacuum: 30
+        z_order_by: _load_date
+      person_business_entity:
         custom_properties:
-          process_group: 1                              
-      production_work_order_routing: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.production_work_order_routing
+        - landing.landing_ad_works.person_business_entity
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: BusinessEntityID
+        vacuum: 30
+        z_order_by: _load_date
+      person_business_entity_address:
         custom_properties:
-          process_group: 1                      
-      purchasing_product_vendor: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.purchasing_product_vendor
+        - landing.landing_ad_works.person_business_entity_address
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - BusinessEntityID
+        - AddressID
+        - AddressTypeID
+        vacuum: 30
+        z_order_by: _load_date
+      person_business_entity_contact:
         custom_properties:
-          process_group: 1                          
-      purchasing_purchase_order_detail: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.purchasing_purchase_order_detail
+        - landing.landing_ad_works.person_business_entity_contact
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - BusinessEntityID
+        - PersonID
+        - ContactTypeID
+        vacuum: 30
+        z_order_by: _load_date
+      person_contact_type:
         custom_properties:
-          process_group: 1                   
-      purchasing_purchase_order_header: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.purchasing_purchase_order_header
+        - landing.landing_ad_works.person_contact_type
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ContactTypeID
+        vacuum: 30
+        z_order_by: _load_date
+      person_country_region:
         custom_properties:
-          process_group: 1                   
-      purchasing_ship_method: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.purchasing_ship_method
+        - landing.landing_ad_works.person_country_region
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: CountryRegionCode
+        vacuum: 30
+        z_order_by: _load_date
+      person_email_address:
         custom_properties:
-          process_group: 1                             
-      purchasing_vendor: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.purchasing_vendor
+        - landing.landing_ad_works.person_email_address
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - BusinessEntityID
+        - EmailAddressID
+        vacuum: 30
+        z_order_by: _load_date
+      person_password:
         custom_properties:
-          process_group: 1                                  
-      sales_country_region_currency: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_country_region_currency
+        - landing.landing_ad_works.person_password
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: BusinessEntityID
+        vacuum: 30
+        z_order_by: _load_date
+      person_person:
         custom_properties:
-          process_group: 1                      
-      sales_credit_card: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_credit_card
+        - landing.landing_ad_works.person_person
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: BusinessEntityID
+        vacuum: 30
+        z_order_by: _load_date
+      person_personp_phone:
         custom_properties:
-          process_group: 1                                  
-      sales_currency: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_currency
+        - landing.landing_ad_works.person_personp_phone
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - BusinessEntityID
+        - PhoneNumber
+        - PhoneNumberTypeID
+        vacuum: 30
+        z_order_by: _load_date
+      person_phone_number_type:
         custom_properties:
-          process_group: 1                                     
-      sales_currency_rate: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_currency_rate
+        - landing.landing_ad_works.person_phone_number_type
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: PhoneNumberTypeID
+        vacuum: 30
+        z_order_by: _load_date
+      person_state_province:
         custom_properties:
-          process_group: 1                                
-      sales_customer: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_customer
+        - landing.landing_ad_works.person_state_province
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: StateProvinceID
+        vacuum: 30
+        z_order_by: _load_date
+      production_bill_of_materials:
         custom_properties:
-          process_group: 1                                     
-      sales_person_credit_card: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_person_credit_card
+        - landing.landing_ad_works.production_bill_of_materials
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: BillOfMaterialsID
+        vacuum: 30
+        z_order_by: _load_date
+      production_culture:
         custom_properties:
-          process_group: 1                           
-      sales_sales_order_detail: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_sales_order_detail
+        - landing.landing_ad_works.production_culture
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: CultureID
+        vacuum: 30
+        z_order_by: _load_date
+      production_document:
         custom_properties:
-          process_group: 1                           
-      sales_sales_order_header: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_sales_order_header
+        - landing.landing_ad_works.production_document
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: DocumentNode
+        vacuum: 30
+        z_order_by: _load_date
+      production_illustration:
         custom_properties:
-          process_group: 1                           
-      sales_sales_order_header_sales_reason: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_sales_order_header_sales_reason
+        - landing.landing_ad_works.production_illustration
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: IllustrationID
+        vacuum: 30
+        z_order_by: _load_date
+      production_location:
         custom_properties:
-          process_group: 1              
-      sales_sales_person: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_sales_person
+        - landing.landing_ad_works.production_location
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        vacuum: 30
+        z_order_by: _load_date
+      production_product:
         custom_properties:
-          process_group: 1                                 
-      sales_sales_person_quota_history: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_sales_person_quota_history
+        - landing.landing_ad_works.production_product
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ProductID
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_category:
         custom_properties:
-          process_group: 1                   
-      sales_sales_reason: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_sales_reason
+        - landing.landing_ad_works.production_product_category
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ProductCategoryID
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_cost_history:
         custom_properties:
-          process_group: 1                                 
-      sales_sales_tax_rate: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_sales_tax_rate
+        - landing.landing_ad_works.production_product_cost_history
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - ProductID
+        - StartDate
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_description:
         custom_properties:
-          process_group: 1                               
-      sales_sales_territory: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_sales_territory
+        - landing.landing_ad_works.production_product_description
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ProductDescriptionID
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_document:
         custom_properties:
-          process_group: 1                              
-      sales_sales_territory_history: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_sales_territory_history
+        - landing.landing_ad_works.production_product_document
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - ProductID
+        - DocumentNode
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_inventory:
         custom_properties:
-          process_group: 1                      
-      sales_shopping_cart_item: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_shopping_cart_item
+        - landing.landing_ad_works.production_product_inventory
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - ProductID
+        - LocationID
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_list_price_history:
         custom_properties:
-          process_group: 1                           
-      sales_special_offer: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_special_offer
+        - landing.landing_ad_works.production_product_list_price_history
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - ProductID
+        - StartDate
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_model:
         custom_properties:
-          process_group: 1                                
-      sales_special_offer_product: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_special_offer_product
+        - landing.landing_ad_works.production_product_model
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ProductModelID
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_model_illustration:
         custom_properties:
-          process_group: 1                        
-      sales_store: 
-        ids: id
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - landing.landing_ad_works.sales_store
+        - landing.landing_ad_works.production_product_model_illustration
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - ProductModelID
+        - IllustrationID
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_model_product_description_culture:
         custom_properties:
-          process_group: 1   
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.production_product_model_product_description_culture
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - ProductModelID
+        - ProductDescriptionID
+        - CultureID
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_photo:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.production_product_photo
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ProductPhotoID
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_product_photo:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.production_product_product_photo
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - ProductID
+        - ProductPhotoID
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_review:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.production_product_review
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ProductReviewID
+        vacuum: 30
+        z_order_by: _load_date
+      production_product_subcategory:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.production_product_subcategory
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ProductSubcategoryID
+        vacuum: 30
+        z_order_by: _load_date
+      production_scrap_reason:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.production_scrap_reason
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ScrapReasonID
+        vacuum: 30
+        z_order_by: _load_date
+      production_transaction_history:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.production_transaction_history
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: TransactionID
+        vacuum: 30
+        z_order_by: _load_date
+      production_transaction_history_archive:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.production_transaction_history_archive
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: TransactionID
+        vacuum: 30
+        z_order_by: _load_date
+      production_unit_measure:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.production_unit_measure
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: UnitMeasureCode
+        vacuum: 30
+        z_order_by: _load_date
+      production_work_order_routing:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.production_work_order_routing
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - WorkOrderID
+        - ProductID
+        - OperationSequence
+        vacuum: 30
+        z_order_by: _load_date
+      purchasing_product_vendor:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.purchasing_product_vendor
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: BusinessEntityID
+        vacuum: 30
+        z_order_by: _load_date
+      purchasing_purchase_order_detail:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.purchasing_purchase_order_detail
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - PurchaseOrderID
+        - PurchaseOrderDetailID
+        vacuum: 30
+        z_order_by: _load_date
+      purchasing_purchase_order_header:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.purchasing_purchase_order_header
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: PurchaseOrderID
+        vacuum: 30
+        z_order_by: _load_date
+      purchasing_ship_method:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.purchasing_ship_method
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ShipMethodID
+        vacuum: 30
+        z_order_by: _load_date
+      purchasing_vendor:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.purchasing_vendor
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: BusinessEntityID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_country_region_currency:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_country_region_currency
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - CountryRegionCode
+        - CurrencyCode
+        vacuum: 30
+        z_order_by: _load_date
+      sales_credit_card:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_credit_card
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: CreditCardID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_currency:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_currency
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: CurrencyCode
+        vacuum: 30
+        z_order_by: _load_date
+      sales_currency_rate:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_currency_rate
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: CurrencyRateID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_customer:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_customer
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: CustomerID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_person_credit_card:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_person_credit_card
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - BusinessEntityID
+        - CreditCardID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_sales_order_detail:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_sales_order_detail
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - SalesOrderID
+        - SalesOrderDetailID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_sales_order_header:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_sales_order_header
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: SalesOrderID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_sales_order_header_sales_reason:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_sales_order_header_sales_reason
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - SalesOrderID
+        - SalesReasonID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_sales_person:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_sales_person
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: BusinessEntityID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_sales_person_quota_history:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_sales_person_quota_history
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - BusinessEntityID
+        - QuotaDate
+        vacuum: 30
+        z_order_by: _load_date
+      sales_sales_reason:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_sales_reason
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: SalesReasonID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_sales_tax_rate:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_sales_tax_rate
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: SalesTaxRateID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_sales_territory:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_sales_territory
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: TerritoryID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_sales_territory_history:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_sales_territory_history
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - BusinessEntityID
+        - TerritoryID
+        - StartDate
+        vacuum: 30
+        z_order_by: _load_date
+      sales_shopping_cart_item:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_shopping_cart_item
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: ShoppingCartItemID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_special_offer:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_special_offer
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: SpecialOfferID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_special_offer_product:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_special_offer_product
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids:
+        - SpecialOfferID
+        - ProductID
+        vacuum: 30
+        z_order_by: _load_date
+      sales_store:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works.sales_store
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        ids: BusinessEntityID
+        vacuum: 30
+        z_order_by: _load_date
 
-base:
-  delta_lake:
-    delta_properties:
-      delta.appendOnly: true
-      delta.autoOptimize.autoCompact: true    
-      delta.autoOptimize.optimizeWrite: true  
-      delta.enableChangeDataFeed: true
-    base_ad_works:
-      address:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.address
-        custom_properties:
-          process_group: 1
-
-      hr_department: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.hr_department
-        custom_properties:
-          process_group: 1                                      
-      hr_employee: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.hr_employee
-        custom_properties:
-          process_group: 1                                        
-      hr_employee_department_history: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.hr_employee_department_history
-        custom_properties:
-          process_group: 1                     
-      hr_employee_pay_history: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.hr_employee_pay_history
-        custom_properties:
-          process_group: 1                            
-      hr_job_candidate: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.hr_job_candidate
-        custom_properties:
-          process_group: 1                                   
-      hr_shift: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.hr_shift
-        custom_properties:
-          process_group: 1                                           
-      person_address: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_address
-        custom_properties:
-          process_group: 1                                     
-      person_address_type: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_address_type
-        custom_properties:
-          process_group: 1                                
-      person_business_entity: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_business_entity
-        custom_properties:
-          process_group: 1                             
-      person_business_entity_address: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_business_entity_address
-        custom_properties:
-          process_group: 1                     
-      person_business_entity_contact: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_business_entity_contact
-        custom_properties:
-          process_group: 1                     
-      person_contact_type: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_contact_type
-        custom_properties:
-          process_group: 1                                
-      person_country_region: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_country_region
-        custom_properties:
-          process_group: 1                              
-      person_email_address: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_email_address
-        custom_properties:
-          process_group: 1                               
-      person_password: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_password
-        custom_properties:
-          process_group: 1                                    
-      person_person: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_person
-        custom_properties:
-          process_group: 1                                      
-      person_personp_phone: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_personp_phone
-        custom_properties:
-          process_group: 1                               
-      person_phone_number_type: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_phone_number_type
-        custom_properties:
-          process_group: 1                           
-      person_state_province: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.person_state_province
-        custom_properties:
-          process_group: 1                              
-      production_bill_of_materials: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_bill_of_materials
-        custom_properties:
-          process_group: 1                       
-      production_culture: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_culture
-        custom_properties:
-          process_group: 1                                 
-      production_document: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_document
-        custom_properties:
-          process_group: 1                                
-      production_illustration: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_illustration
-        custom_properties:
-          process_group: 1                            
-      production_location: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_location
-        custom_properties:
-          process_group: 1                                
-      production_product: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product
-        custom_properties:
-          process_group: 1                                 
-      production_product_category: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_category
-        custom_properties:
-          process_group: 1                        
-      production_product_cost_history: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_cost_history
-        custom_properties:
-          process_group: 1                     
-      production_product_description: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_description
-        custom_properties:
-          process_group: 1                     
-      production_product_document: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_document
-        custom_properties:
-          process_group: 1                        
-      production_product_inventory: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_inventory
-        custom_properties:
-          process_group: 1                       
-      production_product_list_price_history: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_list_price_history
-        custom_properties:
-          process_group: 1              
-      production_product_model: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_model
-        custom_properties:
-          process_group: 1                           
-      production_product_model_illustration: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_model_illustration
-        custom_properties:
-          process_group: 1              
-      production_product_model_product_description_culture: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_model_product_description_culture
-        custom_properties:
-          process_group: 1
-      production_product_photo: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_photo
-        custom_properties:
-          process_group: 1                           
-      production_product_product_photo: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_product_photo
-        custom_properties:
-          process_group: 1                   
-      production_product_review: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_review
-        custom_properties:
-          process_group: 1                          
-      production_product_subcategory: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_product_subcategory
-        custom_properties:
-          process_group: 1                     
-      production_scrap_reason: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_scrap_reason
-        custom_properties:
-          process_group: 1                            
-      production_transaction_history: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_transaction_history
-        custom_properties:
-          process_group: 1                     
-      production_transaction_history_archive: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_transaction_history_archive
-        custom_properties:
-          process_group: 1             
-      production_unit_measure: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_unit_measure
-        custom_properties:
-          process_group: 1                            
-      production_work_order: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_work_order
-        custom_properties:
-          process_group: 1                              
-      production_work_order_routing: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.production_work_order_routing
-        custom_properties:
-          process_group: 1                      
-      purchasing_product_vendor: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.purchasing_product_vendor
-        custom_properties:
-          process_group: 1                          
-      purchasing_purchase_order_detail: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.purchasing_purchase_order_detail
-        custom_properties:
-          process_group: 1                   
-      purchasing_purchase_order_header: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.purchasing_purchase_order_header
-        custom_properties:
-          process_group: 1                   
-      purchasing_ship_method: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.purchasing_ship_method
-        custom_properties:
-          process_group: 1                             
-      purchasing_vendor: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.purchasing_vendor
-        custom_properties:
-          process_group: 1                                  
-      sales_country_region_currency: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_country_region_currency
-        custom_properties:
-          process_group: 1                      
-      sales_credit_card: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_credit_card
-        custom_properties:
-          process_group: 1                                  
-      sales_currency: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_currency
-        custom_properties:
-          process_group: 1                                     
-      sales_currency_rate: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_currency_rate
-        custom_properties:
-          process_group: 1                                
-      sales_customer: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_customer
-        custom_properties:
-          process_group: 1                                     
-      sales_person_credit_card: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_person_credit_card
-        custom_properties:
-          process_group: 1                           
-      sales_sales_order_detail: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_sales_order_detail
-        custom_properties:
-          process_group: 1                           
-      sales_sales_order_header: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_sales_order_header
-        custom_properties:
-          process_group: 1                           
-      sales_sales_order_header_sales_reason: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_sales_order_header_sales_reason
-        custom_properties:
-          process_group: 1              
-      sales_sales_person: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_sales_person
-        custom_properties:
-          process_group: 1                                 
-      sales_sales_person_quota_history: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_sales_person_quota_history
-        custom_properties:
-          process_group: 1                   
-      sales_sales_reason: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_sales_reason
-        custom_properties:
-          process_group: 1                                 
-      sales_sales_tax_rate: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_sales_tax_rate
-        custom_properties:
-          process_group: 1                               
-      sales_sales_territory: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_sales_territory
-        custom_properties:
-          process_group: 1                              
-      sales_sales_territory_history: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_sales_territory_history
-        custom_properties:
-          process_group: 1                      
-      sales_shopping_cart_item: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_shopping_cart_item
-        custom_properties:
-          process_group: 1                           
-      sales_special_offer: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_special_offer
-        custom_properties:
-          process_group: 1                                
-      sales_special_offer_product: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_special_offer_product
-        custom_properties:
-          process_group: 1                        
-      sales_store: 
-        ids: id
-        depends_on:
-          - raw.raw_ad_works.sales_store
-        custom_properties:
-          process_group: 1 
