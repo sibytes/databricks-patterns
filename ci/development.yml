@@ -82,7 +82,7 @@ stages:
                     FromWorkspaceDir: ad_works
                     ToWorkspaceDir: ad_works
 
-      - deployment: deployAdWorksWorkflows
+      - deployment: deployHeaderFooterWorkflows
         displayName: Deploy Dbx header_footer Workflows
         environment: 'development'
         strategy:
