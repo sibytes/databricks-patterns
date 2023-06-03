@@ -37,8 +37,8 @@ stages:
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
-                    FromWorkspaceDir: header_footer
-                    ToWorkspaceDir: header_footer
+                    FromWorkspaceDir: 'header_footer'
+                    ToWorkspaceDir: 'header_footer'
 
       - deployment: deployAdWorksLtNotebooks
         displayName: Deploy Dbx Notebooks
@@ -58,8 +58,8 @@ stages:
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
-                    FromWorkspaceDir: ad_works_lt
-                    ToWorkspaceDir: ad_works_lt
+                    FromWorkspaceDir: 'ad_works_lt'
+                    ToWorkspaceDir: 'ad_works_lt'
 
       - deployment: deployAdWorksNotebooks
         displayName: Deploy Dbx Notebooks
@@ -79,8 +79,8 @@ stages:
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
-                    FromWorkspaceDir: ad_works
-                    ToWorkspaceDir: ad_works
+                    FromWorkspaceDir: 'ad_works'
+                    ToWorkspaceDir: 'ad_works'
 
       - deployment: deployHeaderFooterWorkflows
         displayName: Deploy Dbx header_footer Workflows
@@ -99,7 +99,7 @@ stages:
                     DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
-                    SubDir: header_footer/databricks/workflows
+                    SubDir: 'header_footer/databricks/workflows'
 
 
       - deployment: deployAdWorksWorkflows
@@ -119,8 +119,8 @@ stages:
                     DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
-                    SubDir: ad_works/databricks/workflows
-
+                    SubDir: 'ad_works/databricks/workflows
+'
       - deployment: deployAdWorksLtWorkflows
         displayName: Deploy Dbx ad_works lt Workflows
         environment: 'development'
@@ -138,4 +138,4 @@ stages:
                     DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
-                    SubDir: ad_works_lt/databricks/workflows
+                    SubDir: 'ad_works_lt/databricks/workflows'

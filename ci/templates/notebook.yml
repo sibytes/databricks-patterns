@@ -49,4 +49,4 @@ steps:
       FROM_DIR: $(System.FromWorkspaceDir)
       TO_WORKSPACE_DIR: $(System.ToWorkspaceDir)
       AUTOBRICKS_LOGGING: INFO
-      SSL_VERIFY: True
+      SSL_VERIFY: Trueß
