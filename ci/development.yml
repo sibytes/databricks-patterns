@@ -19,7 +19,7 @@ stages:
 
 
     jobs:
-      - deployment: deployNotebooks
+      - deployment: deployHeaderFooterNotebooks
         displayName: Deploy Dbx Notebooks
         environment: 'development'
         strategy:
@@ -37,8 +37,52 @@ stages:
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
+                    FromWorkspaceDir: header_footer
+                    FromWorkspaceDir: header_footer
 
-      - deployment: deployHeaderFooterWorkflows
+      - deployment: deployAdWorksLtNotebooks
+        displayName: Deploy Dbx Notebooks
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - template: ../ci/templates/notebook.yml
+                  parameters:
+                    azureResourceManagerConnection: 'development_subscription'
+                    keyVaultName: '$(KEY_VAULT)'
+                    SubscriptionId: '$(SUBSCRIPTION_ID)'
+                    ResourceGroup: '$(RESOURCE_GROUP)'
+                    DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
+                    DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
+                    DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
+                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
+                    FromWorkspaceDir: ad_works_lt
+                    ToWorkspaceDir: ad_works_lt
+
+      - deployment: deployAdWorksNotebooks
+        displayName: Deploy Dbx Notebooks
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - template: ../ci/templates/notebook.yml
+                  parameters:
+                    azureResourceManagerConnection: 'development_subscription'
+                    keyVaultName: '$(KEY_VAULT)'
+                    SubscriptionId: '$(SUBSCRIPTION_ID)'
+                    ResourceGroup: '$(RESOURCE_GROUP)'
+                    DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
+                    DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
+                    DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
+                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
+                    FromWorkspaceDir: ad_works
+                    ToWorkspaceDir: ad_works
+
+      - deployment: deployAdWorksWorkflows
         displayName: Deploy Dbx header_footer Workflows
         environment: 'development'
         strategy:
@@ -56,6 +100,8 @@ stages:
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
                     SubDir: header_footer/databricks/workflows
+                    FromWorkspaceDir: ad_works_lt
+
 
       - deployment: deployAdWorksWorkflows
         displayName: Deploy Dbx ad_works Workflows
@@ -77,7 +123,7 @@ stages:
                     SubDir: ad_works/databricks/workflows
 
       - deployment: deployAdWorksLtWorkflows
-        displayName: Deploy Dbx ad_works Workflows
+        displayName: Deploy Dbx ad_works lt Workflows
         environment: 'development'
         strategy:
           runOnce:
