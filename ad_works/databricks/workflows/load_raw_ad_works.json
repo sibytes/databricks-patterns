@@ -66,30 +66,6 @@
                 "no_alert_for_canceled_runs": false,
                 "alert_on_last_attempt": false
             }
-        },
-        {
-            "task_key": "load_raw_2",
-            "depends_on": [
-                {
-                    "task_key": "create_audit_tables"
-                }
-            ],
-            "notebook_task": {
-                "notebook_path": "/ad_works/databricks/notebooks/bronze/raw_load",
-                "base_parameters": {
-                    "process_id": "{{job_id}}",
-                    "process_group": "2"
-                },
-                "source": "WORKSPACE"
-            },
-            "job_cluster_key": "dbx_patterns_job_cluster",
-            "timeout_seconds": 0,
-            "email_notifications": {},
-            "notification_settings": {
-                "no_alert_for_skipped_runs": false,
-                "no_alert_for_canceled_runs": false,
-                "alert_on_last_attempt": false
-            }
         }
     ],
     "job_clusters": [
