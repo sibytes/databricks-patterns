@@ -39,7 +39,7 @@ stages:
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
 
       - deployment: deployWorkflows
-        displayName: Deploy Dbx Workflows
+        displayName: Deploy Dbx header_footer Workflows
         environment: 'development'
         strategy:
           runOnce:
@@ -55,3 +55,42 @@ stages:
                     DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
+                    SubDir: header_footer/databricks/workflows
+
+      - deployment: deployWorkflows
+        displayName: Deploy Dbx ad_works Workflows
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - template: ../ci/templates/workflows.yml
+                  parameters:
+                    azureResourceManagerConnection: 'development_subscription'
+                    keyVaultName: '$(KEY_VAULT)'
+                    SubscriptionId: '$(SUBSCRIPTION_ID)'
+                    ResourceGroup: '$(RESOURCE_GROUP)'
+                    DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
+                    DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
+                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
+                    SubDir: ad_works/databricks/workflows
+
+      - deployment: deployWorkflows
+        displayName: Deploy Dbx ad_works Workflows
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - template: ../ci/templates/workflows.yml
+                  parameters:
+                    azureResourceManagerConnection: 'development_subscription'
+                    keyVaultName: '$(KEY_VAULT)'
+                    SubscriptionId: '$(SUBSCRIPTION_ID)'
+                    ResourceGroup: '$(RESOURCE_GROUP)'
+                    DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
+                    DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
+                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
+                    SubDir: ad_works_lt/databricks/workflows
