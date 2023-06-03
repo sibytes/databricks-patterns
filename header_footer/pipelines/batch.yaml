@@ -1,4 +1,4 @@
-version: 1.4.4
+version: 1.4.5
 # paths here are relative to this configuration document
 tables: ./tables.yaml
 
