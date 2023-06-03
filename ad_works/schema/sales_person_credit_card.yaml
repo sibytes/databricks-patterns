@@ -1,0 +1,14 @@
+fields:
+-   metadata: {}
+    name: BusinessEntityID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: CreditCardID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

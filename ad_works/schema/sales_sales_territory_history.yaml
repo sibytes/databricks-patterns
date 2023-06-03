@@ -1,0 +1,26 @@
+fields:
+-   metadata: {}
+    name: BusinessEntityID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: TerritoryID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: StartDate
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: EndDate
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: rowguid
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

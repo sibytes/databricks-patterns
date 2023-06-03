@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.4.0
+# MAGIC %pip install pyaml pydantic yetl-framework==1.4.5
 
 # COMMAND ----------
 
@@ -43,6 +43,12 @@ tables = config.tables.create_table(
   first_match=False
 )
 
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
+# MAGIC create database if not exists raw_ad_works
 
 # COMMAND ----------
 

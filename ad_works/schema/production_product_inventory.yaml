@@ -1,0 +1,30 @@
+fields:
+-   metadata: {}
+    name: ProductID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: LocationID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: Shelf
+    nullable: true
+    type: string
+-   metadata: {}
+    name: Bin
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: Quantity
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: rowguid
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

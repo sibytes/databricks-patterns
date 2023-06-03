@@ -1,0 +1,30 @@
+fields:
+-   metadata: {}
+    name: CustomerID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: PersonID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: StoreID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: TerritoryID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: AccountNumber
+    nullable: true
+    type: string
+-   metadata: {}
+    name: rowguid
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

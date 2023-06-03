@@ -14,12 +14,13 @@ def z_order_by(
     process_id: int,
     destination: DeltaLake
 ):
-
-    z_order_by = ",".join(destination.z_order_by)
+    _z_order_by = destination.z_order_by
+    if isinstance(_z_order_by, list):
+      z_order_by = ",".join(destination.z_order_by)
     print("Optimizing")
     sql = f"""
         OPTIMIZE `{destination.database}`.`{destination.table}`
-        ZORDER BY ({z_order_by})
+        ZORDER BY ({_z_order_by})
     """
     print(sql)
     spark.sql(sql)

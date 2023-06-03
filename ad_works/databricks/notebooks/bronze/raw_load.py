@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.4.0
+# MAGIC %pip install pyaml pydantic yetl-framework==1.4.5
 
 # COMMAND ----------
 
@@ -59,7 +59,7 @@ config = Config(
 tables = config.tables.lookup_table(
   stage=StageType.raw, 
   first_match=False,
-  create_table=True,
+  create_table=False,
   # this will filter the tables on a custom property
   # in the tables parameter you can add whatever custom properties you want
   # either for filtering or to use in pipelines
@@ -102,3 +102,7 @@ print(msg)
 # COMMAND ----------
 
 dbutils.notebook.exit("Success")
+
+# COMMAND ----------
+
+person_business_entity, hr_department, person_business_entity

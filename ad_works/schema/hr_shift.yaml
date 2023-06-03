@@ -1,0 +1,22 @@
+fields:
+-   metadata: {}
+    name: ShiftID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: Name
+    nullable: true
+    type: string
+-   metadata: {}
+    name: StartTime
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: EndTime
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

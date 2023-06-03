@@ -1,0 +1,14 @@
+fields:
+-   metadata: {}
+    name: SalesOrderID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: SalesReasonID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

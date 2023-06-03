@@ -1,0 +1,34 @@
+fields:
+-   metadata: {}
+    name: BusinessEntityID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: AccountNumber
+    nullable: true
+    type: string
+-   metadata: {}
+    name: Name
+    nullable: true
+    type: string
+-   metadata: {}
+    name: CreditRating
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: PreferredVendorStatus
+    nullable: true
+    type: boolean
+-   metadata: {}
+    name: ActiveFlag
+    nullable: true
+    type: boolean
+-   metadata: {}
+    name: PurchasingWebServiceURL
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

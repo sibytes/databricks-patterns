@@ -1,0 +1,34 @@
+fields:
+-   metadata: {}
+    name: ProductReviewID
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ProductID
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ReviewerName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ReviewDate
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: EmailAddress
+    nullable: true
+    type: string
+-   metadata: {}
+    name: Rating
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: Comments
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: string
+type: struct

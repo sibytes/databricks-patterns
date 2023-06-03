@@ -1,0 +1,14 @@
+fields:
+-   metadata: {}
+    name: ProductModelID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: IllustrationID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

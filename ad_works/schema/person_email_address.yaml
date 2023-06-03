@@ -1,0 +1,22 @@
+fields:
+-   metadata: {}
+    name: BusinessEntityID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: EmailAddressID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: EmailAddress
+    nullable: true
+    type: string
+-   metadata: {}
+    name: rowguid
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

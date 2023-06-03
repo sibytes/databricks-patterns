@@ -1,0 +1,22 @@
+fields:
+-   metadata: {}
+    name: ProductID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: StartDate
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: EndDate
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: ListPrice
+    nullable: true
+    type: double
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

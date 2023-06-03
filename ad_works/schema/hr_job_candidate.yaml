@@ -1,0 +1,18 @@
+fields:
+-   metadata: {}
+    name: JobCandidateID
+    nullable: true
+    type: string
+-   metadata: {}
+    name: BusinessEntityID
+    nullable: true
+    type: string
+-   metadata: {}
+    name: Resume
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: string
+type: struct

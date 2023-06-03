@@ -1,0 +1,34 @@
+fields:
+-   metadata: {}
+    name: StateProvinceID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: StateProvinceCode
+    nullable: true
+    type: string
+-   metadata: {}
+    name: CountryRegionCode
+    nullable: true
+    type: string
+-   metadata: {}
+    name: IsOnlyStateProvinceFlag
+    nullable: true
+    type: boolean
+-   metadata: {}
+    name: Name
+    nullable: true
+    type: string
+-   metadata: {}
+    name: TerritoryID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: rowguid
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

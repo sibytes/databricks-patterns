@@ -1,0 +1,30 @@
+fields:
+-   metadata: {}
+    name: CurrencyRateID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: CurrencyRateDate
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: FromCurrencyCode
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ToCurrencyCode
+    nullable: true
+    type: string
+-   metadata: {}
+    name: AverageRate
+    nullable: true
+    type: double
+-   metadata: {}
+    name: EndOfDayRate
+    nullable: true
+    type: double
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

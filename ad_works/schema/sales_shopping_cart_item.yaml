@@ -1,0 +1,26 @@
+fields:
+-   metadata: {}
+    name: ShoppingCartItemID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ShoppingCartID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: Quantity
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ProductID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: DateCreated
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

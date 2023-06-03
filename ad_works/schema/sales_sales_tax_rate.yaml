@@ -1,0 +1,30 @@
+fields:
+-   metadata: {}
+    name: SalesTaxRateID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: StateProvinceID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: TaxType
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: TaxRate
+    nullable: true
+    type: double
+-   metadata: {}
+    name: Name
+    nullable: true
+    type: string
+-   metadata: {}
+    name: rowguid
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

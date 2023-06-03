@@ -22,8 +22,8 @@ landing:
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/mnt/{{container}}/data/{{project}}/csv/{{table.replace('_','-')}}/{{path_date_format}}"
-    filename: "{{table.replace('_','-')}}-{{filename_date_format}}*.csv"
+    location: "/mnt/{{container}}/data/{{project}}/csv/{{table}}/{{path_date_format}}"
+    filename: "{{table}}-{{filename_date_format}}*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
     format: csv

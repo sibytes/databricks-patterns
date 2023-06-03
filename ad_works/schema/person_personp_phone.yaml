@@ -1,0 +1,18 @@
+fields:
+-   metadata: {}
+    name: BusinessEntityID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: PhoneNumber
+    nullable: true
+    type: string
+-   metadata: {}
+    name: PhoneNumberTypeID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

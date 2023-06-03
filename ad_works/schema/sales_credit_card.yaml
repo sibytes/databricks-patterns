@@ -1,0 +1,26 @@
+fields:
+-   metadata: {}
+    name: CreditCardID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: CardType
+    nullable: true
+    type: string
+-   metadata: {}
+    name: CardNumber
+    nullable: true
+    type: long
+-   metadata: {}
+    name: ExpMonth
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ExpYear
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

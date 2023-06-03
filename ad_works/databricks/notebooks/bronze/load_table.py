@@ -1,12 +1,21 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.4.0
+# MAGIC %pip install pyaml pydantic yetl-framework==1.4.5
 
 # COMMAND ----------
 
 dbutils.widgets.text("process_id", "-1")
-dbutils.widgets.text("table", "address")
+dbutils.widgets.text("table", "person_address")
 dbutils.widgets.text("load_type", "batch")
 dbutils.widgets.text("timeslice", "*")
+
+# COMMAND ----------
+
+print(dbutils.notebook.entry_point.getDbutils().notebook().getContext().currentRunId().toString())
+print(dbutils.notebook.entry_point.getDbutils().notebook().getContext().idInJob().toString())
+print(dbutils.notebook.entry_point.getDbutils().notebook().getContext().jobGroup().toString())
+print(dbutils.notebook.entry_point.getDbutils().notebook().getContext().jobId().toString())
+print(dbutils.notebook.entry_point.getDbutils().notebook().getContext().jobTaskType().toString())
+
 
 # COMMAND ----------
 
@@ -77,7 +86,8 @@ load = get_load(LoadFunction.load_audit, load_type)
 
 table_mapping_audit = config.get_table_mapping(
   stage=StageType.audit_control, 
-  table="raw_audit"
+  table="raw_audit",
+  create_table=False
 )
 
 landing = table_mapping.source

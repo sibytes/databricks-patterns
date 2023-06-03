@@ -1,0 +1,14 @@
+fields:
+-   metadata: {}
+    name: CurrencyCode
+    nullable: true
+    type: string
+-   metadata: {}
+    name: Name
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

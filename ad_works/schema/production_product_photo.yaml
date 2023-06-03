@@ -1,0 +1,26 @@
+fields:
+-   metadata: {}
+    name: ProductPhotoID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ThumbNailPhoto
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ThumbnailPhotoFileName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: LargePhoto
+    nullable: true
+    type: string
+-   metadata: {}
+    name: LargePhotoFileName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

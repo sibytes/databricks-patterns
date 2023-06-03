@@ -1,0 +1,22 @@
+fields:
+-   metadata: {}
+    name: LocationID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: Name
+    nullable: true
+    type: string
+-   metadata: {}
+    name: CostRate
+    nullable: true
+    type: double
+-   metadata: {}
+    name: Availability
+    nullable: true
+    type: double
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct
