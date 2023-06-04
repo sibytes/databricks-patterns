@@ -7,6 +7,7 @@ dbutils.widgets.text("process_id", "-1")
 dbutils.widgets.text("table", "person_address")
 dbutils.widgets.text("load_type", "batch")
 dbutils.widgets.text("timeslice", "*")
+dbutils.widgets.text("drop_already_loaded", "True")
 
 # COMMAND ----------
 
@@ -22,6 +23,11 @@ param_process_id = int(dbutils.widgets.get("process_id"))
 param_table = dbutils.widgets.get("table")
 param_load_type = dbutils.widgets.get("load_type")
 param_timeslice = dbutils.widgets.get("timeslice")
+param_drop_already_loaded = dbutils.widgets.get("drop_already_loaded")
+if param_drop_already_loaded.lower() in ['true','false']:
+  param_drop_already_loaded = bool(param_drop_already_loaded)
+else:
+  raise ValueError("drop_already_loaded must be true or false")
 
 try:
   load_type:LoadType = LoadType(param_load_type)
@@ -37,6 +43,7 @@ print(f"""
   param_table: {param_table}
   load_type: {str(load_type)}
   timeslice: {timeslice}
+  drop_already_loaded: {param_drop_already_loaded}
 """)
 
 # COMMAND ----------
@@ -66,7 +73,7 @@ config.set_checkpoint(
 )
 
 load(
-  param_process_id, table_mapping.source, table_mapping.destination
+  param_process_id, table_mapping.source, table_mapping.destination, param_drop_already_loaded
 )
 
 # COMMAND ----------
