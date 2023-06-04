@@ -46,6 +46,10 @@ landing:
 
 raw:
   delta_lake:
+    delta_properties:
+        delta.appendOnly: true
+        delta.autoOptimize.autoCompact: true
+        delta.autoOptimize.optimizeWrite: true
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
@@ -55,12 +59,6 @@ raw:
       - _load_date
     options:
       mergeSchema: true
-        # optional leave it out if you don't want them
-    warning_thresholds:
-      invalid_rows: 0
-    # optional leave it out if you don't want them
-    exception_thresholds:
-      invalid_rows: 0
 
 
 base:
