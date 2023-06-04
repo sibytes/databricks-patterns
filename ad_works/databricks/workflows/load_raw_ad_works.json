@@ -28,10 +28,13 @@
     "tasks": [
         {
             "task_key": "create_audit_tables",
+            "depends_on": [
+                {
+                    "task_key": "clear"
+                }
+            ],
             "notebook_task": {
                 "notebook_path": "/ad_works/databricks/notebooks/bronze/create_audit_tables",
-                "base_parameters": {
-                },
                 "source": "WORKSPACE"
             },
             "job_cluster_key": "dbx_patterns_job_cluster",
@@ -57,6 +60,21 @@
                     "process_group": "1",
                     "timeslice": "2023-01-01"
                 },
+                "source": "WORKSPACE"
+            },
+            "job_cluster_key": "dbx_patterns_job_cluster",
+            "timeout_seconds": 0,
+            "email_notifications": {},
+            "notification_settings": {
+                "no_alert_for_skipped_runs": false,
+                "no_alert_for_canceled_runs": false,
+                "alert_on_last_attempt": false
+            }
+        },
+        {
+            "task_key": "clear",
+            "notebook_task": {
+                "notebook_path": "/ad_works/databricks/notebooks/clear_down",
                 "source": "WORKSPACE"
             },
             "job_cluster_key": "dbx_patterns_job_cluster",
