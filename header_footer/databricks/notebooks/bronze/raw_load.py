@@ -7,7 +7,7 @@ dbutils.widgets.text("process_id", "-1")
 dbutils.widgets.text("max_parallel", "4")
 dbutils.widgets.text("timeout", "3600")
 dbutils.widgets.text("process_group", "1")
-dbutils.widgets.text("load_type", "autoloader")
+dbutils.widgets.text("load_type", "batch")
 dbutils.widgets.text("timeslice", "*")
 
 

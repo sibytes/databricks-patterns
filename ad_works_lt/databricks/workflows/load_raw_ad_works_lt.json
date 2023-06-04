@@ -58,7 +58,8 @@
                 "base_parameters": {
                     "process_id": "{{job_id}}",
                     "process_group": "1",
-                    "timeslice": "2023-01-01"
+                    "timeslice": "2023-01-01",
+                    "load_type": "batch"
                 },
                 "source": "WORKSPACE"
             },

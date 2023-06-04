@@ -54,7 +54,9 @@
                 "notebook_path": "/header_footer/databricks/notebooks/bronze/raw_load",
                 "base_parameters": {
                     "process_id": "{{job_id}}",
-                    "process_group": "1"
+                    "process_group": "1",
+                    "timeslice": "2023-01-01",
+                    "load_type": "batch"
                 },
                 "source": "WORKSPACE"
             },
@@ -78,7 +80,9 @@
                 "notebook_path": "/header_footer/databricks/notebooks/bronze/raw_load",
                 "base_parameters": {
                     "process_id": "{{job_id}}",
-                    "process_group": "2"
+                    "process_group": "2",
+                    "timeslice": "2023-01-01",
+                    "load_type": "batch"
                 },
                 "source": "WORKSPACE"
             },
