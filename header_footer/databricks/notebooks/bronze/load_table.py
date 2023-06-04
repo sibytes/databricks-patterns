@@ -59,7 +59,7 @@ load = get_load(LoadFunction.load, load_type)
 table_mapping = config.get_table_mapping(
   stage=StageType.raw, 
   table=param_table,
-  create_table=False
+  create_table=True
 )
 config.set_checkpoint(
   table_mapping.source, table_mapping.destination
