@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.4.8
+# MAGIC %pip install pyaml pydantic yetl-framework==1.4.9
 
 # COMMAND ----------
 
