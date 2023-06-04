@@ -77,7 +77,8 @@ notebooks = [
     parameters={
       "process_id": str(param_process_id), 
       "table": t.table,
-      "load_type": load_type.value
+      "load_type": load_type.value,
+      "timeslice": param_timeslice
     }, 
     timeout=param_timeout, 
     retry=0, 
