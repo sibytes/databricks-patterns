@@ -30,7 +30,8 @@ def z_order_by(
 def stream_load(
     process_id: int,
     source: Read,
-    destination: DeltaLake
+    destination: DeltaLake,
+    drop_already_loaded:bool = True
 ):
     stream = (
         spark.readStream.schema(source.spark_schema)
@@ -73,7 +74,8 @@ def stream_load(
 def batch_load(
     process_id: int,
     source: Read,
-    destination: DeltaLake
+    destination: DeltaLake,
+    drop_already_loaded:bool = True
 ):
     df:DataFrame = (
         spark.read.schema(source.spark_schema)
@@ -99,6 +101,16 @@ def batch_load(
 
     df = df.selectExpr(*columns)
     df = source.add_timeslice(df)
+
+    if drop_already_loaded:
+      already_loaded = spark.sql(f"""
+        select struct(file_path, file_name, file_size, file_modification_time) as _metadata_loaded
+        from control_ad_works.raw_audit
+        where source_table = '{source.table}'                   
+      """)
+      df = df.join(already_loaded, already_loaded._metadata_loaded == df._metadata ,"left")
+      df = df.where(df._metadata_loaded.isNull())
+      df = df.drop("_metadata_loaded")
 
     audit:DataFrame = (df
         .select("*")

@@ -9,7 +9,7 @@ dbutils.widgets.text("timeout", "3600")
 dbutils.widgets.text("process_group", "1")
 dbutils.widgets.text("load_type", "batch")
 dbutils.widgets.text("timeslice", "*")
-
+dbutils.widgets.text("drop_already_loaded", "True")
 
 # COMMAND ----------
 
@@ -29,6 +29,12 @@ param_timeout = int(dbutils.widgets.get("timeout"))
 param_process_group = int(dbutils.widgets.get("process_group"))
 param_load_type = dbutils.widgets.get("load_type")
 param_timeslice = dbutils.widgets.get("timeslice")
+param_drop_already_loaded = dbutils.widgets.get("drop_already_loaded")
+
+if param_drop_already_loaded.lower() in ['true','false']:
+  param_drop_already_loaded = bool(param_drop_already_loaded)
+else:
+  raise ValueError("drop_already_loaded must be true or false")
 
 try:
   load_type:LoadType = LoadType(param_load_type)
@@ -78,7 +84,8 @@ notebooks = [
       "process_id": str(param_process_id), 
       "table": t.table,
       "load_type": load_type.value,
-      "timeslice": param_timeslice
+      "timeslice": param_timeslice,
+      "drop_already_loaded": str(param_drop_already_loaded)
     }, 
     timeout=param_timeout, 
     retry=0, 
