@@ -14,22 +14,35 @@ def z_order_by(
     process_id: int,
     destination: DeltaLake
 ):
-
-    z_order_by = ",".join(destination.z_order_by)
+    _z_order_by = destination.z_order_by
+    if isinstance(_z_order_by, list):
+      z_order_by = ",".join(destination.z_order_by)
     print("Optimizing")
     sql = f"""
         OPTIMIZE `{destination.database}`.`{destination.table}`
-        ZORDER BY ({z_order_by})
+        ZORDER BY ({_z_order_by})
     """
     print(sql)
     spark.sql(sql)
 
 
+def drop_if_already_loaded(df:Union[DataFrame, StreamingQuery]):
+    already_loaded = spark.sql(f"""
+      select struct(file_path, file_name, file_size, file_modification_time) as _metadata_loaded
+      from control_ad_works.raw_audit
+      where source_table = '{source.table}'                   
+    """)
+    df = df.join(already_loaded, already_loaded._metadata_loaded == df._metadata ,"left")
+    df = df.where(df._metadata_loaded.isNull())
+    df = df.drop("_metadata_loaded")
+    return df
+
 
 def stream_load(
     process_id: int,
     source: Read,
-    destination: DeltaLake
+    destination: DeltaLake,
+    drop_already_loaded:bool = True
 ):
     stream = (
         spark.readStream.schema(source.spark_schema)
@@ -56,6 +69,9 @@ def stream_load(
     stream = stream.selectExpr(*columns)
     stream = source.add_timeslice(stream)
 
+    if drop_already_loaded:
+      drop_if_already_loaded(stream)
+
     stream_data: StreamingQuery = (stream
         .select("*")
         .writeStream
@@ -72,7 +88,8 @@ def stream_load(
 def batch_load(
     process_id: int,
     source: Read,
-    destination: DeltaLake
+    destination: DeltaLake,
+    drop_already_loaded:bool = True
 ):
     df:DataFrame = (
         spark.read.schema(source.spark_schema)
@@ -98,6 +115,9 @@ def batch_load(
 
     df = df.selectExpr(*columns)
     df = source.add_timeslice(df)
+
+    if drop_already_loaded:
+      drop_if_already_loaded(df)
 
     audit:DataFrame = (df
         .select("*")
