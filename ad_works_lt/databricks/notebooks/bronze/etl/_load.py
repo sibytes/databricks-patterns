@@ -3,6 +3,7 @@ from databricks.sdk.runtime import spark
 from pyspark.sql.streaming import StreamingQuery
 import hashlib
 from pyspark.sql import DataFrame
+from typing import Union
 
 
 def hash_value(value: str):
@@ -11,12 +12,11 @@ def hash_value(value: str):
     return hex_dig
 
 def z_order_by(
-    process_id: int,
     destination: DeltaLake
 ):
     _z_order_by = destination.z_order_by
     if isinstance(_z_order_by, list):
-      z_order_by = ",".join(destination.z_order_by)
+      _z_order_by = ",".join(destination.z_order_by)
     print("Optimizing")
     sql = f"""
         OPTIMIZE `{destination.database}`.`{destination.table}`
@@ -26,7 +26,7 @@ def z_order_by(
     spark.sql(sql)
 
 
-def drop_if_already_loaded(df:Union[DataFrame, StreamingQuery]):
+def drop_if_already_loaded(df:Union[DataFrame, StreamingQuery], source:Read):
     already_loaded = spark.sql(f"""
       select struct(file_path, file_name, file_size, file_modification_time) as _metadata_loaded
       from control_ad_works.raw_audit
@@ -70,7 +70,7 @@ def stream_load(
     stream = source.add_timeslice(stream)
 
     if drop_already_loaded:
-      drop_if_already_loaded(stream)
+      drop_if_already_loaded(stream, source)
 
     stream_data: StreamingQuery = (stream
         .select("*")
@@ -82,7 +82,7 @@ def stream_load(
 
     stream_data.awaitTermination()
     if destination.z_order_by:
-      z_order_by(process_id, destination)
+      z_order_by(destination)
 
 
 def batch_load(
@@ -127,6 +127,6 @@ def batch_load(
         .saveAsTable(name=f"`{destination.database}`.`{destination.table}`")
     )
     if destination.z_order_by:
-      z_order_by(process_id, destination)
+      z_order_by(destination)
 
     return audit
