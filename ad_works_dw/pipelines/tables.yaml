@@ -18,13 +18,13 @@ landing:
       dim_date: null
       dim_department: null
       dim_employee: null
-      dim_eseller: null
       dim_geography: null
       dim_organization: null
       dim_product: null
       dim_product_category: null
       dim_product_sub_category: null
       dim_promotion: null
+      dim_reseller: null
       dim_salesreason: null
       dim_salesterritory: null
       dim_scenario: null
