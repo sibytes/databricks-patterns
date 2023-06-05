@@ -193,7 +193,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dim_eseller
+        - landing.landing_ad_works_dw.dim_reseller
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
