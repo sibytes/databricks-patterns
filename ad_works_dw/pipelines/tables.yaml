@@ -29,7 +29,7 @@ landing:
       dim_sales_territory: null
       dim_scenario: null
       fact_additional_international_product_description: null
-      fact_call_center: null
+      fact_call_centre: null
       fact_currency_rate: null
       fact_finance: null
       fact_internet_sales: null
@@ -248,12 +248,12 @@ raw:
         id: ProductKey
         vacuum: 30
         z_order_by: _load_date
-      fact_call_center:
+      fact_call_centre:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.fact_call_center
+        - landing.landing_ad_works_dw.fact_call_centre
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
