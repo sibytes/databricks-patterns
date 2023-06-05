@@ -200,7 +200,7 @@ raw:
         id: ResellerKey
         vacuum: 30
         z_order_by: _load_date
-      dim_salesreason:
+      dim_sales_reason:
         custom_properties:
           process_group: 1
           rentention_days: 365
@@ -212,7 +212,7 @@ raw:
         id: SalesReasonKey
         vacuum: 30
         z_order_by: _load_date
-      dim_salesterritory:
+      dim_sales_territory:
         custom_properties:
           process_group: 1
           rentention_days: 365
