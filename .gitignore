@@ -148,3 +148,5 @@ derby.log
 
 .databricks
 .env
+
+~$*.xlsx
