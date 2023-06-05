@@ -20,7 +20,7 @@ stages:
 
     jobs:
       - deployment: deployHeaderFooterNotebooks
-        displayName: Deploy Dbx Notebooks
+        displayName: Deploy header_footer Notebooks
         environment: 'development'
         strategy:
           runOnce:
@@ -41,7 +41,7 @@ stages:
                     ToWorkspaceDir: 'header_footer'
 
       - deployment: deployAdWorksLtNotebooks
-        displayName: Deploy AdWorksLt Notebooks
+        displayName: Deploy ad_works_lt Notebooks
         environment: 'development'
         strategy:
           runOnce:
@@ -62,7 +62,7 @@ stages:
                     ToWorkspaceDir: 'ad_works_lt'
 
       - deployment: deployAdWorksNotebooks
-        displayName: Deploy AdWorks Notebooks
+        displayName: Deploy ad_works Notebooks
         environment: 'development'
         strategy:
           runOnce:
@@ -83,7 +83,7 @@ stages:
                     ToWorkspaceDir: 'ad_works'
 
       - deployment: deployAdWorksDWNotebooks
-        displayName: Deploy AdWorks DW Notebooks
+        displayName: Deploy ad_works_dw Notebooks
         environment: 'development'
         strategy:
           runOnce:
@@ -104,7 +104,7 @@ stages:
                     ToWorkspaceDir: 'ad_works_dw'
 
       - deployment: deployHeaderFooterWorkflows
-        displayName: Deploy Dbx header_footer Workflows
+        displayName: Deploy header_footer Workflows
         environment: 'development'
         strategy:
           runOnce:
@@ -124,7 +124,7 @@ stages:
 
 
       - deployment: deployAdWorksWorkflows
-        displayName: Deploy Dbx ad_works Workflows
+        displayName: Deploy ad_works Workflows
         environment: 'development'
         strategy:
           runOnce:
@@ -143,7 +143,7 @@ stages:
                     SubDir: 'ad_works/databricks/workflows
 '
       - deployment: deployAdWorksLtWorkflows
-        displayName: Deploy Dbx ad_works lt Workflows
+        displayName: Deploy ad_works_lt Workflows
         environment: 'development'
         strategy:
           runOnce:
@@ -162,7 +162,7 @@ stages:
                     SubDir: 'ad_works_lt/databricks/workflows'
 
       - deployment: deployAdWorksDWWorkflows
-        displayName: Deploy Dbx ad_works_dw Workflows
+        displayName: Deploy ad_works_dw Workflows
         environment: 'development'
         strategy:
           runOnce:

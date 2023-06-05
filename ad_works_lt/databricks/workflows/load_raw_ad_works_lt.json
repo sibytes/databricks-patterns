@@ -18,11 +18,10 @@
         "no_alert_for_canceled_runs": false
     },
     "timeout_seconds": 0,
-    "trigger": {
-        "pause_status": "PAUSED",
-        "file_arrival": {
-            "url": "abfss://development@datalakegeneva.dfs.core.windows.net/data/triggers/dbx-patterns-autoloader-raw-schema/"
-        }
+    "schedule": {
+        "quartz_cron_expression": "37 0 4 * * ?",
+        "timezone_id": "UTC",
+        "pause_status": "PAUSED"
     },
     "max_concurrent_runs": 1,
     "tasks": [
