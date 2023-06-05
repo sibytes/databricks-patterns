@@ -55,15 +55,16 @@ def stream_load(
     sys_cols = [c for c in stream.columns if c.startswith("_")]
 
     columns = (
-        src_cols
-        + sys_cols
-        + [
+        [
             "if(_corrupt_record is null, true, false) as _is_valid",
             f"cast(null as timestamp) as {source.slice_date_column_name}",
             f"cast({process_id} as long) as _process_id",
             "current_timestamp() as _load_date",
             "_metadata",
         ]
+        + src_cols
+        + sys_cols
+
     )
 
     stream = stream.selectExpr(*columns)
