@@ -25,8 +25,8 @@ landing:
       dim_product_sub_category: null
       dim_promotion: null
       dim_reseller: null
-      dim_salesreason: null
-      dim_salesterritory: null
+      dim_sales_reason: null
+      dim_sales_territory: null
       dim_scenario: null
       fact_additional_international_product_description: null
       fact_call_center: null
@@ -205,7 +205,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dim_salesreason
+        - landing.landing_ad_works_dw.dim_sales_reason
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -217,7 +217,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dim_salesterritory
+        - landing.landing_ad_works_dw.dim_sales_territory
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
