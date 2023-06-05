@@ -38,8 +38,6 @@ landing:
       fact_reseller_sales: null
       fact_sales_quota: null
       fact_survey_response: null
-      new_fact_currency_rate: null
-      prospective_buyer: null
 
 raw:
   delta_lake:
@@ -368,18 +366,6 @@ raw:
           invalid_rows: 0
           mins_rows: 1
         id: SurveyResponseKey
-        vacuum: 30
-        z_order_by: _load_date
-      prospective_buyer:
-        custom_properties:
-          process_group: 1
-          rentention_days: 365
-        depends_on:
-        - landing.landing_ad_works_dw.prospective_buyer
-        error_thresholds:
-          invalid_rows: 0
-          mins_rows: 1
-        id: ProspectiveBuyerKey
         vacuum: 30
         z_order_by: _load_date
 
