@@ -75,7 +75,7 @@
         {
             "task_key": "clear",
             "notebook_task": {
-                "notebook_path": "/ad_works/databricks/notebooks/clear_down",
+                "notebook_path": "/ad_works_dw/databricks/notebooks/clear_down",
                 "source": "WORKSPACE"
             },
             "job_cluster_key": "dbx_patterns_job_cluster",
