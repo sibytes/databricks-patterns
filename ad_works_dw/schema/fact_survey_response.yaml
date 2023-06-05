@@ -1,0 +1,34 @@
+fields:
+-   metadata: {}
+    name: SurveyResponseKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: DateKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: CustomerKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ProductCategoryKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: EnglishProductCategoryName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ProductSubcategoryKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: EnglishProductSubcategoryName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: Date
+    nullable: true
+    type: timestamp
+type: struct

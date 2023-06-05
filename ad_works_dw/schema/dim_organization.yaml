@@ -1,0 +1,22 @@
+fields:
+-   metadata: {}
+    name: OrganizationKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ParentOrganizationKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: PercentageOfOwnership
+    nullable: true
+    type: double
+-   metadata: {}
+    name: OrganizationName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: CurrencyKey
+    nullable: true
+    type: integer
+type: struct

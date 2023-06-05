@@ -1,0 +1,10 @@
+fields:
+-   metadata: {}
+    name: ScenarioKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ScenarioName
+    nullable: true
+    type: string
+type: struct

@@ -1,0 +1,30 @@
+fields:
+-   metadata: {}
+    name: SalesQuotaKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: EmployeeKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: DateKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: CalendarYear
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: CalendarQuarter
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: SalesAmountQuota
+    nullable: true
+    type: double
+-   metadata: {}
+    name: Date
+    nullable: true
+    type: timestamp
+type: struct

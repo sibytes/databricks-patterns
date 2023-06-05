@@ -1,0 +1,14 @@
+fields:
+-   metadata: {}
+    name: ProductKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: CultureName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ProductDescription
+    nullable: true
+    type: string
+type: struct

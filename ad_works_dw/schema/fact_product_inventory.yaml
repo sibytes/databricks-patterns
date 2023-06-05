@@ -1,0 +1,30 @@
+fields:
+-   metadata: {}
+    name: ProductKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: DateKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: MovementDate
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: UnitCost
+    nullable: true
+    type: double
+-   metadata: {}
+    name: UnitsIn
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: UnitsOut
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: UnitsBalance
+    nullable: true
+    type: integer
+type: struct

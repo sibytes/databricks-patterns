@@ -1,0 +1,34 @@
+fields:
+-   metadata: {}
+    name: FinanceKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: DateKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: OrganizationKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: DepartmentGroupKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ScenarioKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: AccountKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: Amount
+    nullable: true
+    type: double
+-   metadata: {}
+    name: Date
+    nullable: true
+    type: timestamp
+type: struct

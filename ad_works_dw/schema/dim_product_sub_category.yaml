@@ -1,0 +1,26 @@
+fields:
+-   metadata: {}
+    name: ProductSubcategoryKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ProductSubcategoryAlternateKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: EnglishProductSubcategoryName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: SpanishProductSubcategoryName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: FrenchProductSubcategoryName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ProductCategoryKey
+    nullable: true
+    type: integer
+type: struct

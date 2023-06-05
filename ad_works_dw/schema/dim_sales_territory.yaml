@@ -1,0 +1,26 @@
+fields:
+-   metadata: {}
+    name: SalesTerritoryKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: SalesTerritoryAlternateKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: SalesTerritoryRegion
+    nullable: true
+    type: string
+-   metadata: {}
+    name: SalesTerritoryCountry
+    nullable: true
+    type: string
+-   metadata: {}
+    name: SalesTerritoryGroup
+    nullable: true
+    type: string
+-   metadata: {}
+    name: SalesTerritoryImage
+    nullable: true
+    type: string
+type: struct

@@ -1,0 +1,18 @@
+fields:
+-   metadata: {}
+    name: SalesReasonKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: SalesReasonAlternateKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: SalesReasonName
+    nullable: true
+    type: string
+-   metadata: {}
+    name: SalesReasonReasonType
+    nullable: true
+    type: string
+type: struct

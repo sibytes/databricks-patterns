@@ -1,0 +1,14 @@
+fields:
+-   metadata: {}
+    name: DepartmentGroupKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: ParentDepartmentGroupKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: DepartmentGroupName
+    nullable: true
+    type: string
+type: struct

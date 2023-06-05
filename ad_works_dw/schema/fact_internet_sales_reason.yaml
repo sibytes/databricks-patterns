@@ -1,0 +1,14 @@
+fields:
+-   metadata: {}
+    name: SalesOrderNumber
+    nullable: true
+    type: string
+-   metadata: {}
+    name: SalesOrderLineNumber
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: SalesReasonKey
+    nullable: true
+    type: integer
+type: struct

@@ -1,0 +1,14 @@
+fields:
+-   metadata: {}
+    name: CurrencyKey
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: CurrencyAlternateKey
+    nullable: true
+    type: string
+-   metadata: {}
+    name: CurrencyName
+    nullable: true
+    type: string
+type: struct
