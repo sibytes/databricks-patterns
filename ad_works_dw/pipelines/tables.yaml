@@ -23,7 +23,7 @@ landing:
       dim_organization: null
       dim_product: null
       dim_product_category: null
-      dim_product_subcategory: null
+      dim_product_sub_category: null
       dim_promotion: null
       dim_salesreason: null
       dim_salesterritory: null
@@ -164,12 +164,12 @@ raw:
         id: ProductCategoryKey
         vacuum: 30
         z_order_by: _load_date
-      dim_product_subcategory:
+      dim_product_sub_category:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dim_product_subcategory
+        - landing.landing_ad_works_dw.dim_product_sub_category
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
