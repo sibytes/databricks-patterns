@@ -55,7 +55,7 @@ def create_schema(
 
 # COMMAND ----------
 
-project = "ad_works"
+project = "ad_works_dw"
 pipeline = load_type.value
 
 config = Config(
