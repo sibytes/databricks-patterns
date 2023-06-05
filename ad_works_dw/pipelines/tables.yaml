@@ -12,34 +12,33 @@ audit_control:
 landing:
   read:
     landing_ad_works_dw:
-      dbo_dim_account: null
-      dbo_dim_currency: null
-      dbo_dim_customer: null
-      dbo_dim_date: null
-      dbo_dim_department_group: null
-      dbo_dim_employee: null
-      dbo_dim_eseller: null
-      dbo_dim_geography: null
-      dbo_dim_organization: null
-      dbo_dim_product: null
-      dbo_dim_product_category: null
-      dbo_dim_product_subcategory: null
-      dbo_dim_promotion: null
-      dbo_dim_salesreason: null
-      dbo_dim_salesterritory: null
-      dbo_dim_scenario: null
-      dbo_fact_additional_international_product_description: null
-      dbo_fact_call_center: null
-      dbo_fact_currency_rate: null
-      dbo_fact_finance: null
-      dbo_fact_internet_sales: null
-      dbo_fact_internet_sales_reason: null
-      dbo_fact_product_inventory: null
-      dbo_fact_reseller_sales: null
-      dbo_fact_sales_quota: null
-      dbo_fact_survey_response: null
-      dbo_new_fact_currency_rate: null
-      dbo_prospective_buyer: null
+      dbo_DimAccount: null
+      dbo_DimCurrency: null
+      dbo_DimCustomer: null
+      dbo_DimDate: null
+      dbo_DimDepartmentGroup: null
+      dbo_DimEmployee: null
+      dbo_DimGeography: null
+      dbo_DimOrganization: null
+      dbo_DimProduct: null
+      dbo_DimProductCategory: null
+      dbo_DimProductSubcategory: null
+      dbo_DimPromotion: null
+      dbo_DimReseller: null
+      dbo_DimSalesReason: null
+      dbo_DimScenario: null
+      dbo_FactAdditionalInternationalProductDescription: null
+      dbo_FactCurrencyRate: null
+      dbo_FactFinance: null
+      dbo_FactInternetSales: null
+      dbo_FactInternetSalesReason: null
+      dbo_FactProductInventory: null
+      dbo_FactResellerSales: null
+      dbo_FactSalesQuota: null
+      dbo_FactSurveyResponse: null
+      dbo_ProspectiveBuyer: null
+      dbo_SimSalesTerritory: null
+      dbo_factCallCenter: null
 
 raw:
   delta_lake:
@@ -49,7 +48,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_account
+        - landing.landing_ad_works_dw.dbo_DimAccount
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -61,7 +60,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_currency
+        - landing.landing_ad_works_dw.dbo_DimCurrency
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -73,7 +72,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_customer
+        - landing.landing_ad_works_dw.dbo_DimCustomer
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -85,7 +84,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_date
+        - landing.landing_ad_works_dw.dbo_DimDate
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -97,7 +96,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_department_group
+        - landing.landing_ad_works_dw.dbo_DimDepartmentGroup
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -109,7 +108,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_employee
+        - landing.landing_ad_works_dw.dbo_DimEmployee
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -121,7 +120,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_geography
+        - landing.landing_ad_works_dw.dbo_DimGeography
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -133,7 +132,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_organization
+        - landing.landing_ad_works_dw.dbo_DimOrganization
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -145,7 +144,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_product
+        - landing.landing_ad_works_dw.dbo_DimProduct
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -157,7 +156,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_product_category
+        - landing.landing_ad_works_dw.dbo_DimProductCategory
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -169,7 +168,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_product_subcategory
+        - landing.landing_ad_works_dw.dbo_DimProductSubcategory
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -181,7 +180,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_promotion
+        - landing.landing_ad_works_dw.dbo_DimPromotion
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -193,7 +192,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_eseller
+        - landing.landing_ad_works_dw.dbo_DimReseller
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -205,7 +204,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_salesreason
+        - landing.landing_ad_works_dw.dbo_DimSalesReason
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -217,7 +216,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_salesterritory
+        - landing.landing_ad_works_dw.dbo_SimSalesTerritory
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -229,7 +228,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_dim_scenario
+        - landing.landing_ad_works_dw.dbo_DimScenario
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -241,7 +240,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_fact_additional_international_product_description
+        - landing.landing_ad_works_dw.dbo_FactAdditionalInternationalProductDescription
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -253,7 +252,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_fact_call_center
+        - landing.landing_ad_works_dw.dbo_factCallCenter
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -268,7 +267,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_fact_currency_rate
+        - landing.landing_ad_works_dw.dbo_FactCurrencyRate
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -282,7 +281,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_fact_finance
+        - landing.landing_ad_works_dw.dbo_FactFinance
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -294,7 +293,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_fact_internet_sales
+        - landing.landing_ad_works_dw.dbo_FactInternetSales
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -308,7 +307,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_fact_internet_sales_reason
+        - landing.landing_ad_works_dw.dbo_FactInternetSalesReason
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -323,7 +322,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_fact_product_inventory
+        - landing.landing_ad_works_dw.dbo_FactProductInventory
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -337,7 +336,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_fact_reseller_sales
+        - landing.landing_ad_works_dw.dbo_FactResellerSales
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -351,7 +350,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_fact_sales_quota
+        - landing.landing_ad_works_dw.dbo_FactSalesQuota
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -363,7 +362,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_fact_survey_response
+        - landing.landing_ad_works_dw.dbo_FactSurveyResponse
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -375,7 +374,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_dw.dbo_prospective_buyer
+        - landing.landing_ad_works_dw.dbo_ProspectiveBuyer
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
