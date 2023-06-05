@@ -1,0 +1,385 @@
+version: 1.4.5
+
+audit_control:
+  delta_lake:
+    control_ad_works_dw:
+      raw_audit:
+        depends_on:
+        - raw.raw_ad_works_dw.*
+        sql: ../sql/{{database}}/{{table}}.sql
+        vacuum: 30
+
+landing:
+  read:
+    landing_ad_works_dw:
+      dbo_dim_account: null
+      dbo_dim_currency: null
+      dbo_dim_customer: null
+      dbo_dim_date: null
+      dbo_dim_department_group: null
+      dbo_dim_employee: null
+      dbo_dim_eseller: null
+      dbo_dim_geography: null
+      dbo_dim_organization: null
+      dbo_dim_product: null
+      dbo_dim_product_category: null
+      dbo_dim_product_subcategory: null
+      dbo_dim_promotion: null
+      dbo_dim_salesreason: null
+      dbo_dim_salesterritory: null
+      dbo_dim_scenario: null
+      dbo_fact_additional_international_product_description: null
+      dbo_fact_call_center: null
+      dbo_fact_currency_rate: null
+      dbo_fact_finance: null
+      dbo_fact_internet_sales: null
+      dbo_fact_internet_sales_reason: null
+      dbo_fact_product_inventory: null
+      dbo_fact_reseller_sales: null
+      dbo_fact_sales_quota: null
+      dbo_fact_survey_response: null
+      dbo_new_fact_currency_rate: null
+      dbo_prospective_buyer: null
+
+raw:
+  delta_lake:
+    raw_ad_works_dw:
+      dim_account:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_account
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: AccountKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_currency:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_currency
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: CurrencyKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_customer:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_customer
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: CustomerKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_date:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_date
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: DateKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_department_group:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_department_group
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: DepartmentGroupKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_employee:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_employee
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: EmployeeKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_geography:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_geography
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: GeographyKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_organization:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_organization
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: OrganizationKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_product:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_product
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProductKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_product_category:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_product_category
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProductCategoryKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_product_subcategory:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_product_subcategory
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProductSubcategoryKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_promotion:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_promotion
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: PromotionKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_reseller:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_eseller
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ResellerKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_salesreason:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_salesreason
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: SalesReasonKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_salesterritory:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_salesterritory
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: SalesTerritoryKey
+        vacuum: 30
+        z_order_by: _load_date
+      dim_scenario:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_dim_scenario
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ScenarioKey
+        vacuum: 30
+        z_order_by: _load_date
+      fact_additional_international_product_description:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_fact_additional_international_product_description
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProductKey
+        vacuum: 30
+        z_order_by: _load_date
+      fact_call_center:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_fact_call_center
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - DateKey
+        - FactCallCenterID
+        - Shift
+        vacuum: 30
+        z_order_by: _load_date
+      fact_currency_rate:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_fact_currency_rate
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - CurrencyKey
+        - DateKey
+        vacuum: 30
+        z_order_by: _load_date
+      fact_finance:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_fact_finance
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: FinanceKey
+        vacuum: 30
+        z_order_by: _load_date
+      fact_internet_sales:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_fact_internet_sales
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - SalesOrderLineNumber
+        - SalesOrderNumber
+        vacuum: 30
+        z_order_by: _load_date
+      fact_internet_sales_reason:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_fact_internet_sales_reason
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - SalesOrderLineNumber
+        - SalesOrderNumber
+        - SalesReasonKey
+        vacuum: 30
+        z_order_by: _load_date
+      fact_product_inventory:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_fact_product_inventory
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - DateKey
+        - ProductKey
+        vacuum: 30
+        z_order_by: _load_date
+      fact_reseller_sales:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_fact_reseller_sales
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - SalesOrderLineNumber
+        - SalesOrderNumber
+        vacuum: 30
+        z_order_by: _load_date
+      fact_sales_quota:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_fact_sales_quota
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: SalesQuotaKey
+        vacuum: 30
+        z_order_by: _load_date
+      fact_survey_response:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_fact_survey_response
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: SurveyResponseKey
+        vacuum: 30
+        z_order_by: _load_date
+      prospective_buyer:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_dw.dbo_prospective_buyer
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProspectiveBuyerKey
+        vacuum: 30
+        z_order_by: _load_date
+
