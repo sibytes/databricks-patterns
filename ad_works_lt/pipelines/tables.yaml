@@ -1,17 +1,21 @@
-version: 1.4.10
+version: 1.4.5
 
 audit_control:
   delta_lake:
     control_ad_works_lt:
-      raw_audit:
-        sql: ../sql/{{database}}/{{table}}.sql
+      base_audit:
         depends_on:
-          - raw.raw_ad_works_lt.*
-
+        - base.raw_ad_works.*
+        sql: ../sql/{{database}}/{{table}}.sql
+        vacuum: 30
+      raw_audit:
+        depends_on:
+        - raw.raw_ad_works.*
+        sql: ../sql/{{database}}/{{table}}.sql
+        vacuum: 30
 
 landing:
   read:
-    # delta table properties can be set at stage level or table level
     landing_ad_works_lt:
       address: null
       customer: null
@@ -24,10 +28,8 @@ landing:
       sales_order_detail: null
       sales_order_header: null
 
-
 raw:
   delta_lake:
-    # delta table properties can be set at stage level or table level
     delta_properties:
       delta.appendOnly: true
       delta.autoOptimize.autoCompact: true    
@@ -35,66 +37,136 @@ raw:
       delta.enableChangeDataFeed: true
     raw_ad_works_lt:
       address:
-        ids: id
-        depends_on:
-          - landing.landing_ad_works_lt.address
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_lt.address
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: AddressID
+        vacuum: 30
+        z_order_by: _load_date
       customer:
-        ids: id
-        depends_on:
-          - landing.landing_ad_works_lt.customer
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_lt.customer
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: CustomerID
+        vacuum: 30
+        z_order_by: _load_date
       customer_address:
-        ids: id
-        depends_on:
-          - landing.landing_ad_works_lt.customer_address
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_lt.customer_address
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - AddressID
+        - CustomerID
+        vacuum: 30
+        z_order_by: _load_date
       product:
-        ids: id
-        depends_on:
-          - landing.landing_ad_works_lt.product
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_lt.product
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - ProductID
+        - ProductNumber
+        vacuum: 30
+        z_order_by: _load_date
       product_category:
-        ids: id
-        depends_on:
-          - landing.landing_ad_works_lt.product_category
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_lt.product_category
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProductCategoryID
+        vacuum: 30
+        z_order_by: _load_date
       product_description:
-        ids: id
-        depends_on:
-          - landing.landing_ad_works_lt.product_description
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_lt.product_description
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProductDescriptionID
+        vacuum: 30
+        z_order_by: _load_date
       product_model:
-        ids: id
-        depends_on:
-          - landing.landing_ad_works_lt.product_model
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_lt.product_model
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProductModelID
+        vacuum: 30
+        z_order_by: _load_date
       product_model_product_description:
-        ids: id
-        depends_on:
-          - landing.landing_ad_works_lt.product_model_product_description
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_lt.product_model_product_description
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - ProductDescriptionID
+        - ProductModelID
+        - Culture
+        vacuum: 30
+        z_order_by: _load_date
       sales_order_detail:
-        ids: id
-        depends_on:
-          - landing.landing_ad_works_lt.sales_order_detail
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_lt.sales_order_detail
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - SalesOrderDetailID
+        - SalesOrderID
+        vacuum: 30
+        z_order_by: _load_date
       sales_order_header:
-        ids: id
-        depends_on:
-          - landing.landing_ad_works_lt.sales_order_header
         custom_properties:
           process_group: 1
-
+          rentention_days: 365
+        depends_on:
+        - landing.landing_ad_works_lt.sales_order_header
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - SalesOrderID
+        - SalesOrderNumber
+        vacuum: 30
+        z_order_by: _load_date
 
 base:
   delta_lake:
@@ -105,63 +177,124 @@ base:
       delta.enableChangeDataFeed: true
     base_ad_works_lt:
       address:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works_lt.address
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.raw_ad_works_lt.address
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: AddressID
+        vacuum: 30
       customer:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works_lt.customer
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.raw_ad_works_lt.customer
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: CustomerID
+        vacuum: 30
       customer_address:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works_lt.customer_address
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.raw_ad_works_lt.customer_address
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - AddressID
+        - CustomerID
+        vacuum: 30
       product:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works_lt.product
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.raw_ad_works_lt.product
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - ProductID
+        - ProductNumber
+        vacuum: 30
       product_category:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works_lt.product_category
-        raw_ad_works_lt:
+        custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.raw_ad_works_lt.product_category
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProductCategoryID
+        vacuum: 30
       product_description:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works_lt.product_description
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.raw_ad_works_lt.product_description
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProductDescriptionID
+        vacuum: 30
       product_model:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works_lt.product_model
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.raw_ad_works_lt.product_model
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: ProductModelID
+        vacuum: 30
       product_model_product_description:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works_lt.product_model_product_description
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.raw_ad_works_lt.product_model_product_description
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - ProductDescriptionID
+        - ProductModelID
+        - Culture
+        vacuum: 30
       sales_order_detail:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works_lt.sales_order_detail
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.raw_ad_works_lt.sales_order_detail
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - SalesOrderDetailID
+        - SalesOrderID
+        vacuum: 30
       sales_order_header:
-        ids: id
-        depends_on:
-          - raw.raw_ad_works_lt.sales_order_header
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.raw_ad_works_lt.sales_order_header
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id:
+        - SalesOrderID
+        - SalesOrderNumber
+        vacuum: 30
 
