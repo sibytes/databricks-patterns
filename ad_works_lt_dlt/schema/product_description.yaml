@@ -1,0 +1,18 @@
+fields:
+-   metadata: {}
+    name: ProductDescriptionID
+    nullable: true
+    type: integer
+-   metadata: {}
+    name: Description
+    nullable: true
+    type: string
+-   metadata: {}
+    name: rowguid
+    nullable: true
+    type: string
+-   metadata: {}
+    name: ModifiedDate
+    nullable: true
+    type: timestamp
+type: struct

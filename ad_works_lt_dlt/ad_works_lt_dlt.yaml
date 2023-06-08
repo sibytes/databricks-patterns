@@ -1,0 +1,18 @@
+version: 1.4.10
+
+name: ad_works_lt_dlt
+sql: ./sql
+spark_schema: ./schema
+pipeline: ./pipelines
+databricks_notebooks: ./databricks/notebooks
+databricks_workflows: ./databricks/workflows
+databricks_queries: ./databricks/queries
+
+
+spark:
+  logging_level: ERROR
+  config:
+    spark.master: local
+    spark.databricks.delta.allowArbitraryProperties.enabled: true
+    spark.sql.catalog.spark_catalog: org.apache.spark.sql.delta.catalog.DeltaCatalog
+    spark.sql.extensions: io.delta.sql.DeltaSparkSessionExtension
