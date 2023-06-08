@@ -40,6 +40,27 @@ stages:
                     FromWorkspaceDir: 'header_footer'
                     ToWorkspaceDir: 'header_footer'
 
+      - deployment: deployAdWorksLtDltNotebooks
+        displayName: Deploy ad_works_lt_dlt Notebooks
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - template: ../ci/templates/notebook.yml
+                  parameters:
+                    azureResourceManagerConnection: 'development_subscription'
+                    keyVaultName: '$(KEY_VAULT)'
+                    SubscriptionId: '$(SUBSCRIPTION_ID)'
+                    ResourceGroup: '$(RESOURCE_GROUP)'
+                    DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
+                    DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
+                    DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
+                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
+                    FromWorkspaceDir: 'ad_works_lt_dlt'
+                    ToWorkspaceDir: 'ad_works_lt_dlt'
+
       - deployment: deployAdWorksLtNotebooks
         displayName: Deploy ad_works_lt Notebooks
         environment: 'development'
