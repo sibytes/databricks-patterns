@@ -1,62 +1,20 @@
 # Databricks notebook source
 # MAGIC %pip install pyaml pydantic yetl-framework==1.4.10
 
-# COMMAND ----------
-
-dbutils.widgets.text("process_id", "-1")
-dbutils.widgets.text("timeout", "3600")
-dbutils.widgets.text("process_group", "1")
-dbutils.widgets.text("load_type", "batch")
-dbutils.widgets.text("timeslice", "*")
-dbutils.widgets.text("drop_already_loaded", "True")
-
-# COMMAND ----------
-
 
 from yetl import (
   Config, Timeslice, StageType, Read, DeltaLake
 )
-from yetl.workflow import (
-  execute_notebooks, Notebook
-)
-
-from enum import Enum
-
-class LoadType(Enum):
-    autoloader = "autoloader"
-    batch = "batch"
 
 # COMMAND ----------
 
-param_process_id = int(dbutils.widgets.get("process_id"))
-param_timeout = int(dbutils.widgets.get("timeout"))
-param_process_group = int(dbutils.widgets.get("process_group"))
-param_load_type = dbutils.widgets.get("load_type")
-param_timeslice = dbutils.widgets.get("timeslice")
-param_drop_already_loaded = dbutils.widgets.get("drop_already_loaded")
+process_group = 1
+pipeline = "autoloader"
 
-if param_drop_already_loaded.lower() in ['true','false']:
-  param_drop_already_loaded = bool(param_drop_already_loaded)
-else:
-  raise ValueError("drop_already_loaded must be true or false")
-
-try:
-  load_type:LoadType = LoadType(param_load_type)
-except Exception as e:
-   raise Exception(f"load_type parameter {param_load_type} is not valid")
-
-print(f"""
-  param_process_id: {param_process_id}
-  param_timeout: {param_timeout}
-  process_group: {param_process_group}
-  load_type: {str(load_type)}
-  timeslice: {param_timeslice}
-""")
 
 # COMMAND ----------
 
 project = "ad_works_lt"
-pipeline = load_type.value
 
 config = Config(
   project=project, 
@@ -71,7 +29,7 @@ tables = config.tables.lookup_table(
   # this will filter the tables on a custom property
   # in the tables parameter you can add whatever custom properties you want
   # either for filtering or to use in pipelines
-  process_group=param_process_group
+  process_group=process_group
 )
 
 
@@ -83,8 +41,7 @@ from pyspark.sql.functions import *
 
 def create_dlt(
   source: Read,
-  destination: DeltaLake,
-  drop_already_loaded:bool = True
+  destination: DeltaLake
 ):
 
   @dlt.table(
@@ -116,9 +73,6 @@ def create_dlt(
 
     df = df.selectExpr(*columns)
     df = source.add_timeslice(df)
-
-    if drop_already_loaded:
-      drop_if_already_loaded(df, source)
 
     return df
 
