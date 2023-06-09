@@ -11,7 +11,7 @@ from yetl import (
 # COMMAND ----------
 
 process_group = 1
-pipeline = "autoloader"
+pipeline = "batch"
 project = "ad_works_lt"
 
 # COMMAND ----------
