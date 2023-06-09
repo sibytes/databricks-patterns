@@ -3,18 +3,18 @@
 
 
 from yetl import (
-  Config, Timeslice, StageType, Read, DeltaLake
+  Config, StageType, Read, DeltaLake
 )
 
 # COMMAND ----------
 
 process_group = 1
 pipeline = "autoloader"
-
+project = "ad_works_lt"
 
 # COMMAND ----------
 
-project = "ad_works_lt"
+
 
 config = Config(
   project=project, 
@@ -76,8 +76,6 @@ def create_dlt(
 
     return df
 
-
-
 # COMMAND ----------
 
 for t in tables:
@@ -85,6 +83,8 @@ for t in tables:
   table_mapping = config.get_table_mapping(
     stage=StageType.raw, 
     table=t.table,
+    # dlt does this so yetl doesn't need to
+    create_database=False,
     create_table=False
   )
   config.set_checkpoint(
@@ -93,8 +93,7 @@ for t in tables:
 
   create_dlt(
     table_mapping.source, 
-    table_mapping.destination, 
-    False
+    table_mapping.destination
   )
 
 
