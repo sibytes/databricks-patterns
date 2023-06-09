@@ -1,6 +1,8 @@
 # Databricks notebook source
 # MAGIC %pip install pyaml pydantic yetl-framework==1.4.12
 
+# COMMAND ----------
+
 
 from yetl import (
   Config, StageType, Read, DeltaLake
