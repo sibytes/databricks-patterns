@@ -1,28 +1,28 @@
 {
-    "id": "5281d7e4-3be1-44c5-83c7-dd9bc1fdef03",
+    "id": "3bfcb35d-d3bc-4d1a-9eb4-be85f49a61e7",
     "clusters": [
         {
             "label": "default",
             "autoscale": {
-                "min_workers": 1,
+                "min_workers": 0,
                 "max_workers": 5,
                 "mode": "ENHANCED"
             }
         }
     ],
-    "development": false,
+    "development": true,
     "continuous": false,
     "channel": "CURRENT",
-    "photon": true,
+    "photon": false,
     "libraries": [
         {
             "notebook": {
-                "path": "/ad_works_lt/databricks/notebooks/raw_base_load_dlt"
+                "path": "/ad_works_lt/databricks/notebooks/bronze/raw_load_dlt"
             }
         }
     ],
-    "name": "ad_works_lt_dlt",
+    "name": "raw_ad_works_lt_dlt",
     "edition": "ADVANCED",
-    "storage": "/mnt/datalake/data/raw/ad_works_lt_raw_base",
-    "target": "ad_works_lt_rb"
+    "storage": "/mnt/datalake/data/raw/ad_works_lt",
+    "target": "ad_works_lt"
 }
