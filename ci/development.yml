@@ -179,3 +179,22 @@ stages:
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
                     SubDir: 'ad_works_dw/databricks/workflows'
+
+      - deployment: deployAdWorksLtPipelines
+        displayName: Deploy ad_works_lt Pipelines
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - template: ../ci/templates/pipelines.yml
+                  parameters:
+                    azureResourceManagerConnection: 'development_subscription'
+                    keyVaultName: '$(KEY_VAULT)'
+                    SubscriptionId: '$(SUBSCRIPTION_ID)'
+                    ResourceGroup: '$(RESOURCE_GROUP)'
+                    DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
+                    DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
+                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
+                    SubDir: 'ad_works_lt/databricks/pipelines'
