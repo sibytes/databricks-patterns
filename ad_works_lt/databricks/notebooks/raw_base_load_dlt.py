@@ -91,16 +91,11 @@ def create_base_dlt(
     name=f"base_{destination.table}"
   )
   def base_load():
-
-    df:DataFrame = (
-        spark.sql(f"""
-          SELECT *
-          FROM ad_works_lt_rb.raw_{source.table}
-          WHERE _is_valid = 1
-        """)
+    return(
+      dlt.read(f"raw_{source.table}").where("_is_valid = 1")
     )
 
-    return df
+
 
 # COMMAND ----------
 
