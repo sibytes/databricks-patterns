@@ -1,0 +1,28 @@
+{
+    "id": "bc52598b-848a-4611-9872-db275880ab89",
+    "clusters": [
+        {
+            "label": "default",
+            "autoscale": {
+                "min_workers": 1,
+                "max_workers": 5,
+                "mode": "ENHANCED"
+            }
+        }
+    ],
+    "development": true,
+    "continuous": false,
+    "channel": "CURRENT",
+    "photon": false,
+    "libraries": [
+        {
+            "notebook": {
+                "path": "/ad_works_lt/databricks/notebooks/raw_base_load_dlt"
+            }
+        }
+    ],
+    "name": "ad_works_lt_dlt",
+    "edition": "ADVANCED",
+    "storage": "/mnt/datalake/data/raw/ad_works_lt_raw_base",
+    "target": "ad_works_lt_rb"
+}
