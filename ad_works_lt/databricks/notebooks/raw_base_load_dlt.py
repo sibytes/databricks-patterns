@@ -7,6 +7,9 @@
 from yetl import (
   Config, StageType, Read, DeltaLake
 )
+import dlt
+from pyspark.sql.functions import *
+
 
 # COMMAND ----------
 
@@ -37,17 +40,15 @@ tables = config.tables.lookup_table(
 
 # COMMAND ----------
 
-import dlt
-from pyspark.sql.functions import *
 
 
-def create_dlt(
+def create_raw_dlt(
   source: Read,
   destination: DeltaLake
 ):
 
   @dlt.table(
-    name=destination.table
+    name=f"raw_{destination.table}"
   )
   def raw_load():
 
@@ -80,6 +81,29 @@ def create_dlt(
 
 # COMMAND ----------
 
+
+def create_base_dlt(
+  source: Read,
+  destination: DeltaLake
+):
+
+  @dlt.table(
+    name=f"base_{destination.table}"
+  )
+  def base_load():
+
+    df:DataFrame = (
+        spark.read.sql(f"""
+          SELECT *
+          FROM {source.database}.{source.table}
+          WHERE _is_valid = 1
+        """)
+    )
+
+    return df
+
+# COMMAND ----------
+
 for t in tables:
 
   table_mapping = config.get_table_mapping(
@@ -93,11 +117,50 @@ for t in tables:
     table_mapping.source, table_mapping.destination
   )
 
-  create_dlt(
+
+# COMMAND ----------
+
+
+  create_raw_dlt(
     table_mapping.source, 
     table_mapping.destination
   )
 
+
+# COMMAND ----------
+
+tables = config.tables.lookup_table(
+  stage=StageType.base, 
+  first_match=False,
+  # this will filter the tables on a custom property
+  # in the tables parameter you can add whatever custom properties you want
+  # either for filtering or to use in pipelines
+  process_group=process_group
+)
+
+# COMMAND ----------
+
+for t in tables:
+
+  table_mapping = config.get_table_mapping(
+    stage=StageType.base, 
+    table=t.table,
+    # dlt does this so yetl doesn't need to
+    create_database=False,
+    create_table=False
+  )
+  config.set_checkpoint(
+    table_mapping.source, table_mapping.destination
+  )
+
+
+
+# COMMAND ----------
+
+  create_base_dlt(
+    table_mapping.source, 
+    table_mapping.destination
+  )
 
 # COMMAND ----------
 
