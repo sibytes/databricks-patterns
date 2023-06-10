@@ -64,6 +64,30 @@ def create_raw_dlt(
 
 # COMMAND ----------
 
+create_dlt(
+  config=config, 
+  stage=StageType.raw, 
+  dlt_funct=create_raw_dlt, 
+  process_group=process_group
+)
+
+# COMMAND ----------
+
+from yetl.workflow import create_dlt
+from yetl import (
+  Config, StageType
+)
+
+process_group = 1
+pipeline = "batch"
+project = "ad_works_lt"
+config = Config(
+  project=project, 
+  pipeline=pipeline
+)
+
+# COMMAND ----------
+
 
 def create_base_dlt(
   source: Read,
@@ -82,11 +106,12 @@ def create_base_dlt(
 
 # COMMAND ----------
 
-create_dlt(config, StageType.raw, create_raw_dlt, process_group=process_group)
-
-# COMMAND ----------
-
-create_dlt(config, StageType.base, create_raw_dlt, process_group=process_group)
+create_dlt(
+  config=config, 
+  stage=StageType.base, 
+  dlt_funct=create_base_dlt, 
+  process_group=process_group
+)
 
 # COMMAND ----------
 
