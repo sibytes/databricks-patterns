@@ -119,7 +119,6 @@ stages:
                     ResourceGroup: '$(RESOURCE_GROUP)'
                     DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
-                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
                     SubDir: 'header_footer/databricks/workflows'
 
 
@@ -139,7 +138,6 @@ stages:
                     ResourceGroup: '$(RESOURCE_GROUP)'
                     DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
-                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
                     SubDir: 'ad_works/databricks/workflows
 '
       - deployment: deployAdWorksLtWorkflows
@@ -158,7 +156,6 @@ stages:
                     ResourceGroup: '$(RESOURCE_GROUP)'
                     DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
-                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
                     SubDir: 'ad_works_lt/databricks/workflows'
 
       - deployment: deployAdWorksDWWorkflows
@@ -177,7 +174,6 @@ stages:
                     ResourceGroup: '$(RESOURCE_GROUP)'
                     DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
-                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
                     SubDir: 'ad_works_dw/databricks/workflows'
 
       - deployment: deployAdWorksLtPipelines
@@ -196,5 +192,4 @@ stages:
                     ResourceGroup: '$(RESOURCE_GROUP)'
                     DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
-                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
                     SubDir: 'ad_works_lt/databricks/pipelines'

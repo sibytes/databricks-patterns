@@ -6,7 +6,6 @@ parameters:
   ResourceGroup: none
   DbxWorkspaceName: none
   DbxWorkspaceUrl: none
-  DbxWorkspaceRoot: none
   SubDir: none
 
 steps:
@@ -45,6 +44,5 @@ steps:
       DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
       ROOT_DIR: $(System.DefaultWorkingDirectory)
       SUB_DIR: ${{ parameters.SubDir }}
-      WORKSPACE_ROOT: "autobricks"
       AUTOBRICKS_LOGGING: INFO
       SSL_VERIFY: True

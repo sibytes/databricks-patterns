@@ -6,7 +6,6 @@ parameters:
   ResourceGroup: none
   DbxWorkspaceName: none
   DbxWorkspaceUrl: none
-  DbxWorkspaceRoot: none
   SubDir: none
 
 steps:
@@ -30,7 +29,7 @@ steps:
                 python -m pip install autobricks
 
   - task: PythonScript@0
-    displayName: "Deploy DBX Workflows"
+    displayName: "Deploy DBX Pipelines"
     inputs:
       scriptSource: 'filePath'
       scriptPath: ci/python/deploy_pipelines.py
@@ -45,6 +44,5 @@ steps:
       DATABRICKS_API_HOST: ${{ parameters.DbxWorkspaceUrl }}
       ROOT_DIR: $(System.DefaultWorkingDirectory)
       SUB_DIR: ${{ parameters.SubDir }}
-      WORKSPACE_ROOT: "autobricks"
       AUTOBRICKS_LOGGING: INFO
       SSL_VERIFY: True
