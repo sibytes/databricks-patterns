@@ -95,7 +95,7 @@ def create_base_dlt(
     df:DataFrame = (
         spark.sql(f"""
           SELECT *
-          FROM raw_{source.database}.{source.table}
+          FROM raw_{source.table}
           WHERE _is_valid = 1
         """)
     )
