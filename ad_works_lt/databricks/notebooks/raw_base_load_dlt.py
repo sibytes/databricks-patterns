@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.4.14
+# MAGIC %pip install pyaml pydantic yetl-framework==1.5.0.dev1
 
 # COMMAND ----------
 
@@ -35,8 +35,16 @@ def create_raw_dlt(
   )
   def raw_load():
 
-    df:DataFrame = (
-        spark.read.schema(source.spark_schema)
+    # batch read! Need to figure out a way to pass in the timeslice
+    # df:DataFrame = (
+    #     spark.read.schema(source.spark_schema)
+    #     .format(source.format)
+    #     .options(**source.options)
+    #     .load(source.path)
+    # )
+
+    df = (
+        spark.readStream.schema(source.spark_schema)
         .format(source.format)
         .options(**source.options)
         .load(source.path)
@@ -51,7 +59,6 @@ def create_raw_dlt(
         + [
             "if(_corrupt_record is null, true, false) as _is_valid",
             f"cast(null as timestamp) as {source.slice_date_column_name}",
-            # f"cast({process_id} as long) as _process_id",
             "current_timestamp() as _load_date",
             "_metadata",
         ]

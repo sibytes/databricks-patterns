@@ -1,6 +1,15 @@
-version: 1.4.10
+version: 1.5.0
 # paths here are relative to this configuration document
 tables: ./tables.yaml
+
+audit_control:
+  delta_lake:
+    # delta table properties can be set at stage level or table level
+    managed: false
+    container: datalake
+    location: /mnt/{{container}}/data/control
+    path: "{{database}}/{{table}}"
+    options: null
 
 landing:
   read:
@@ -33,6 +42,7 @@ landing:
       quote: '"'
       emptyValue: ""
     
+
 raw:
   delta_lake:
     database: "{{database}}"
@@ -44,6 +54,13 @@ raw:
       - _load_date
     options:
       mergeSchema: true
+        # optional leave it out if you don't want them
+    warning_thresholds:
+      invalid_rows: 0
+    # optional leave it out if you don't want them
+    exception_thresholds:
+      invalid_rows: 2
+
 
 base:
   delta_lake:
