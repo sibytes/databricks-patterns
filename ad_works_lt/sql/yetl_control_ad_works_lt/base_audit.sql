@@ -1,4 +1,4 @@
-  CREATE TABLE IF NOT EXISTS `control_ad_works_lt`.`base_audit`
+  CREATE TABLE IF NOT EXISTS `yetl_control_ad_works_lt`.`base_audit`
   (
 
     `file_name` string,

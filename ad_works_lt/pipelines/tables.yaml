@@ -5,12 +5,12 @@ audit_control:
     yetl_control_ad_works_lt:
       base_audit:
         depends_on:
-        - base.raw_ad_works.*
+        - base.yetl_base_ad_works_lt.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 30
       raw_audit:
         depends_on:
-        - raw.raw_ad_works.*
+        - raw.yetl_raw_ad_works_lt.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 30
 
