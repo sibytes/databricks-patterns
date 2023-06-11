@@ -1,0 +1,55 @@
+version: 1.4.10
+# paths here are relative to this configuration document
+tables: ./tables.yaml
+
+landing:
+  read:
+    # trigger: customerdetailscomplete-{{filename_date_format}}*.flg
+    trigger_type: file
+    database: "{{database}}"
+    table: "{{table}}"
+    container: landing
+    location: "/mnt/{{container}}/data/{{project}}/csv/{{table}}/*"
+    filename: "{{table}}-*.csv"
+    filename_date_format: "%Y%m%d"
+    path_date_format: "%Y%m%d"
+    format: cloudFiles
+    spark_schema: ../schema/{{table.lower()}}.yaml
+    options:
+      # autoloader
+      cloudFiles.format: csv
+      cloudFiles.useIncrementalListing: auto
+      # schema
+      inferSchema: false
+      enforceSchema: true
+      columnNameOfCorruptRecord: _corrupt_record
+      # csv
+      header: false
+      mode: PERMISSIVE
+      encoding: windows-1252
+      delimiter: ","
+      escape: '"'
+      nullValue: ""
+      quote: '"'
+      emptyValue: ""
+    
+raw:
+  delta_lake:
+    database: "{{database}}"
+    table: "{{table}}"
+    container: datalake
+    location: /mnt/{{container}}/data/raw
+    path: "{{database}}/{{table}}"
+    z_order_by:
+      - _load_date
+    options:
+      mergeSchema: true
+
+base:
+  delta_lake:
+    database: "{{database}}"
+    table: "{{table}}"
+    container: datalake
+    location: /mnt/{{container}}/data/base
+    path: "{{database}}/{{table}}"
+    options: null

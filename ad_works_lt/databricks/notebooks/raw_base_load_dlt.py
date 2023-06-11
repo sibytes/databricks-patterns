@@ -14,7 +14,7 @@ from pyspark.sql.functions import *
 # COMMAND ----------
 
 process_group = 1
-pipeline = "batch"
+pipeline = "autoloader_dlt"
 project = "ad_works_lt"
 config = Config(
   project=project, 
