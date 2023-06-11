@@ -2,7 +2,7 @@ version: 1.4.5
 
 audit_control:
   delta_lake:
-    control_ad_works_lt:
+    yetl_control_ad_works_lt:
       base_audit:
         depends_on:
         - base.raw_ad_works.*
@@ -16,7 +16,7 @@ audit_control:
 
 landing:
   read:
-    landing_ad_works_lt:
+    yetl_landing_ad_works_lt:
       address: null
       customer: null
       customer_address: null
@@ -30,18 +30,13 @@ landing:
 
 raw:
   delta_lake:
-    delta_properties:
-      delta.appendOnly: true
-      delta.autoOptimize.autoCompact: true    
-      delta.autoOptimize.optimizeWrite: true  
-      delta.enableChangeDataFeed: true
-    raw_ad_works_lt:
+    yetl_raw_ad_works_lt:
       address:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_lt.address
+        - landing.yetl_landing_ad_works_lt.address
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -53,7 +48,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_lt.customer
+        - landing.yetl_landing_ad_works_lt.customer
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -65,7 +60,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_lt.customer_address
+        - landing.yetl_landing_ad_works_lt.customer_address
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -79,7 +74,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_lt.product
+        - landing.yetl_landing_ad_works_lt.product
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -93,7 +88,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_lt.product_category
+        - landing.yetl_landing_ad_works_lt.product_category
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -105,7 +100,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_lt.product_description
+        - landing.yetl_landing_ad_works_lt.product_description
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -117,7 +112,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_lt.product_model
+        - landing.yetl_landing_ad_works_lt.product_model
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -129,7 +124,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_lt.product_model_product_description
+        - landing.yetl_landing_ad_works_lt.product_model_product_description
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -144,7 +139,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_lt.sales_order_detail
+        - landing.yetl_landing_ad_works_lt.sales_order_detail
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -158,7 +153,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.landing_ad_works_lt.sales_order_header
+        - landing.yetl_landing_ad_works_lt.sales_order_header
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -170,18 +165,13 @@ raw:
 
 base:
   delta_lake:
-    delta_properties:
-      delta.appendOnly: true
-      delta.autoOptimize.autoCompact: true    
-      delta.autoOptimize.optimizeWrite: true  
-      delta.enableChangeDataFeed: true
-    base_ad_works_lt:
+    yetl_base_ad_works_lt:
       address:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.raw_ad_works_lt.address
+        - raw.yetl_raw_ad_works_lt.address
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -192,7 +182,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.raw_ad_works_lt.customer
+        - raw.yetl_raw_ad_works_lt.customer
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -203,7 +193,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.raw_ad_works_lt.customer_address
+        - raw.yetl_raw_ad_works_lt.customer_address
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -216,7 +206,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.raw_ad_works_lt.product
+        - raw.yetl_raw_ad_works_lt.product
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -229,7 +219,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.raw_ad_works_lt.product_category
+        - raw.yetl_raw_ad_works_lt.product_category
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -240,7 +230,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.raw_ad_works_lt.product_description
+        - raw.yetl_raw_ad_works_lt.product_description
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -251,7 +241,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.raw_ad_works_lt.product_model
+        - raw.yetl_raw_ad_works_lt.product_model
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -262,7 +252,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.raw_ad_works_lt.product_model_product_description
+        - raw.yetl_raw_ad_works_lt.product_model_product_description
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -276,7 +266,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.raw_ad_works_lt.sales_order_detail
+        - raw.yetl_raw_ad_works_lt.sales_order_detail
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
@@ -289,7 +279,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.raw_ad_works_lt.sales_order_header
+        - raw.yetl_raw_ad_works_lt.sales_order_header
         error_thresholds:
           invalid_rows: 0
           mins_rows: 1
