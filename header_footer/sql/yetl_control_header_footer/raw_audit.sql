@@ -1,4 +1,4 @@
-  CREATE TABLE IF NOT EXISTS `control_header_footer`.`raw_audit`
+  CREATE TABLE IF NOT EXISTS `yetl_control_header_footer`.`raw_audit`
   (
 
     `file_name` string,
