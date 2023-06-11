@@ -23,22 +23,22 @@ version: 1.4.10
 
 audit_control:
   delta_lake:
-    control_header_footer:
+    yetl_control_header_footer:
       header_footer:
         sql: ../sql/{{database}}/{{table}}.sql
         depends_on:
-          - raw.raw_header_footer.*
+          - raw.yetl_raw_header_footer.*
       raw_audit:
         sql: ../sql/{{database}}/{{table}}.sql
         depends_on:
-          - raw.raw_header_footer.*
-          - audit_control.control_header_footer.header_footer
+          - raw.yetl_raw_header_footer.*
+          - audit_control.yetl_control_header_footer.header_footer
 
 
 landing:
   read:
     # delta table properties can be set at stage level or table level
-    landing_header_footer:
+    yetl_landing_header_footer:
       customer_details_1: null
       customer_details_2: null
       customer_preferences: null
@@ -51,23 +51,23 @@ raw:
       delta.autoOptimize.autoCompact: true    
       delta.autoOptimize.optimizeWrite: true  
       delta.enableChangeDataFeed: true
-    raw_header_footer:
+    yetl_raw_header_footer:
       customer_preferences:
         ids: id
         depends_on:
-          - landing.landing_header_footer.customer_preferences
+          - landing.yetl_landing_header_footer.customer_preferences
         custom_properties:
           process_group: 2
       customer_details_1:
         ids: id
         depends_on:
-          - landing.landing_header_footer.customer_details_1
+          - landing.yetl_landing_header_footer.customer_details_1
         custom_properties:
           process_group: 1
       customer_details_2:
         ids: id
         depends_on:
-          - landing.landing_header_footer.customer_details_2
+          - landing.yetl_landing_header_footer.customer_details_2
         custom_properties:
           process_group: 1
         # # optional leave it out if you don't want them
@@ -90,14 +90,14 @@ base:
       delta.autoOptimize.autoCompact: true    
       delta.autoOptimize.optimizeWrite: true  
       delta.enableChangeDataFeed: true
-    base_header_footer:
+    yetl_base_header_footer:
       customers:
         ids: id
         depends_on:
-          - raw.raw_header_footer.customer_details_*
+          - raw.yetl_raw_header_footer.customer_details_*
       customer_preferences:
         ids: id
         depends_on:
-          - raw.raw_header_footer.customer_preferences
+          - raw.yetl_raw_header_footer.customer_preferences
 
 
