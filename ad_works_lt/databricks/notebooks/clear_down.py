@@ -11,7 +11,7 @@ def clear_down():
     "/mnt/datalake/data/yetl_raw_ad_works_lt",
     "/mnt/datalake/data/yetl_base_ad_works_lt",
     "/mnt/datalake/data/yetl_control_ad_works_lt",
-    "/mnt/datalake/checkpoint/yetl_ad_works_lt_dlt"
+    "/mnt/datalake/checkpoint/yetl_ad_works_lt"
   ]
   for c in checkpoints:
     dbutils.fs.rm(c, True)

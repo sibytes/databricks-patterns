@@ -102,7 +102,7 @@ def create_base_dlt(
 ):
 
   @dlt.table(
-    name=f"base_{destination.table}"
+    name=destination.table
   )
   def base_load():
     return(

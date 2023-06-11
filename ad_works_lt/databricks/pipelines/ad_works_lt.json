@@ -17,12 +17,12 @@
     "libraries": [
         {
             "notebook": {
-                "path": "/ad_works_lt/databricks/notebooks/raw_base_load_dlt"
+                "path": "/ad_works_lt/databricks/notebooks/load_dlt"
             }
         }
     ],
-    "name": "ad_works_lt_dlt",
+    "name": "ad_works_lt",
     "edition": "ADVANCED",
-    "storage": "/mnt/datalake/data/raw/ad_works_lt_raw_base",
-    "target": "ad_works_lt_rb"
+    "storage": "/mnt/datalake/data/ad_works_lt",
+    "target": "ad_works_lt"
 }
