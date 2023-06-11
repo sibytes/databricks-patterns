@@ -37,16 +37,16 @@
 # DBTITLE 1,Clear Down the Data Lakehouse
 def clear_down():
   checkpoints = [
-    "/mnt/datalake/data/raw/raw_ad_works_lt",
-    "/mnt/datalake/data/base/base_ad_works_lt",
-    "/mnt/datalake/data/control/control_ad_works_lt",
-    "/mnt/datalake/checkpoint/ad_works_lt"
+    "/mnt/datalake/data/yetl_raw_ad_works_lt",
+    "/mnt/datalake/data/yetl_base_ad_works_lt",
+    "/mnt/datalake/data/yetl_control_ad_works_lt",
+    "/mnt/datalake/checkpoint/yetl_ad_works_lt_dlt"
   ]
   for c in checkpoints:
     dbutils.fs.rm(c, True)
-  spark.sql("drop database if exists raw_ad_works_lt CASCADE")
-  spark.sql("drop database if exists base_ad_works_lt CASCADE")
-  spark.sql("drop database if exists control_ad_works_lt CASCADE")
+  spark.sql("drop database if exists yetl_raw_ad_works_lt CASCADE")
+  spark.sql("drop database if exists yetl_base_ad_works_lt CASCADE")
+  spark.sql("drop database if exists yetl_control_ad_works_lt CASCADE")
 clear_down()
 
 # COMMAND ----------
