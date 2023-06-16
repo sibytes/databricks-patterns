@@ -1,43 +1,27 @@
 version: 1.5.0
-# deltalake table properties
-# https://docs.databricks.com/delta/table-properties.html
-
-# delta.appendOnly: false
-# delta.autoOptimize.autoCompact: none    
-# delta.autoOptimize.optimizeWrite: none    
-# delta.checkpoint.writeStatsAsJson: true
-# delta.checkpoint.writeStatsAsStruct: none
-# delta.columnMapping.mode: false
-# delta.compatibility.symlinkFormatManifest.enabled: false
-# delta.dataSkippingNumIndexedCols 32
-# delta.deletedFileRetentionDuration: interval 1 week
-# delta.enableChangeDataFeed: false
-# delta.isolationLevel:  WriteSerializable
-# delta.logRetentionDuration: interval 30 days
-# delta.minReaderVersion: 1
-# delta.minWriterVersion: 2
-# delta.randomizeFilePrefixes: false
-# delta.randomPrefixLength: 2
-# delta.setTransactionRetentionDuration: none
-# delta.tuneFileSizesForRewrites: none
 
 audit_control:
   delta_lake:
-    yetl_control_header_footer:
-      header_footer:
-        sql: ../sql/{{database}}/{{table}}.sql
+    yetl_control_ad_works_lt:
+      base_audit:
         depends_on:
-          - raw.yetl_raw_header_footer.*
+        - base.yetl_base_header_footer.*
+        sql: ../sql/{{database}}/{{table}}.sql
+        vacuum: 168
       raw_audit:
-        sql: ../sql/{{database}}/{{table}}.sql
         depends_on:
-          - raw.yetl_raw_header_footer.*
-          - audit_control.yetl_control_header_footer.header_footer
-
+        - raw.yetl_raw_header_footer.*
+        sql: ../sql/{{database}}/{{table}}.sql
+        vacuum: 168
+      yetl_control_header_footer:
+        depends_on:
+        - raw.yetl_raw_header_footer.*
+        - audit_control.yetl_control_header_footer.header_footer
+        sql: ../sql/{{database}}/{{table}}.sql
+        vacuum: 168
 
 landing:
   read:
-    # delta table properties can be set at stage level or table level
     yetl_landing_header_footer:
       customer_details_1: null
       customer_details_2: null
@@ -45,59 +29,93 @@ landing:
 
 raw:
   delta_lake:
-    # delta table properties can be set at stage level or table level
-    delta_properties:
-      delta.appendOnly: true
-      delta.autoOptimize.autoCompact: true    
-      delta.autoOptimize.optimizeWrite: true  
-      delta.enableChangeDataFeed: true
     yetl_raw_header_footer:
-      customer_preferences:
-        ids: id
-        depends_on:
-          - landing.yetl_landing_header_footer.customer_preferences
-        custom_properties:
-          process_group: 2
       customer_details_1:
-        ids: id
-        depends_on:
-          - landing.yetl_landing_header_footer.customer_details_1
         custom_properties:
           process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.yetl_landing_header_footer.customer_details_1
+        error_thresholds:
+          invalid_rows: 2
+          mins_rows: 1
+        id: id
+        vacuum: 168
+        z_order_by: _load_date
       customer_details_2:
-        ids: id
-        depends_on:
-          - landing.yetl_landing_header_footer.customer_details_2
         custom_properties:
           process_group: 1
-        # # optional leave it out if you don't want them
-        # warning_thresholds:
-        #   invalid_ratio: 0.2
-        #   invalid_rows: 0
-        #   max_rows: 100
-        #   min_rows: 5
-        # # optional leave it out if you don't want them
-        # exception_thresholds:
-        #   invalid_ratio: 0.3
-        #   invalid_rows: 2
-        #   max_rows: 1000
-        #   min_rows: 0
+          rentention_days: 365
+        depends_on:
+        - landing.yetl_landing_header_footer.customer_details_2
+        error_thresholds:
+          invalid_rows: 2
+          mins_rows: 1
+        id: id
+        vacuum: 168
+        z_order_by: _load_date
+      customer_preferences:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - landing.yetl_landing_header_footer.customer_preferences
+        error_thresholds:
+          invalid_rows: 2
+          mins_rows: 1
+        id: id
+        vacuum: 168
+        z_order_by: _load_date
 
 base:
   delta_lake:
-    delta_properties:
-      delta.appendOnly: true
-      delta.autoOptimize.autoCompact: true    
-      delta.autoOptimize.optimizeWrite: true  
-      delta.enableChangeDataFeed: true
     yetl_base_header_footer:
-      customers:
-        ids: id
+      customer_details_1:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - raw.yetl_raw_header_footer.customer_details_*
+        - raw.yetl_raw_header_footer.customer_details_1
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: id
+        vacuum: 168
+        z_order_by: _load_date
+      customer_details_2:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.yetl_raw_header_footer.customer_details_2
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: id
+        vacuum: 168
+        z_order_by: _load_date
       customer_preferences:
-        ids: id
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
         depends_on:
-          - raw.yetl_raw_header_footer.customer_preferences
-
+        - raw.yetl_raw_header_footer.customer_preferences
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: id
+        vacuum: 168
+        z_order_by: _load_date
+      customers:
+        custom_properties:
+          process_group: 1
+          rentention_days: 365
+        depends_on:
+        - raw.yetl_raw_header_footer.*
+        error_thresholds:
+          invalid_rows: 0
+          mins_rows: 1
+        id: id
+        vacuum: 168
+        z_order_by: _load_date
 

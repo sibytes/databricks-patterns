@@ -2,6 +2,28 @@ version: 1.5.0
 # paths here are relative to this configuration document
 tables: ./tables.yaml
 
+# deltalake table properties
+# https://docs.databricks.com/delta/table-properties.html
+
+# delta.appendOnly: false
+# delta.autoOptimize.autoCompact: none    
+# delta.autoOptimize.optimizeWrite: none    
+# delta.checkpoint.writeStatsAsJson: true
+# delta.checkpoint.writeStatsAsStruct: none
+# delta.columnMapping.mode: false
+# delta.compatibility.symlinkFormatManifest.enabled: false
+# delta.dataSkippingNumIndexedCols 32
+# delta.deletedFileRetentionDuration: interval 1 week
+# delta.enableChangeDataFeed: false
+# delta.isolationLevel:  WriteSerializable
+# delta.logRetentionDuration: interval 30 days
+# delta.minReaderVersion: 1
+# delta.minWriterVersion: 2
+# delta.randomizeFilePrefixes: false
+# delta.randomPrefixLength: 2
+# delta.setTransactionRetentionDuration: none
+# delta.tuneFileSizesForRewrites: none
+
 audit_control:
   delta_lake:
     # delta table properties can be set at stage level or table level
@@ -46,6 +68,11 @@ landing:
 
 raw:
   delta_lake:
+    delta_properties:
+      delta.appendOnly: true
+      delta.autoOptimize.autoCompact: true    
+      delta.autoOptimize.optimizeWrite: true  
+      delta.enableChangeDataFeed: true
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
@@ -55,16 +82,21 @@ raw:
       - _load_date
     options:
       mergeSchema: true
-        # optional leave it out if you don't want them
-    warning_thresholds:
-      invalid_rows: 0
-    # optional leave it out if you don't want them
-    exception_thresholds:
-      invalid_rows: 2
+    # # optional leave it out if you don't want them
+    # warning_thresholds:
+    #   invalid_rows: 0
+    # # optional leave it out if you don't want them
+    # exception_thresholds:
+    #   invalid_rows: 2
 
 
 base:
   delta_lake:
+    delta_properties:
+      delta.appendOnly: false
+      delta.autoOptimize.autoCompact: true    
+      delta.autoOptimize.optimizeWrite: true  
+      delta.enableChangeDataFeed: false
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
