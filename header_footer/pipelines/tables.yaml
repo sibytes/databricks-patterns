@@ -2,7 +2,7 @@ version: 1.5.0
 
 audit_control:
   delta_lake:
-    yetl_control_ad_works_lt:
+    yetl_control_header_footer:
       base_audit:
         depends_on:
         - base.yetl_base_header_footer.*
