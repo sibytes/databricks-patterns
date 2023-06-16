@@ -5,15 +5,15 @@ audit_control:
     yetl_control_header_footer:
       base_audit:
         depends_on:
-        - base.yetl_base_header_footer.*
+        - raw.yetl_raw_header_footer.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 168
-      raw_audit:
+      header_footer:
         depends_on:
         - raw.yetl_raw_header_footer.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 168
-      yetl_control_header_footer:
+      raw_audit:
         depends_on:
         - raw.yetl_raw_header_footer.*
         - audit_control.yetl_control_header_footer.header_footer
