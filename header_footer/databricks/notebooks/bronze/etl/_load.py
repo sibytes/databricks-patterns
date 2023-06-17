@@ -3,6 +3,7 @@ from databricks.sdk.runtime import spark
 from pyspark.sql.streaming import StreamingQuery
 import hashlib
 from pyspark.sql import DataFrame
+from typing import Union
 
 
 def hash_value(value: str):

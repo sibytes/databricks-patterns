@@ -1,7 +1,7 @@
 # Databricks notebook source
 # DBTITLE 1,Clear Landing
-# dbfs_to_path = "/mnt/landing/data/header_footer"
-# dbutils.fs.rm(dbfs_to_path, True)
+dbfs_to_path = "/mnt/landing/data/header_footer"
+dbutils.fs.rm(dbfs_to_path, True)
 
 # COMMAND ----------
 
