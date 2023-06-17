@@ -11,7 +11,6 @@ def hash_value(value: str):
     return hex_dig
 
 def z_order_by(
-    process_id: int,
     destination: DeltaLake
 ):
     z_order_by = destination.z_order_by
@@ -68,7 +67,7 @@ def stream_load(
 
     stream_data.awaitTermination()
     if destination.z_order_by:
-      z_order_by(process_id, destination)
+      z_order_by(destination)
 
 
 def batch_load(
@@ -109,6 +108,6 @@ def batch_load(
         .saveAsTable(name=f"`{destination.database}`.`{destination.table}`")
     )
     if destination.z_order_by:
-      z_order_by(process_id, destination)
+      z_order_by(destination)
 
     return audit
