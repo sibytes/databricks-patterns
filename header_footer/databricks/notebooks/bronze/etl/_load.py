@@ -118,7 +118,7 @@ def batch_load(
     df = source.add_timeslice(df)
 
     if drop_already_loaded:
-      drop_if_already_loaded(stream, source)
+      drop_if_already_loaded(df, source)
 
     audit:DataFrame = (df
         .select("*")
