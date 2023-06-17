@@ -6,31 +6,31 @@ dbutils.fs.rm(dbfs_to_path, True)
 # COMMAND ----------
 
 # DBTITLE 1,Load Landing
-# import os
+import os
 
-# home = os.getcwd()
-# print(home)
+home = os.getcwd()
+print(home)
 
-# data_dir = os.path.join(home, "../../../data/landing/customer_details")
+data_dir = os.path.join(home, "../../../data/landing/customer_details")
 
-# dbfs_from_path = f"file://{data_dir}"
-# dbutils.fs.ls(dbfs_from_path)
+dbfs_from_path = f"file://{data_dir}"
+dbutils.fs.ls(dbfs_from_path)
 
-# print(f"Copying data from {dbfs_from_path} to {dbfs_to_path}")
-# dbutils.fs.cp(dbfs_from_path, dbfs_to_path, True)
+print(f"Copying data from {dbfs_from_path} to {dbfs_to_path}")
+dbutils.fs.cp(dbfs_from_path, dbfs_to_path, True)
 
 
 
 # COMMAND ----------
 
 # DBTITLE 1,Check Landing Data
-# data_files = dbutils.fs.ls(dbfs_to_path)
-# dirs = [d.name.replace("/", "") for d in data_files]
+data_files = dbutils.fs.ls(dbfs_to_path)
+dirs = [d.name.replace("/", "") for d in data_files]
 
-# assert "customer_details_1" in dirs, "customer_details_1 is missing, landing not setup"
-# assert "customer_details_2" in dirs, "customer_details_2 is missing, landing not setup"
-# assert "customer_preferences" in dirs, "customer_preferences is missing, landing not setup"
-# display(data_files)
+assert "customer_details_1" in dirs, "customer_details_1 is missing, landing not setup"
+assert "customer_details_2" in dirs, "customer_details_2 is missing, landing not setup"
+assert "customer_preferences" in dirs, "customer_preferences is missing, landing not setup"
+display(data_files)
 
 # COMMAND ----------
 
