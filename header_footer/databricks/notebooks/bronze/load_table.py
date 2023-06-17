@@ -5,7 +5,7 @@
 
 dbutils.widgets.text("process_id", "-1")
 dbutils.widgets.text("table", "customer_details_1")
-dbutils.widgets.text("load_type", "autoloader")
+dbutils.widgets.text("load_type", "batch")
 dbutils.widgets.text("timeslice", "*")
 
 # COMMAND ----------

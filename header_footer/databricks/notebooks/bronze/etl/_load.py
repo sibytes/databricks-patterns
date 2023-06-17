@@ -14,8 +14,10 @@ def z_order_by(
     process_id: int,
     destination: DeltaLake
 ):
-
-    z_order_by = ",".join(destination.z_order_by)
+    z_order_by = destination.z_order_by
+    if isinstance(z_order_by, list): 
+      z_order_by = ",".join(z_order_by)
+      
     print("Optimizing")
     sql = f"""
         OPTIMIZE `{destination.database}`.`{destination.table}`
