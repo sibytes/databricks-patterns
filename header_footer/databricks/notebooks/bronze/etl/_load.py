@@ -3,6 +3,7 @@ from databricks.sdk.runtime import spark
 from pyspark.sql.streaming import StreamingQuery
 import hashlib
 from pyspark.sql import DataFrame
+from typing import Union
 
 
 def hash_value(value: str):
@@ -26,11 +27,23 @@ def z_order_by(
     spark.sql(sql)
 
 
+def drop_if_already_loaded(df:Union[DataFrame, StreamingQuery], source:Read):
+    already_loaded = spark.sql(f"""
+      select struct(file_path, file_name, file_size, file_modification_time) as _metadata_loaded
+      from yetl_control_header_footer.raw_audit
+      where source_table = '{source.table}'                   
+    """)
+    df = df.join(already_loaded, already_loaded._metadata_loaded == df._metadata ,"left")
+    df = df.where(df._metadata_loaded.isNull())
+    df = df.drop("_metadata_loaded")
+    return df
+
 
 def stream_load(
     process_id: int,
     source: Read,
-    destination: DeltaLake
+    destination: DeltaLake,
+    drop_already_loaded:bool = False
 ):
     stream = (
         spark.readStream.schema(source.spark_schema)
@@ -57,6 +70,9 @@ def stream_load(
     stream = stream.selectExpr(*columns)
     stream = source.add_timeslice(stream)
 
+    if drop_already_loaded:
+      drop_if_already_loaded(stream, source)
+
     stream_data: StreamingQuery = (stream
         .select("*")
         .writeStream
@@ -73,7 +89,8 @@ def stream_load(
 def batch_load(
     process_id: int,
     source: Read,
-    destination: DeltaLake
+    destination: DeltaLake,
+    drop_already_loaded:bool = True
 ):
     df:DataFrame = (
         spark.read.schema(source.spark_schema)
@@ -99,6 +116,9 @@ def batch_load(
 
     df = df.selectExpr(*columns)
     df = source.add_timeslice(df)
+
+    if drop_already_loaded:
+      drop_if_already_loaded(df, source)
 
     audit:DataFrame = (df
         .select("*")

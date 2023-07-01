@@ -35,14 +35,6 @@ def create_raw_dlt(
   )
   def raw_load():
 
-    # batch read! Need to figure out a way to pass in the timeslice
-    # df:DataFrame = (
-    #     spark.read.schema(source.spark_schema)
-    #     .format(source.format)
-    #     .options(**source.options)
-    #     .load(source.path)
-    # )
-
     df = (
         spark.readStream.schema(source.spark_schema)
         .format(source.format)
