@@ -1,8 +1,9 @@
-version: 1.6.0
+version: 1.6.1
 
 audit_control:
   delta_lake:
     yetl_control_ad_works_dw:
+      catalog: null
       raw_audit:
         depends_on:
         - raw.yetl_raw_ad_works_dw.*
@@ -12,6 +13,7 @@ audit_control:
 landing:
   read:
     yetl_landing_ad_works_dw:
+      catalog: null
       dim_account: null
       dim_currency: null
       dim_customer: null
@@ -42,15 +44,16 @@ landing:
 raw:
   delta_lake:
     yetl_raw_ad_works_dw:
+      catalog: null
       dim_account:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_account
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: AccountKey
         vacuum: 30
         z_order_by: _load_date
@@ -60,9 +63,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_currency
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: CurrencyKey
         vacuum: 30
         z_order_by: _load_date
@@ -72,9 +75,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_customer
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: CustomerKey
         vacuum: 30
         z_order_by: _load_date
@@ -84,9 +87,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_date
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: DateKey
         vacuum: 30
         z_order_by: _load_date
@@ -96,9 +99,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_department
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: DepartmentGroupKey
         vacuum: 30
         z_order_by: _load_date
@@ -108,9 +111,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_employee
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: EmployeeKey
         vacuum: 30
         z_order_by: _load_date
@@ -120,9 +123,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_geography
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: GeographyKey
         vacuum: 30
         z_order_by: _load_date
@@ -132,9 +135,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_organization
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: OrganizationKey
         vacuum: 30
         z_order_by: _load_date
@@ -144,9 +147,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_product
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductKey
         vacuum: 30
         z_order_by: _load_date
@@ -156,9 +159,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_product_category
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductCategoryKey
         vacuum: 30
         z_order_by: _load_date
@@ -168,9 +171,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_product_sub_category
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductSubcategoryKey
         vacuum: 30
         z_order_by: _load_date
@@ -180,9 +183,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_promotion
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: PromotionKey
         vacuum: 30
         z_order_by: _load_date
@@ -192,9 +195,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_reseller
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ResellerKey
         vacuum: 30
         z_order_by: _load_date
@@ -204,9 +207,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_sales_reason
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: SalesReasonKey
         vacuum: 30
         z_order_by: _load_date
@@ -216,9 +219,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_sales_territory
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: SalesTerritoryKey
         vacuum: 30
         z_order_by: _load_date
@@ -228,9 +231,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.dim_scenario
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ScenarioKey
         vacuum: 30
         z_order_by: _load_date
@@ -240,9 +243,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.fact_additional_international_product_description
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductKey
         vacuum: 30
         z_order_by: _load_date
@@ -252,9 +255,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.fact_call_centre
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - DateKey
         - FactCallCenterID
@@ -267,9 +270,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.fact_currency_rate
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - CurrencyKey
         - DateKey
@@ -281,9 +284,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.fact_finance
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: FinanceKey
         vacuum: 30
         z_order_by: _load_date
@@ -293,9 +296,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.fact_internet_sales
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - SalesOrderLineNumber
         - SalesOrderNumber
@@ -307,9 +310,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.fact_internet_sales_reason
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - SalesOrderLineNumber
         - SalesOrderNumber
@@ -322,9 +325,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.fact_product_inventory
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - DateKey
         - ProductKey
@@ -336,9 +339,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.fact_reseller_sales
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - SalesOrderLineNumber
         - SalesOrderNumber
@@ -350,9 +353,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.fact_sales_quota
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: SalesQuotaKey
         vacuum: 30
         z_order_by: _load_date
@@ -362,9 +365,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_dw.fact_survey_response
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: SurveyResponseKey
         vacuum: 30
         z_order_by: _load_date

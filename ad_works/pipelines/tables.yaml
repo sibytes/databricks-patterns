@@ -1,8 +1,9 @@
-version: 1.6.0
+version: 1.6.1
 
 audit_control:
   delta_lake:
     yetl_control_ad_works:
+      catalog: null
       raw_audit:
         depends_on:
         - raw.yetl_raw_ad_works.*
@@ -12,6 +13,7 @@ audit_control:
 landing:
   read:
     yetl_landing_ad_works:
+      catalog: null
       hr_department: null
       hr_employee: null
       hr_employee_department_history: null
@@ -90,21 +92,22 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_work_order
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: WorkOrderID
         vacuum: 30
         z_order_by: _load_date
+      catalog: null
       hr_department:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.hr_department
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: DepartmentID
         vacuum: 30
         z_order_by: _load_date
@@ -114,9 +117,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.hr_employee
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: BusinessEntityID
         vacuum: 30
         z_order_by: _load_date
@@ -126,9 +129,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.hr_employee_department_history
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - BusinessEntityID
         - DepartmentID
@@ -142,9 +145,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.hr_employee_pay_history
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - BusinessEntityID
         - RateChangeDate
@@ -156,9 +159,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.hr_job_candidate
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: JobCandidateID
         vacuum: 30
         z_order_by: _load_date
@@ -168,9 +171,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.hr_shift
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ShiftID
         vacuum: 30
         z_order_by: _load_date
@@ -180,9 +183,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_address
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: AddressID
         vacuum: 30
         z_order_by: _load_date
@@ -192,9 +195,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_address_type
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: AddressTypeID
         vacuum: 30
         z_order_by: _load_date
@@ -204,9 +207,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_business_entity
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: BusinessEntityID
         vacuum: 30
         z_order_by: _load_date
@@ -216,9 +219,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_business_entity_address
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - BusinessEntityID
         - AddressID
@@ -231,9 +234,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_business_entity_contact
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - BusinessEntityID
         - PersonID
@@ -246,9 +249,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_contact_type
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ContactTypeID
         vacuum: 30
         z_order_by: _load_date
@@ -258,9 +261,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_country_region
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: CountryRegionCode
         vacuum: 30
         z_order_by: _load_date
@@ -270,9 +273,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_email_address
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - BusinessEntityID
         - EmailAddressID
@@ -284,9 +287,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_password
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: BusinessEntityID
         vacuum: 30
         z_order_by: _load_date
@@ -296,9 +299,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_person
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: BusinessEntityID
         vacuum: 30
         z_order_by: _load_date
@@ -308,9 +311,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_personp_phone
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - BusinessEntityID
         - PhoneNumber
@@ -323,9 +326,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_phone_number_type
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: PhoneNumberTypeID
         vacuum: 30
         z_order_by: _load_date
@@ -335,9 +338,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.person_state_province
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: StateProvinceID
         vacuum: 30
         z_order_by: _load_date
@@ -347,9 +350,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_bill_of_materials
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: BillOfMaterialsID
         vacuum: 30
         z_order_by: _load_date
@@ -359,9 +362,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_culture
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: CultureID
         vacuum: 30
         z_order_by: _load_date
@@ -371,9 +374,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_document
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: DocumentNode
         vacuum: 30
         z_order_by: _load_date
@@ -383,9 +386,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_illustration
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: IllustrationID
         vacuum: 30
         z_order_by: _load_date
@@ -395,9 +398,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_location
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         vacuum: 30
         z_order_by: _load_date
       production_product:
@@ -406,9 +409,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductID
         vacuum: 30
         z_order_by: _load_date
@@ -418,9 +421,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_category
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductCategoryID
         vacuum: 30
         z_order_by: _load_date
@@ -430,9 +433,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_cost_history
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductID
         - StartDate
@@ -444,9 +447,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_description
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductDescriptionID
         vacuum: 30
         z_order_by: _load_date
@@ -456,9 +459,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_document
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductID
         - DocumentNode
@@ -470,9 +473,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_inventory
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductID
         - LocationID
@@ -484,9 +487,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_list_price_history
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductID
         - StartDate
@@ -498,9 +501,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_model
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductModelID
         vacuum: 30
         z_order_by: _load_date
@@ -510,9 +513,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_model_illustration
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductModelID
         - IllustrationID
@@ -524,9 +527,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_model_product_description_culture
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductModelID
         - ProductDescriptionID
@@ -539,9 +542,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_photo
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductPhotoID
         vacuum: 30
         z_order_by: _load_date
@@ -551,9 +554,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_product_photo
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductID
         - ProductPhotoID
@@ -565,9 +568,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_review
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductReviewID
         vacuum: 30
         z_order_by: _load_date
@@ -577,9 +580,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_product_subcategory
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductSubcategoryID
         vacuum: 30
         z_order_by: _load_date
@@ -589,9 +592,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_scrap_reason
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ScrapReasonID
         vacuum: 30
         z_order_by: _load_date
@@ -601,9 +604,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_transaction_history
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: TransactionID
         vacuum: 30
         z_order_by: _load_date
@@ -613,9 +616,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_transaction_history_archive
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: TransactionID
         vacuum: 30
         z_order_by: _load_date
@@ -625,9 +628,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_unit_measure
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: UnitMeasureCode
         vacuum: 30
         z_order_by: _load_date
@@ -637,9 +640,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.production_work_order_routing
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - WorkOrderID
         - ProductID
@@ -652,9 +655,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.purchasing_product_vendor
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: BusinessEntityID
         vacuum: 30
         z_order_by: _load_date
@@ -664,9 +667,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.purchasing_purchase_order_detail
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - PurchaseOrderID
         - PurchaseOrderDetailID
@@ -678,9 +681,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.purchasing_purchase_order_header
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: PurchaseOrderID
         vacuum: 30
         z_order_by: _load_date
@@ -690,9 +693,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.purchasing_ship_method
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ShipMethodID
         vacuum: 30
         z_order_by: _load_date
@@ -702,9 +705,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.purchasing_vendor
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: BusinessEntityID
         vacuum: 30
         z_order_by: _load_date
@@ -714,9 +717,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_country_region_currency
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - CountryRegionCode
         - CurrencyCode
@@ -728,9 +731,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_credit_card
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: CreditCardID
         vacuum: 30
         z_order_by: _load_date
@@ -740,9 +743,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_currency
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: CurrencyCode
         vacuum: 30
         z_order_by: _load_date
@@ -752,9 +755,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_currency_rate
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: CurrencyRateID
         vacuum: 30
         z_order_by: _load_date
@@ -764,9 +767,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_customer
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: CustomerID
         vacuum: 30
         z_order_by: _load_date
@@ -776,9 +779,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_person_credit_card
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - BusinessEntityID
         - CreditCardID
@@ -790,9 +793,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_sales_order_detail
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - SalesOrderID
         - SalesOrderDetailID
@@ -804,9 +807,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_sales_order_header
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: SalesOrderID
         vacuum: 30
         z_order_by: _load_date
@@ -816,9 +819,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_sales_order_header_sales_reason
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - SalesOrderID
         - SalesReasonID
@@ -830,9 +833,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_sales_person
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: BusinessEntityID
         vacuum: 30
         z_order_by: _load_date
@@ -842,9 +845,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_sales_person_quota_history
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - BusinessEntityID
         - QuotaDate
@@ -856,9 +859,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_sales_reason
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: SalesReasonID
         vacuum: 30
         z_order_by: _load_date
@@ -868,9 +871,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_sales_tax_rate
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: SalesTaxRateID
         vacuum: 30
         z_order_by: _load_date
@@ -880,9 +883,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_sales_territory
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: TerritoryID
         vacuum: 30
         z_order_by: _load_date
@@ -892,9 +895,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_sales_territory_history
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - BusinessEntityID
         - TerritoryID
@@ -907,9 +910,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_shopping_cart_item
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ShoppingCartItemID
         vacuum: 30
         z_order_by: _load_date
@@ -919,9 +922,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_special_offer
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: SpecialOfferID
         vacuum: 30
         z_order_by: _load_date
@@ -931,9 +934,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_special_offer_product
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - SpecialOfferID
         - ProductID
@@ -945,9 +948,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works.sales_store
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: BusinessEntityID
         vacuum: 30
         z_order_by: _load_date

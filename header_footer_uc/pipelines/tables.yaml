@@ -1,44 +1,44 @@
-version: 1.6.1
+version: 1.6.2
 
 audit_control:
   delta_lake:
-    yetl_control_header_footer:
+    yetl_control_header_footer_uc:
       base_audit:
         depends_on:
-        - raw.yetl_raw_header_footer.*
+        - raw.yetl_raw_header_footer_uc.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 168
-      catalog: null
+      catalog: development
       header_footer:
         depends_on:
-        - raw.yetl_raw_header_footer.*
+        - raw.yetl_raw_header_footer_uc.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 168
       raw_audit:
         depends_on:
-        - raw.yetl_raw_header_footer.*
-        - audit_control.yetl_control_header_footer.header_footer
+        - raw.yetl_raw_header_footer_uc.*
+        - audit_control.yetl_control_header_footer_uc.header_footer
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 168
 
 landing:
   read:
-    yetl_landing_header_footer:
-      catalog: null
+    yetl_landing_header_footer_uc:
+      catalog: development
       customer_details_1: null
       customer_details_2: null
       customer_preferences: null
 
 raw:
   delta_lake:
-    yetl_raw_header_footer:
-      catalog: null
+    yetl_raw_header_footer_uc:
+      catalog: development
       customer_details_1:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_header_footer.customer_details_1
+        - landing.yetl_landing_header_footer_uc.customer_details_1
         exception_thresholds:
           invalid_rows: 2
           min_rows: 1
@@ -50,7 +50,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_header_footer.customer_details_2
+        - landing.yetl_landing_header_footer_uc.customer_details_2
         exception_thresholds:
           invalid_rows: 2
           min_rows: 1
@@ -62,7 +62,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_header_footer.customer_preferences
+        - landing.yetl_landing_header_footer_uc.customer_preferences
         exception_thresholds:
           invalid_rows: 2
           min_rows: 1
@@ -72,14 +72,14 @@ raw:
 
 base:
   delta_lake:
-    yetl_base_header_footer:
-      catalog: null
+    yetl_base_header_footer_uc:
+      catalog: development
       customer_details_1:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_header_footer.customer_details_1
+        - raw.yetl_raw_header_footer_uc.customer_details_1
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -91,7 +91,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_header_footer.customer_details_2
+        - raw.yetl_raw_header_footer_uc.customer_details_2
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -103,7 +103,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_header_footer.customer_preferences
+        - raw.yetl_raw_header_footer_uc.customer_preferences
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -115,7 +115,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_header_footer.*
+        - raw.yetl_raw_header_footer_uc.*
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1

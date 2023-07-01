@@ -1,4 +1,4 @@
-version: 1.6.0
+version: 1.6.1
 
 audit_control:
   delta_lake:
@@ -8,6 +8,7 @@ audit_control:
         - base.yetl_base_ad_works_lt.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 30
+      catalog: null
       raw_audit:
         depends_on:
         - raw.yetl_raw_ad_works_lt.*
@@ -18,6 +19,7 @@ landing:
   read:
     yetl_landing_ad_works_lt:
       address: null
+      catalog: null
       customer: null
       customer_address: null
       product: null
@@ -37,21 +39,22 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_lt.address
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: AddressID
         vacuum: 30
         z_order_by: _load_date
+      catalog: null
       customer:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_lt.customer
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: CustomerID
         vacuum: 30
         z_order_by: _load_date
@@ -61,9 +64,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_lt.customer_address
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - AddressID
         - CustomerID
@@ -75,9 +78,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_lt.product
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductID
         - ProductNumber
@@ -89,9 +92,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_lt.product_category
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductCategoryID
         vacuum: 30
         z_order_by: _load_date
@@ -101,9 +104,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_lt.product_description
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductDescriptionID
         vacuum: 30
         z_order_by: _load_date
@@ -113,9 +116,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_lt.product_model
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductModelID
         vacuum: 30
         z_order_by: _load_date
@@ -125,9 +128,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_lt.product_model_product_description
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductDescriptionID
         - ProductModelID
@@ -140,9 +143,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_lt.sales_order_detail
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - SalesOrderDetailID
         - SalesOrderID
@@ -154,9 +157,9 @@ raw:
           rentention_days: 365
         depends_on:
         - landing.yetl_landing_ad_works_lt.sales_order_header
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - SalesOrderID
         - SalesOrderNumber
@@ -172,20 +175,21 @@ base:
           rentention_days: 365
         depends_on:
         - raw.yetl_raw_ad_works_lt.address
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: AddressID
         vacuum: 30
+      catalog: null
       customer:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
         - raw.yetl_raw_ad_works_lt.customer
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: CustomerID
         vacuum: 30
       customer_address:
@@ -194,9 +198,9 @@ base:
           rentention_days: 365
         depends_on:
         - raw.yetl_raw_ad_works_lt.customer_address
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - AddressID
         - CustomerID
@@ -207,9 +211,9 @@ base:
           rentention_days: 365
         depends_on:
         - raw.yetl_raw_ad_works_lt.product
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductID
         - ProductNumber
@@ -220,9 +224,9 @@ base:
           rentention_days: 365
         depends_on:
         - raw.yetl_raw_ad_works_lt.product_category
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductCategoryID
         vacuum: 30
       product_description:
@@ -231,9 +235,9 @@ base:
           rentention_days: 365
         depends_on:
         - raw.yetl_raw_ad_works_lt.product_description
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductDescriptionID
         vacuum: 30
       product_model:
@@ -242,9 +246,9 @@ base:
           rentention_days: 365
         depends_on:
         - raw.yetl_raw_ad_works_lt.product_model
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id: ProductModelID
         vacuum: 30
       product_model_product_description:
@@ -253,9 +257,9 @@ base:
           rentention_days: 365
         depends_on:
         - raw.yetl_raw_ad_works_lt.product_model_product_description
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - ProductDescriptionID
         - ProductModelID
@@ -267,9 +271,9 @@ base:
           rentention_days: 365
         depends_on:
         - raw.yetl_raw_ad_works_lt.sales_order_detail
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - SalesOrderDetailID
         - SalesOrderID
@@ -280,9 +284,9 @@ base:
           rentention_days: 365
         depends_on:
         - raw.yetl_raw_ad_works_lt.sales_order_header
-        error_thresholds:
+        exception_thresholds:
           invalid_rows: 0
-          mins_rows: 1
+          min_rows: 1
         id:
         - SalesOrderID
         - SalesOrderNumber
