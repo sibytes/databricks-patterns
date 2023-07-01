@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.6.0
+# MAGIC %pip install pyaml pydantic yetl-framework==1.6.4
 
 # COMMAND ----------
 dbutils.widgets.text("load_type", "autoloader")

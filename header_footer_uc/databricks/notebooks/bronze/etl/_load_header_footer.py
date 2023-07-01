@@ -28,7 +28,7 @@ def stream_load_header_footer(
     stream_header: StreamingQuery = (
         spark.readStream.format("delta")
         .option("readChangeFeed", "true")
-        .table(f"`{source.database}`.`{source.table}`")
+        .table(source.qualified_table_name())
         .where("_change_type = 'insert' and flag = 'H'")
         .selectExpr(*columns)
     )
@@ -43,7 +43,7 @@ def stream_load_header_footer(
     stream_footer: StreamingQuery = (
         spark.readStream.format("delta")
         .option("readChangeFeed", "true")
-        .table(f"`{source.database}`.`{source.table}`")
+        .table(source.qualified_table_name())
         .where("_change_type = 'insert' and flag = 'F'")
         .selectExpr(*columns)
     )
@@ -72,7 +72,7 @@ def stream_load_header_footer(
     stream_write = (
         stream_joined.writeStream.options(**destination.options)
         .trigger(availableNow=True)
-        .toTable(f"`{destination.database}`.`{destination.table}`")
+        .toTable(destination.qualified_table_name())
     )
 
     stream_write.awaitTermination()
@@ -100,7 +100,7 @@ def batch_load_header_footer(
     # https://docs.databricks.com/delta/delta-change-data-feed.html
     df_header: DataFrame = (
         spark.read.format("delta")
-        .table(f"`{source.database}`.`{source.table}`")
+        .table(source.qualified_table_name())
         .where(f"_process_id = {process_id} and flag = 'H'")
         .selectExpr(*columns)
     )
@@ -114,7 +114,7 @@ def batch_load_header_footer(
     ]
     df_footer: DataFrame = (
         spark.read.format("delta")
-        .table(f"`{source.database}`.`{source.table}`")
+        .table(source.qualified_table_name())
         .where(f"_process_id = {process_id} and flag = 'H'")
         .selectExpr(*columns)
     )
@@ -143,6 +143,6 @@ def batch_load_header_footer(
       df_write = df_write.options(**destination.options)
     df_write = (df_write
       .mode("append")
-      .saveAsTable(f"`{destination.database}`.`{destination.table}`")
+      .saveAsTable(destination.qualified_table_name())
     )
 

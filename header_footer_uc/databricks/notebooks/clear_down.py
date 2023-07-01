@@ -8,9 +8,6 @@
 # DBTITLE 1,Clear Down the Data Lakehouse
 def clear_down():
   checkpoints = [
-    "/mnt/datalake/data/yetl_raw_header_footer_uc",
-    "/mnt/datalake/data/yetl_base_header_footer_uc",
-    "/mnt/datalake/data/yetl_control_header_footer_uc",
     "/mnt/datalake/checkpoint/header_footer_uc"
   ]
   for c in checkpoints:

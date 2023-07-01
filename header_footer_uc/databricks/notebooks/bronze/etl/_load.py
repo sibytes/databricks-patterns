@@ -20,7 +20,7 @@ def z_order_by(
       
     print("Optimizing")
     sql = f"""
-        OPTIMIZE `{destination.database}`.`{destination.table}`
+        OPTIMIZE {destination.qualified_table_name()}
         ZORDER BY ({z_order_by})
     """
     print(sql)
@@ -78,7 +78,7 @@ def stream_load(
         .writeStream
         .options(**destination.options)
         .trigger(availableNow=True)
-        .toTable(f"`{destination.database}`.`{destination.table}`")
+        .toTable(destination.qualified_table_name())
     )
 
     stream_data.awaitTermination()
@@ -125,7 +125,7 @@ def batch_load(
         .write
         .options(**destination.options)
         .mode("append")
-        .saveAsTable(name=f"`{destination.database}`.`{destination.table}`")
+        .saveAsTable(name=destination.qualified_table_name())
     )
     if destination.z_order_by:
       z_order_by(destination)
