@@ -19,7 +19,7 @@ stages:
 
 
     jobs:
-      - deployment: deployHeaderFooterNotebooks
+      - deployment: deployHeaderFooterUCNotebooks
         displayName: Deploy header_footer_uc Notebooks
         environment: 'development'
         strategy:
