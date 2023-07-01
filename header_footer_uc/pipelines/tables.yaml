@@ -3,12 +3,12 @@ version: 1.6.2
 audit_control:
   delta_lake:
     yetl_control_header_footer_uc:
+      catalog: development
       base_audit:
         depends_on:
         - raw.yetl_raw_header_footer_uc.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 168
-      catalog: development
       header_footer:
         depends_on:
         - raw.yetl_raw_header_footer_uc.*
