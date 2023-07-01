@@ -123,5 +123,5 @@ load(
 
 # COMMAND ----------
 
-msg = f"Succeeded: {table_mapping.destination.database}.{table_mapping.destination.table}"
+msg = f"Succeeded: {table_mapping.destination.qualified_table_name()}"
 dbutils.notebook.exit(msg)
