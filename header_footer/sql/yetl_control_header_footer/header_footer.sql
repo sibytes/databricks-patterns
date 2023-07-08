@@ -8,7 +8,14 @@ CREATE TABLE IF NOT EXISTS `yetl_control_header_footer`.`header_footer`
     _slice_date timestamp,
     _process_id bigint,
     _load_date timestamp,
-    _metadata struct<file_path:string,file_name:string,file_size:bigint,file_modification_time:timestamp>
+    _metadata struct<
+        file_path:string,
+        file_name:string,
+        file_size:bigint,
+        file_modification_time:timestamp,
+        file_block_start:bigint,
+        file_block_length bigint
+    >
 )
 USING DELTA
 LOCATION '{{location}}'
