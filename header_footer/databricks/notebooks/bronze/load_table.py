@@ -2,6 +2,7 @@
 # MAGIC %pip install pyaml pydantic yetl-framework==1.6.6.dev3
 
 # COMMAND ----------
+
 dbutils.library.restartPython()
 
 # COMMAND ----------
@@ -68,6 +69,8 @@ config.set_checkpoint(
   table_mapping.source, table_mapping.destination
 )
 
+# COMMAND ----------
+
 print(load)
 load(
   param_process_id, table_mapping.source, table_mapping.destination
@@ -89,6 +92,9 @@ config.set_checkpoint(
   source_hf, 
   table_mapping_hf.destination
 )
+
+
+# COMMAND ----------
 
 print(load)
 
@@ -115,6 +121,10 @@ landing = table_mapping.source
 raw = table_mapping.destination
 header_footer = table_mapping_audit.source["header_footer"]
 destination = table_mapping_audit.destination
+
+
+
+# COMMAND ----------
 
 load(
   param_process_id, 

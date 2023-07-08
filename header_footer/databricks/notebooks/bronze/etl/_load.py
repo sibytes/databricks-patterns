@@ -5,7 +5,7 @@ import hashlib
 from pyspark.sql import DataFrame
 from typing import Union
 from pyspark.sql import functions as fn
-
+import logging
 
 def hash_value(value: str):
     hash_object = hashlib.sha224(f"{value}".encode("utf-8"))
@@ -15,16 +15,18 @@ def hash_value(value: str):
 def z_order_by(
     destination: DeltaLake
 ):
+    _logger = logging.getLogger(__name__)
     z_order_by = destination.z_order_by
     if isinstance(z_order_by, list): 
       z_order_by = ",".join(z_order_by)
       
-    print("Optimizing")
+    _logger.info("Optimizing")
     sql = f"""
         OPTIMIZE `{destination.database}`.`{destination.table}`
         ZORDER BY ({z_order_by})
     """
-    print(sql)
+
+    _logger.info(sql)
     spark.sql(sql)
 
 
@@ -78,8 +80,10 @@ def stream_load(
     stream = stream.selectExpr(*columns)
     stream = source.add_timeslice(stream)
 
+    # should need this on a stream load since files are already watermarked
+    # leave in place however if ever needed
     if drop_already_loaded:
-      drop_if_already_loaded(stream, source)
+      stream = drop_if_already_loaded(stream, source)
 
     stream_data: StreamingQuery = (stream
         .select("*")
@@ -126,7 +130,7 @@ def batch_load(
     df = source.add_timeslice(df)
 
     if drop_already_loaded:
-      drop_if_already_loaded(df, source)
+      df = drop_if_already_loaded(df, source)
 
     audit:DataFrame = (df
         .select("*")

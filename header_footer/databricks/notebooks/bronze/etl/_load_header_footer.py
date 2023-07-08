@@ -115,7 +115,7 @@ def batch_load_header_footer(
     df_footer: DataFrame = (
         spark.read.format("delta")
         .table(f"`{source.database}`.`{source.table}`")
-        .where(f"_process_id = {process_id} and flag = 'H'")
+        .where(f"_process_id = {process_id} and flag = 'F'")
         .selectExpr(*columns)
     )
 
