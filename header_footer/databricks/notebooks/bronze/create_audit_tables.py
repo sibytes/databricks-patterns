@@ -1,12 +1,13 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==1.6.6.dev2
+# MAGIC %pip install pyaml pydantic yetl-framework==1.6.6.dev3
+
+# COMMAND ----------
+dbutils.library.restartPython()
 
 # COMMAND ----------
 dbutils.widgets.text("load_type", "autoloader")
 
-
 # COMMAND ----------
-
 from etl import LoadType
 from yetl import (
   Config, StageType
