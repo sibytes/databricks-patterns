@@ -1,0 +1,64 @@
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - header_footer
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+# strategy:
+#   matrix:
+#     Python38:
+#       python.version: '3.8'
+
+stages:
+  - stage: devevlopmentDeployment
+    displayName: Deploy dbx notebooks to Dev
+    variables:
+      - group: development
+
+
+    jobs:
+
+      - deployment: deployHeaderFooterNotebooks
+        displayName: Deploy header_footer Notebooks
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - template: ../ci/templates/notebook.yml
+                  parameters:
+                    azureResourceManagerConnection: 'development_subscription'
+                    keyVaultName: '$(KEY_VAULT)'
+                    SubscriptionId: '$(SUBSCRIPTION_ID)'
+                    ResourceGroup: '$(RESOURCE_GROUP)'
+                    DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
+                    DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
+                    DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
+                    DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
+                    FromWorkspaceDir: 'header_footer'
+                    ToWorkspaceDir: 'header_footer'
+
+      - deployment: deployHeaderFooterWorkflows
+        displayName: Deploy header_footer Workflows
+        environment: 'development'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - template: ../ci/templates/workflows.yml
+                  parameters:
+                    azureResourceManagerConnection: 'development_subscription'
+                    keyVaultName: '$(KEY_VAULT)'
+                    SubscriptionId: '$(SUBSCRIPTION_ID)'
+                    ResourceGroup: '$(RESOURCE_GROUP)'
+                    DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
+                    DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
+                    SubDir: 'header_footer/databricks/workflows'
+
