@@ -41,9 +41,9 @@ def drop_if_already_loaded(df:Union[DataFrame, StreamingQuery], source:Read):
        "_metadata.file_modification_time"
     ]
     df = df.withColumn("_metadata_loading", fn.struct(*match_on_metadata))
-    df = df.join(already_loaded, already_loaded._metadata_loaded == df._metadata ,"left")
+    df = df.join(already_loaded, already_loaded._metadata_loaded == df._metadata_loading ,"left")
     df = df.where(df._metadata_loaded.isNull())
-    df = df.drop("_metadata_loaded")
+    df = df.drop(*["_metadata_loading", "_metadata_loaded"])
     return df
 
 
