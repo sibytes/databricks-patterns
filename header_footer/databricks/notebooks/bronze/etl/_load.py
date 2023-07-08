@@ -4,6 +4,7 @@ from pyspark.sql.streaming import StreamingQuery
 import hashlib
 from pyspark.sql import DataFrame
 from typing import Union
+from pyspark.sql import functions as fn
 
 
 def hash_value(value: str):
@@ -33,6 +34,13 @@ def drop_if_already_loaded(df:Union[DataFrame, StreamingQuery], source:Read):
       from yetl_control_header_footer.raw_audit
       where source_table = '{source.table}'                   
     """)
+    match_on_metadata = [
+       "_metadata.file_path",
+       "_metadata.file_name",
+       "_metadata.file_size",
+       "_metadata.file_modification_time"
+    ]
+    df = df.withColumn("_metadata_loading", fn.struct(*match_on_metadata))
     df = df.join(already_loaded, already_loaded._metadata_loaded == df._metadata ,"left")
     df = df.where(df._metadata_loaded.isNull())
     df = df.drop("_metadata_loaded")

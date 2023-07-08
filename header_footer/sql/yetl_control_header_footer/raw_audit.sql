@@ -26,6 +26,8 @@
     file_path string,
     file_size bigint,
     file_modification_time timestamp,
+    file_block_start bigint,
+    file_block_length bigint,
     _slice_date timestamp,
     _process_id bigint,
     _load_date timestamp

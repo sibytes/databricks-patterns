@@ -40,6 +40,8 @@ def load_audit(
         d._metadata.file_path,
         d._metadata.file_size,
         d._metadata.file_modification_time,
+        d._metadata.file_block_start,
+        d._metadata.file_block_length,
         hf._slice_date,
         hf._process_id,
         hf._load_date
@@ -56,11 +58,12 @@ def load_audit(
         d._metadata.file_path,
         d._metadata.file_size,
         d._metadata.file_modification_time,
+        d._metadata.file_block_start,
+        d._metadata.file_block_length,
         hf._slice_date,
         hf._process_id,
         hf._load_date
     """
-
 
     _logger.debug(sql)
     _logger.info(f"loading table `{destination.database}`.`{destination.table}`")
