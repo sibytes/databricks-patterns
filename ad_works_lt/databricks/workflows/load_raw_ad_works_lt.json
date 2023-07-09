@@ -92,7 +92,7 @@
             "job_cluster_key": "dbx_patterns_job_cluster",
             "new_cluster": {
                 "cluster_name": "",
-                "spark_version": "12.2.x-scala2.12",
+                "spark_version": "13.2.x-scala2.12",
                 "spark_conf": {
                     "spark.databricks.delta.preview.enabled": "true"
                 },
@@ -104,7 +104,7 @@
                 "node_type_id": "Standard_DS3_v2",
                 "enable_elastic_disk": true,
                 "policy_id": "8F631AA0F90027D5",
-                "data_security_mode": "USER_ISOLATION",
+                "data_security_mode": "SINGLE_USER",
                 "runtime_engine": "STANDARD",
                 "num_workers": 1
             }
