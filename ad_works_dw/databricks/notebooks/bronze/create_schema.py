@@ -9,9 +9,8 @@ dbutils.widgets.text("load_type", "batch")
 
 from etl import LoadType
 from yetl import (
-  Config, StageType, Tables, Read, DeltaLake, Timeslice
+  Config, StageType, Read, Timeslice
 )
-from yetl.config._utils import get_config_path
 
 # COMMAND ----------
 
@@ -31,8 +30,7 @@ print(f"""
 import yaml, os
 
 def create_schema(
-  source:Read, 
-  destination:DeltaLake
+  source:Read
 ):
 
   options = source.options
@@ -66,11 +64,18 @@ config = Config(
 
 tables = config.tables.lookup_table(
   stage=StageType.raw, 
-  first_match=False
+  first_match=False,
+  catalog_enabled=False
 )
 
 for t in tables:
-  table_mapping = config.get_table_mapping(t.stage, t.table, t.database, create_table=False)
-  create_schema(table_mapping.source, table_mapping.destination)
+  table_mapping = config.get_table_mapping(
+    t.stage, 
+    t.table, 
+    t.database, 
+    create_table=False,
+    catalog_enabled=False
+  )
+  create_schema(table_mapping.source)
 
 

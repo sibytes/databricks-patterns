@@ -4,6 +4,8 @@ from pyspark.sql.streaming import StreamingQuery
 import hashlib
 from pyspark.sql import DataFrame
 from typing import Union
+from pyspark.sql import functions as fn
+import logging
 
 
 def hash_value(value: str):
@@ -14,6 +16,7 @@ def hash_value(value: str):
 def z_order_by(
     destination: DeltaLake
 ):
+    _logger = logging.getLogger(__name__)
     _z_order_by = destination.z_order_by
     if isinstance(_z_order_by, list):
       _z_order_by = ",".join(destination.z_order_by)
@@ -22,7 +25,7 @@ def z_order_by(
         OPTIMIZE `{destination.database}`.`{destination.table}`
         ZORDER BY ({_z_order_by})
     """
-    print(sql)
+    _logger.info(sql)
     spark.sql(sql)
 
 
@@ -32,9 +35,17 @@ def drop_if_already_loaded(df:Union[DataFrame, StreamingQuery], source:Read):
       from yetl_control_ad_works_dw.raw_audit
       where source_table = '{source.table}'                   
     """)
-    df = df.join(already_loaded, already_loaded._metadata_loaded == df._metadata ,"left")
+    match_on_metadata = [
+       "_metadata.file_path",
+       "_metadata.file_name",
+       "_metadata.file_size",
+       "_metadata.file_modification_time"
+    ]
+
+    df = df.withColumn("_metadata_loading", fn.struct(*match_on_metadata))
+    df = df.join(already_loaded, already_loaded._metadata_loaded == df._metadata_loading ,"left")
     df = df.where(df._metadata_loaded.isNull())
-    df = df.drop("_metadata_loaded")
+    df = df.drop(*["_metadata_loading", "_metadata_loaded"])
     return df
 
 
@@ -71,7 +82,7 @@ def stream_load(
     stream = source.add_timeslice(stream)
 
     if drop_already_loaded:
-      drop_if_already_loaded(stream, source)
+      stream = drop_if_already_loaded(stream, source)
 
     stream_data: StreamingQuery = (stream
         .select("*")
@@ -119,7 +130,7 @@ def batch_load(
     df = source.add_timeslice(df)
 
     if drop_already_loaded:
-      drop_if_already_loaded(df, source)
+      df = drop_if_already_loaded(df, source)
 
     audit:DataFrame = (df
         .select("*")
