@@ -24,6 +24,7 @@ param_table = dbutils.widgets.get("table")
 param_load_type = dbutils.widgets.get("load_type")
 param_timeslice = dbutils.widgets.get("timeslice")
 param_drop_already_loaded = dbutils.widgets.get("drop_already_loaded")
+
 if param_drop_already_loaded.lower() in ['true','false']:
   param_drop_already_loaded = bool(param_drop_already_loaded)
 else:
@@ -66,7 +67,8 @@ load = get_load(LoadFunction.load, load_type)
 table_mapping = config.get_table_mapping(
   stage=StageType.raw, 
   table=param_table,
-  create_table=True
+  create_table=True,
+  catalog_enabled=False
 )
 config.set_checkpoint(
   table_mapping.source, table_mapping.destination
@@ -84,7 +86,8 @@ load = get_load(LoadFunction.load_audit, load_type)
 table_mapping_audit = config.get_table_mapping(
   stage=StageType.audit_control, 
   table="raw_audit",
-  create_table=False
+  create_table=False,
+  catalog_enabled=False
 )
 
 landing = table_mapping.source

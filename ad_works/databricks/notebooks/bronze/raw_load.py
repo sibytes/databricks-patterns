@@ -68,7 +68,8 @@ tables = config.tables.lookup_table(
   # this will filter the tables on a custom property
   # in the tables parameter you can add whatever custom properties you want
   # either for filtering or to use in pipelines
-  process_group=param_process_group
+  process_group=param_process_group,
+  catalog_enabled=False
 )
 
 

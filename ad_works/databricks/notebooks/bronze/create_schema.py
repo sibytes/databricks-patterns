@@ -31,8 +31,7 @@ print(f"""
 import yaml, os
 
 def create_schema(
-  source:Read, 
-  destination:DeltaLake
+  source:Read
 ):
 
   options = source.options
@@ -70,7 +69,13 @@ tables = config.tables.lookup_table(
 )
 
 for t in tables:
-  table_mapping = config.get_table_mapping(t.stage, t.table, t.database, create_table=False)
-  create_schema(table_mapping.source, table_mapping.destination)
+  table_mapping = config.get_table_mapping(
+    t.stage, 
+    t.table, 
+    t.database, 
+    create_table=False, 
+    catalog_enabled=False
+  )
+  create_schema(table_mapping.source)
 
 
