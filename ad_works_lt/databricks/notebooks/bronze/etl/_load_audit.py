@@ -37,6 +37,8 @@ def load_audit(
         d._metadata.file_path,
         d._metadata.file_size,
         d._metadata.file_modification_time,
+        d._metadata.file_block_start,
+        d._metadata.file_block_length,
         d._slice_date,
         d._process_id,
         d._load_date
@@ -49,6 +51,8 @@ def load_audit(
         d._metadata.file_path,
         d._metadata.file_size,
         d._metadata.file_modification_time,
+        d._metadata.file_block_start,
+        d._metadata.file_block_length,
         d._slice_date,
         d._process_id,
         d._load_date

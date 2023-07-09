@@ -40,7 +40,8 @@ config = Config(
 
 tables = config.tables.create_table(
   stage=StageType.audit_control, 
-  first_match=False
+  first_match=False,
+  catalog_enabled=False
 )
 
 

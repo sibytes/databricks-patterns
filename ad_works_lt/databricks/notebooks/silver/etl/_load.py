@@ -1,13 +1,13 @@
 from yetl import Read, DeltaLake
 from databricks.sdk.runtime import spark
 from pyspark.sql.streaming import StreamingQuery
-import hashlib
 from pyspark.sql import DataFrame
-from typing import Union
+import logging
 
 def z_order_by(
     destination: DeltaLake
 ):
+    _logger = logging.getLogger(__name__)
     _z_order_by = destination.z_order_by
     if isinstance(_z_order_by, list):
       _z_order_by = ",".join(destination.z_order_by)
@@ -16,7 +16,7 @@ def z_order_by(
         OPTIMIZE `{destination.database}`.`{destination.table}`
         ZORDER BY ({_z_order_by})
     """
-    print(sql)
+    _logger.info(sql)
     spark.sql(sql)
 
 
@@ -50,9 +50,6 @@ def stream_load(
 
     stream = stream.selectExpr(*columns)
     stream = source.add_timeslice(stream)
-
-    if drop_already_loaded:
-      drop_if_already_loaded(stream, source)
 
     stream_data: StreamingQuery = (stream
         .select("*")
@@ -97,9 +94,6 @@ def batch_load(
 
     df = df.selectExpr(*columns)
     df = source.add_timeslice(df)
-
-    if drop_already_loaded:
-      drop_if_already_loaded(df, source)
 
     audit:DataFrame = (df
         .select("*")

@@ -66,7 +66,8 @@ load = get_load(LoadFunction.load, load_type)
 table_mapping = config.get_table_mapping(
   stage=StageType.raw, 
   table=param_table,
-  create_table=True
+  create_table=True,
+  catalog_enabled=False
 )
 config.set_checkpoint(
   table_mapping.source, table_mapping.destination
@@ -84,7 +85,8 @@ load = get_load(LoadFunction.load_audit, load_type)
 table_mapping_audit = config.get_table_mapping(
   stage=StageType.audit_control, 
   table="raw_audit",
-  create_table=False
+  create_table=False,
+  catalog=False
 )
 
 landing = table_mapping.source
