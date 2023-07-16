@@ -1,4 +1,7 @@
-version: 1.6.6
+# yaml-language-server: $schema=./pipelines/json_schema/sibytes_yetl_project_schema.json
+
+
+version: 2.0.0
 
 name: ad_works
 sql: ./sql

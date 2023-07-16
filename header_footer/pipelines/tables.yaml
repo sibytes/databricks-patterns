@@ -1,4 +1,6 @@
-version: 1.6.6
+# yaml-language-server: $schema=./json_schema/sibytes_yetl_tables_schema.json
+
+version: 2.0.0
 
 audit_control:
   delta_lake:
