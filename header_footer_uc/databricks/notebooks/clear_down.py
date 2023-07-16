@@ -1,7 +1,15 @@
 # Databricks notebook source
 # DBTITLE 1,Clear Landing
-# dbfs_to_path = "/mnt/landing/data/header_footer_uc"
-# dbutils.fs.rm(dbfs_to_path, True)
+from pyspark.sql.utils import AnalysisException
+
+
+dbfs_to_path = "/Volumes/development/landing/header_footer_uc/"
+try:
+  dbutils.fs.rm(dbfs_to_path, True)
+except AnalysisException as e:
+  if "UC_VOLUME_NOT_FOUND" in str(e):
+    spark.sql("CREATE VOLUME development.landing.header_footer_uc;")
+  raise e
 
 # COMMAND ----------
 

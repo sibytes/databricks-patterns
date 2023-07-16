@@ -1,7 +1,21 @@
 # Databricks notebook source
 # DBTITLE 1,Clear Landing
-dbfs_to_path = "/mnt/landing/data/header_footer_uc"
-dbutils.fs.rm(dbfs_to_path, True)
+from pyspark.sql.utils import AnalysisException
+
+
+dbfs_to_path = "/Volumes/development/landing/header_footer_uc/"
+try:
+  dbutils.fs.rm(dbfs_to_path, True)
+except AnalysisException as e:
+  if "UC_VOLUME_NOT_FOUND" in str(e):
+    spark.sql("CREATE VOLUME development.landing.header_footer_uc;")
+  raise e
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
+# MAGIC SHOW VOLUMES in DEVELOPMENT.landing
 
 # COMMAND ----------
 
@@ -9,11 +23,15 @@ dbutils.fs.rm(dbfs_to_path, True)
 import os
 
 home = os.getcwd()
-print(home)
+
+if home == '/databricks/driver':
+  home = dbutils.notebook.entry_point.getDbutils().notebook().getContext().notebookPath().get()
+  home = f"Workspace{home}"
 
 data_dir = os.path.join(home, "../../../data/landing/customer_details")
 
-dbfs_from_path = f"file://{data_dir}"
+dbfs_from_path = f"file:/{data_dir}"
+print(dbfs_from_path)
 dbutils.fs.ls(dbfs_from_path)
 
 print(f"Copying data from {dbfs_from_path} to {dbfs_to_path}")
