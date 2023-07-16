@@ -26,11 +26,11 @@ home = os.getcwd()
 
 if home == '/databricks/driver':
   home = dbutils.notebook.entry_point.getDbutils().notebook().getContext().notebookPath().get()
-  home = f"Workspace{home}"
+  home = f"/Workspace{home}"
 
 data_dir = os.path.join(home, "../../../data/landing/customer_details")
 
-dbfs_from_path = f"file:/{data_dir}"
+dbfs_from_path = f"file:{data_dir}"
 print(dbfs_from_path)
 dbutils.fs.ls(dbfs_from_path)
 
@@ -54,14 +54,9 @@ display(data_files)
 
 # DBTITLE 1,Clear Down the Data Lakehouse
 def clear_down():
-  checkpoints = [
-    "/mnt/datalake/checkpoint/header_footer_uc"
-  ]
-  for c in checkpoints:
-    dbutils.fs.rm(c, True)
-  spark.sql("drop database if exists yetl_raw_header_footer_uc CASCADE")
-  spark.sql("drop database if exists yetl_base_header_footer_uc CASCADE")
-  spark.sql("drop database if exists yetl_control_header_footer_uc CASCADE")
+  spark.sql("drop database if exists development.yetl_raw_header_footer_uc CASCADE")
+  spark.sql("drop database if exists development.yetl_base_header_footer_uc CASCADE")
+  spark.sql("drop database if exists development.yetl_control_header_footer_uc CASCADE")
 clear_down()
 
 # COMMAND ----------

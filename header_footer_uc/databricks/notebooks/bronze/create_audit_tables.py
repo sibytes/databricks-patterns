@@ -1,7 +1,8 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==2.0.0.dev3
+# MAGIC %pip install pyaml pydantic yetl-framework==2.0.0
 
 # COMMAND ----------
+
 dbutils.widgets.text("load_type", "batch")
 
 
@@ -13,6 +14,7 @@ from yetl import (
 )
 
 # COMMAND ----------
+
 param_load_type = dbutils.widgets.get("load_type")
 
 try:
