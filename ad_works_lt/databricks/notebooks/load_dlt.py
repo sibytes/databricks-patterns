@@ -3,7 +3,6 @@
 
 # COMMAND ----------
 
-
 from yetl import (
   Config, StageType, Read, DeltaLake
 )
@@ -22,7 +21,6 @@ config = Config(
 )
 
 # COMMAND ----------
-
 
 import dlt
 def create_raw_dlt(
@@ -86,7 +84,6 @@ config = Config(
 )
 
 # COMMAND ----------
-
 
 def create_base_dlt(
   source: Read,

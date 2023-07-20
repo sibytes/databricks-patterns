@@ -94,7 +94,6 @@ results = execute_notebooks(
 
 # COMMAND ----------
 
-
 msg = "\n".join(results)
 print(msg)
 

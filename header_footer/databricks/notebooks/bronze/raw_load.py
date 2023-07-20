@@ -2,6 +2,7 @@
 # MAGIC %pip install pyaml pydantic yetl-framework==2.0.0
 
 # COMMAND ----------
+
 dbutils.library.restartPython()
 
 # COMMAND ----------
@@ -96,7 +97,6 @@ results = execute_notebooks(
 
 
 # COMMAND ----------
-
 
 msg = "\n".join(results)
 print(msg)
