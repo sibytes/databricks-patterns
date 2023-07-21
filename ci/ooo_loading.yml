@@ -4,7 +4,7 @@ trigger:
     - main
   paths:
     include:
-    - header_footer_uc
+    - ooo_loading
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -22,8 +22,8 @@ stages:
 
 
     jobs:
-      - deployment: deployHeaderFooterUCNotebooks
-        displayName: Deploy header_footer_uc Notebooks
+      - deployment: deployOutOfOrderLoadingNotebooks
+        displayName: Deploy ooo_loading Notebooks
         environment: 'development'
         strategy:
           runOnce:
@@ -40,11 +40,11 @@ stages:
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
                     DbxWorkspaceSubDirs: '$(DATABRICKS_WORKSPACE_SUBDIRS)'
                     DbxWorkspaceRoot: '$(DATABRICKS_WORKSPACE_ROOT)'
-                    FromWorkspaceDir: 'header_footer_uc'
-                    ToWorkspaceDir: 'header_footer_uc'
+                    FromWorkspaceDir: 'ooo_loading'
+                    ToWorkspaceDir: 'ooo_loading'
 
-      - deployment: deployHeaderFooterUCWorkflows
-        displayName: Deploy header_footer_uc Workflows
+      - deployment: deployOutOfOrderLoadingWorkflows
+        displayName: Deploy ooo_loading Workflows
         environment: 'development'
         strategy:
           runOnce:
@@ -59,4 +59,4 @@ stages:
                     ResourceGroup: '$(RESOURCE_GROUP)'
                     DbxWorkspaceName: '$(DATABRICKS_WORKSPACE_NAME)'
                     DbxWorkspaceUrl: '$(DATABRICKS_WORKSPACE_URL)'
-                    SubDir: 'header_footer_uc/databricks/workflows'
+                    SubDir: 'ooo_loading/databricks/workflows'
