@@ -1,5 +1,9 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==2.0.0
+# MAGIC %pip install pyaml pydantic yetl-framework==2.0.1
+
+# COMMAND ----------
+
+dbutils.library.restartPython()
 
 # COMMAND ----------
 
@@ -7,6 +11,7 @@ dbutils.widgets.text("process_id", "-1")
 dbutils.widgets.text("table", "customer_details_1")
 dbutils.widgets.text("load_type", "batch")
 dbutils.widgets.text("timeslice", "*")
+dbutils.widgets.text("catalog", "development")
 
 # COMMAND ----------
 
@@ -22,6 +27,8 @@ param_process_id = int(dbutils.widgets.get("process_id"))
 param_table = dbutils.widgets.get("table")
 param_load_type = dbutils.widgets.get("load_type")
 param_timeslice = dbutils.widgets.get("timeslice")
+param_catalog = dbutils.widgets.get("catalog")
+project = "header_footer_uc"
 
 try:
   load_type:LoadType = LoadType(param_load_type)
@@ -33,17 +40,18 @@ if load_type == LoadType.autoloader:
 timeslice = Timeslice.parse_iso_date(param_timeslice)
 
 print(f"""
+  project : {project}
   param_process_id: {param_process_id}
   param_table: {param_table}
   load_type: {str(load_type)}
   timeslice: {timeslice}
+  catalog: {param_catalog}
 """)
 
 # COMMAND ----------
 
-project = "header_footer_uc"
-pipeline = load_type.value
 
+pipeline = load_type.value
 config = Config(
   project=project, 
   pipeline=pipeline,
@@ -59,7 +67,9 @@ load = get_load(LoadFunction.load, load_type)
 table_mapping = config.get_table_mapping(
   stage=StageType.raw, 
   table=param_table,
-  create_table=True
+  create_table=True,
+  catalog=param_catalog,
+  catalog_enabled=True
 )
 config.set_checkpoint(
   table_mapping.source, table_mapping.destination

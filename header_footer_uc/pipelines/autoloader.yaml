@@ -1,20 +1,17 @@
 # yaml-language-server: $schema=./json_schema/sibytes_yetl_pipeline_schema.json
 
-version: 2.0.0
+version: 2.0.1
 # paths here are relative to this configuration document
 tables: ./tables.yaml
 
 audit_control:
   delta_lake:
-    # delta table properties can be set at stage level or table level
     delta_properties:
         delta.appendOnly: true
         delta.autoOptimize.autoCompact: true
         delta.autoOptimize.optimizeWrite: true
     managed: false
     container: datalake
-    # location: /mnt/{{container}}/data
-    # path: "{{database}}/{{table}}"
     options:
       checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
 
@@ -25,7 +22,7 @@ landing:
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/mnt/{{container}}/data/{{project}}/{{table}}/*"
+    location: "/Volumes/{{catalog}}/landing/header_footer_uc/{{table}}/*"
     filename: "{{table}}-*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
@@ -56,19 +53,11 @@ raw:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    # location: /mnt/{{container}}/data
-    # path: "{{database}}/{{table}}"
     z_order_by:
       - _load_date
     options:
       mergeSchema: true
       checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
-        # optional leave it out if you don't want them
-    warning_thresholds:
-      invalid_rows: 0
-    # optional leave it out if you don't want them
-    exception_thresholds:
-      invalid_rows: 2
 
 
 base:
@@ -76,6 +65,4 @@ base:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    # location: /mnt/{{container}}/data
-    # path: "{{database}}/{{table}}"
     options: null

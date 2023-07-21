@@ -1,23 +1,28 @@
 # Databricks notebook source
+dbutils.widgets.text("project", "header_footer_uc")
+dbutils.widgets.text("catalog", "development")
+dbutils.widgets.text("container", "landing")
+
+# COMMAND ----------
+
+project = dbutils.widgets.get("project")
+catalog = dbutils.widgets.get("catalog")
+container = dbutils.widgets.get("container")
+
+# COMMAND ----------
+
 # DBTITLE 1,Clear Landing
-from pyspark.sql.utils import AnalysisException
+volume_path = f"/Volumes/{catalog}/{container}/{project}/"
+dbutils.fs.rm(volume_path, True)
 
-
-dbfs_to_path = "/Volumes/development/landing/header_footer_uc/"
-try:
-  dbutils.fs.rm(dbfs_to_path, True)
-except AnalysisException as e:
-  if "UC_VOLUME_NOT_FOUND" in str(e):
-    spark.sql("CREATE VOLUME development.landing.header_footer_uc")
-  raise e
 
 # COMMAND ----------
 
 # DBTITLE 1,Clear Down the Data Lakehouse
 def clear_down():
-  spark.sql("drop database if exists development.yetl_raw_header_footer_uc CASCADE")
-  spark.sql("drop database if exists development.yetl_base_header_footer_uc CASCADE")
-  spark.sql("drop database if exists development.yetl_control_header_footer_uc CASCADE")
+  spark.sql(f"drop database if exists development.yetl_raw_{project} CASCADE")
+  spark.sql(f"drop database if exists development.yetl_base_{project} CASCADE")
+  spark.sql(f"drop database if exists development.yetl_control_{project} CASCADE")
 clear_down()
 
 # COMMAND ----------
