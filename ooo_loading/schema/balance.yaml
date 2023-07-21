@@ -1,5 +1,3 @@
-transacted,created,id,code_1,code_2,code_3,code_4,code_5,amount,qauntity,price,tax,value
-
 fields:
 -   metadata: {}
     name: transacted
