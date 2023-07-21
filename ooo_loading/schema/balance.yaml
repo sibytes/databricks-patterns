@@ -1,0 +1,56 @@
+transacted,created,id,code_1,code_2,code_3,code_4,code_5,amount,qauntity,price,tax,value
+
+fields:
+-   metadata: {}
+    name: transacted
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: created
+    nullable: true
+    type: timestamp
+-   metadata: {}
+    name: id
+    nullable: true
+    type: string
+-   metadata: {}
+    name: code_1
+    nullable: true
+    type: string
+-   metadata: {}
+    name: code_2
+    nullable: true
+    type: string
+-   metadata: {}
+    name: code_3
+    nullable: true
+    type: string
+-   metadata: {}
+    name: code_4
+    nullable: true
+    type: string
+-   metadata: {}
+    name: code_4
+    nullable: true
+    type: string
+-   metadata: {}
+    name: amount
+    nullable: true
+    type: decimal(10,4)
+-   metadata: {}
+    name: qauntity
+    nullable: true
+    type: decimal(10,4)
+-   metadata: {}
+    name: price
+    nullable: true
+    type: decimal(10,4)
+-   metadata: {}
+    name: tax
+    nullable: true
+    type: decimal(18,6)
+-   metadata: {}
+    name: value
+    nullable: true
+    type: decimal(18,6)
+type: struct
