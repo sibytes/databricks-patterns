@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==2.0.1
+# MAGIC %pip install pyaml pydantic yetl-framework==2.0.2
 
 # COMMAND ----------
 
@@ -43,7 +43,7 @@ config = Config(
 
 # COMMAND ----------
 
-tables = config.tables.create_table(
+tables = config.create_table(
   StageType.audit_control,
   first_match=False,
   catalog=param_catalog,

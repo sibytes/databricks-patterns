@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==2.0.1
+# MAGIC %pip install pyaml pydantic yetl-framework==2.0.2
 
 # COMMAND ----------
 
@@ -65,7 +65,7 @@ config = Config(
 
 # COMMAND ----------
 
-tables = config.tables.lookup_table(
+tables = config.Lookup_table(
   stage=StageType.raw, 
   first_match=False,
   catalog=param_catalog,
