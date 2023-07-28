@@ -74,10 +74,15 @@ config.set_checkpoint(
   table_mapping.source, table_mapping.destination
 )
 
+
+
+# COMMAND ----------
+
 print(load)
 load(
   param_process_id, table_mapping.source, table_mapping.destination
 )
+
 
 # COMMAND ----------
 

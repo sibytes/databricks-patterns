@@ -43,7 +43,7 @@ config = Config(
 
 # COMMAND ----------
 
-tables = config.create_table(
+tables = config.create_tables(
   StageType.audit_control,
   catalog=param_catalog,
   catalog_enabled=True

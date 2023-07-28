@@ -48,7 +48,7 @@ def load_audit(
       FROM {raw.qualified_table_name()} as d
       JOIN {header_footer.qualified_table_name()} as hf
         ON hf._process_id = d._process_id
-        AND hf._metadata.file_name = d._metadata.file_name
+        AND hf.file_name = d._metadata.file_name
       WHERE d._process_id = {process_id}
       GROUP BY
         hf.header.row_count,

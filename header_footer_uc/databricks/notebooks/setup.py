@@ -72,8 +72,11 @@ display(data_files)
 
 # DBTITLE 1,Clear Down the Data Lakehouse
 def clear_down():
+  print(f"dropping database {catalog}.yetl_raw_{project}")
   spark.sql(f"drop database if exists {catalog}.yetl_raw_{project} CASCADE")
+  print(f"dropping database {catalog}.yetl_base_{project}")
   spark.sql(f"drop database if exists {catalog}.yetl_base_{project} CASCADE")
+  print(f"dropping database {catalog}.yetl_control_{project}")
   spark.sql(f"drop database if exists {catalog}.yetl_control_{project} CASCADE")
 clear_down()
 

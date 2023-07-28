@@ -15,8 +15,9 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC select * from development.yetl_control_header_footer_uc.header_footer
-# MAGIC -- where footer.name = "customer_preferences"
+# MAGIC select  distinct file_name from development.yetl_control_header_footer_uc.header_footer
+# MAGIC -- where file_name = "customer_details_1-20230101.csv"
+# MAGIC
 
 # COMMAND ----------
 
