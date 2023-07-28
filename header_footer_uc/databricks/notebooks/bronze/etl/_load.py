@@ -29,16 +29,50 @@ def z_order_by(
     spark.sql(sql)
 
 
+def transform(df:DataFrame, source:Read, process_id:int):
+
+  src_cols = [c for c in df.columns if not c.startswith("_")]
+  sys_cols = [c for c in df.columns if c.startswith("_")]
+
+  columns = (
+      src_cols
+      + sys_cols
+      + get_metadata_columns(source, process_id)
+  )
+
+  df = df.selectExpr(*columns)
+  df = source.add_timeslice(df)
+
+  return df
+
+
+def get_metadata_columns(source:Read, process_id:int):
+  return [
+          "if(_corrupt_record is null, true, false) as _is_valid",
+          f"cast(null as timestamp) as {source.slice_date_column_name}",
+          f"cast({process_id} as long) as _process_id",
+          "current_timestamp() as _load_date",
+          "_metadata",
+        ]
+
+def read_data(reader, source:Read):
+
+    return (
+        reader.schema(source.spark_schema)
+        .format(source.format)
+        .options(**source.options)
+        .load(source.path)
+    )
+
+
 def drop_if_already_loaded(df:Union[DataFrame, StreamingQuery], source:Read):
     already_loaded = spark.sql(f"""
-      select struct(file_path, file_name, file_size, file_modification_time) as _metadata_loaded
+      select struct(file_name, file_modification_time) as _metadata_loaded
       from yetl_control_header_footer.raw_audit
       where source_table = '{source.table}'                   
     """)
     match_on_metadata = [
-       "_metadata.file_path",
        "_metadata.file_name",
-       "_metadata.file_size",
        "_metadata.file_modification_time"
     ]
     df = df.withColumn("_metadata_loading", fn.struct(*match_on_metadata))
@@ -54,30 +88,9 @@ def stream_load(
     destination: DeltaLake,
     drop_already_loaded:bool = False
 ):
-    stream = (
-        spark.readStream.schema(source.spark_schema)
-        .format(source.format)
-        .options(**source.options)
-        .load(source.path)
-    )
+    stream = read_data(spark.readStream, source)
 
-    src_cols = [c for c in stream.columns if not c.startswith("_")]
-    sys_cols = [c for c in stream.columns if c.startswith("_")]
-
-    columns = (
-        src_cols
-        + sys_cols
-        + [
-            "if(_corrupt_record is null, true, false) as _is_valid",
-            f"cast(null as timestamp) as {source.slice_date_column_name}",
-            f"cast({process_id} as long) as _process_id",
-            "current_timestamp() as _load_date",
-            "_metadata",
-        ]
-    )
-
-    stream = stream.selectExpr(*columns)
-    stream = source.add_timeslice(stream)
+    df = transform(df, source, process_id)
 
     if drop_already_loaded:
       stream = drop_if_already_loaded(stream, source)
@@ -101,30 +114,9 @@ def batch_load(
     destination: DeltaLake,
     drop_already_loaded:bool = True
 ):
-    df:DataFrame = (
-        spark.read.schema(source.spark_schema)
-        .format(source.format)
-        .options(**source.options)
-        .load(source.path)
-    )
+    df:DataFrame = read_data(spark.read, source)
 
-    src_cols = [c for c in df.columns if not c.startswith("_")]
-    sys_cols = [c for c in df.columns if c.startswith("_")]
-
-    columns = (
-        src_cols
-        + sys_cols
-        + [
-            "if(_corrupt_record is null, true, false) as _is_valid",
-            f"cast(null as timestamp) as {source.slice_date_column_name}",
-            f"cast({process_id} as long) as _process_id",
-            "current_timestamp() as _load_date",
-            "_metadata",
-        ]
-    )
-
-    df = df.selectExpr(*columns)
-    df = source.add_timeslice(df)
+    df = transform(df, source, process_id)
 
     if drop_already_loaded:
       df = drop_if_already_loaded(df, source)

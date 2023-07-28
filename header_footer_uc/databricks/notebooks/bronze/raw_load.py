@@ -64,7 +64,7 @@ config = Config(
 
 # COMMAND ----------
 
-tables = config.Lookup_table(
+tables = config.tables.lookup_table(
   stage=StageType.raw, 
   first_match=False,
   catalog=param_catalog,

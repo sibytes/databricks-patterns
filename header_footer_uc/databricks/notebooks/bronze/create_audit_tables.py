@@ -45,7 +45,6 @@ config = Config(
 
 tables = config.create_table(
   StageType.audit_control,
-  first_match=False,
   catalog=param_catalog,
   catalog_enabled=True
 )
