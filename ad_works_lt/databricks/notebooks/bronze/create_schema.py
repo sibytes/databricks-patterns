@@ -62,7 +62,7 @@ config = Config(
   timeslice=Timeslice(year=2023, month=1, day=1)
 )
 
-tables = config.Lookup_table(
+tables = config.lookup_table(
   stage=StageType.raw, 
   first_match=False
 )

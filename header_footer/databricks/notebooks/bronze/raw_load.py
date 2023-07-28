@@ -60,7 +60,7 @@ config = Config(
 
 # COMMAND ----------
 
-tables = config.Lookup_table(
+tables = config.lookup_table(
   stage=StageType.raw, 
   first_match=False,
   # this will filter the tables on a custom property
