@@ -50,7 +50,6 @@ print(f"""
 
 # COMMAND ----------
 
-
 pipeline = load_type.value
 config = Config(
   project=project, 
