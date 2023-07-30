@@ -33,7 +33,24 @@ def get_footer_columns():
     "_slice_date as f_slice_date",
     "_process_id as f_process_id",
     "_metadata.file_name as f_file_name",
-  ] 
+  ]
+
+def get_columns():
+  return [
+      "header",
+      "raw_header",
+      "footer",
+      "raw_footer",
+      "file_path",
+      "file_name",
+      "file_size",
+      "file_modification_time",
+      "file_block_start",
+      "file_block_length",
+      "_slice_date",
+      "_process_id",
+      "_load_date"
+  ]
 
 def stream_load_header_footer(
     process_id: int,
@@ -61,21 +78,8 @@ def stream_load_header_footer(
         .selectExpr(*columns)
     )
 
-    columns = [
-        "header",
-        "raw_header",
-        "footer",
-        "raw_footer",
-        "file_path",
-        "file_name",
-        "file_size",
-        "file_modification_time",
-        "file_block_start",
-        "file_block_length",
-        "_slice_date",
-        "_process_id",
-        "_load_date"
-    ]
+    columns = get_columns()
+
     stream_joined = stream_header.join(
         stream_footer,
         fn.expr(
@@ -119,21 +123,8 @@ def batch_load_header_footer(
         .selectExpr(*columns)
     )
 
-    columns = [
-        "header",
-        "raw_header",
-        "footer",
-        "raw_footer",
-        "file_path",
-        "file_name",
-        "file_size",
-        "file_modification_time",
-        "file_block_start",
-        "file_block_length",
-        "_slice_date",
-        "_process_id",
-        "_load_date"
-    ]
+    columns = get_columns()
+
     df_joined = df_header.join(
         df_footer,
         fn.expr("""
