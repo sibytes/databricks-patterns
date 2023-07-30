@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==2.0.3
+# MAGIC %pip install pyaml pydantic yetl-framework==2.0.4.dev1
 
 # COMMAND ----------
 
@@ -66,8 +66,7 @@ load = get_load(LoadFunction.load, load_type)
 table_mapping = config.get_table_mapping(
   stage=StageType.raw, 
   table=param_table,
-  create_table=True,
-  catalog_enabled=False
+  create_table=True
 )
 config.set_checkpoint(
   table_mapping.source, table_mapping.destination

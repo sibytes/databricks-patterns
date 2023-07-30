@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==2.0.3
+# MAGIC %pip install pyaml pydantic yetl-framework==2.0.4.dev1
 
 # COMMAND ----------
 
@@ -68,7 +68,6 @@ tables = config.lookup_table(
   stage=StageType.raw, 
   first_match=False,
   catalog=param_catalog,
-  catalog_enabled=True,
   # this will filter the tables on a custom property
   # in the tables parameter you can add whatever custom properties you want
   # either for filtering or to use in pipelines

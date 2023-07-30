@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==2.0.3
+# MAGIC %pip install pyaml pydantic yetl-framework==2.0.4.dev1
 
 # COMMAND ----------
 
@@ -73,8 +73,7 @@ for t in tables:
     t.stage, 
     t.table, 
     t.database, 
-    create_table=False, 
-    catalog_enabled=False
+    create_table=False
   )
   create_schema(table_mapping.source)
 
