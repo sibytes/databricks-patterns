@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==2.0.6
+# MAGIC %pip install pyaml pydantic yetl-framework==3.0.0.dev3
 
 # COMMAND ----------
 dbutils.library.restartPython()
