@@ -71,11 +71,9 @@ display(data_files)
 # DBTITLE 1,Clear Down the Data Lakehouse
 def clear_down():
   print(f"dropping database {catalog}.raw_{project}")
-  spark.sql(f"drop database if exists {catalog}.yetl_raw_{project} CASCADE")
+  spark.sql(f"drop database if exists {catalog}.raw_{project} CASCADE")
   print(f"dropping database {catalog}.base_{project}")
-  spark.sql(f"drop database if exists {catalog}.yetl_base_{project} CASCADE")
-  print(f"dropping database {catalog}.control_{project}")
-  spark.sql(f"drop database if exists {catalog}.yetl_control_{project} CASCADE")
+  spark.sql(f"drop database if exists {catalog}.base_{project} CASCADE")
 clear_down()
 
 # COMMAND ----------
@@ -83,3 +81,14 @@ clear_down()
 # MAGIC %sql
 # MAGIC
 # MAGIC show databases
+
+# COMMAND ----------
+
+def clear_down():
+  checkpoints = [
+    "/mnt/datalake/checkpoint/ooo_loading"
+  ]
+  for c in checkpoints:
+    dbutils.fs.rm(c, True)
+  spark.sql("drop database if exists `development`.`ooo_loading` CASCADE")
+clear_down()

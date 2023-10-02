@@ -4,26 +4,15 @@ version: 3.0.0
 # paths here are relative to this configuration document
 tables: ./tables.yaml
 
-audit_control:
-  delta_lake:
-    delta_properties:
-        delta.appendOnly: true
-        delta.autoOptimize.autoCompact: true
-        delta.autoOptimize.optimizeWrite: true
-    managed: false
-    container: datalake
-    options:
-      checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
-
 landing:
   read:
-    trigger: customerdetailscomplete-{{filename_date_format}}*.flg
+    trigger: null
     trigger_type: file
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/Volumes/{{catalog}}/landing/header_footer_uc/{{table}}/*"
-    filename: "{{table}}-*.csv"
+    location: "/Volumes/{{catalog}}/landing/ooo_loading/{{table}}"
+    filename: "{{table}}_*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
     format: cloudFiles
@@ -31,8 +20,8 @@ landing:
     options:
       # autoloader
       cloudFiles.format: csv
-      cloudFiles.schemaLocation:  ../schema/{{table.lower()}}.yaml
-      cloudFiles.schemaHints: /mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}
+      cloudFiles.schemaLocation: /mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}  
+      cloudFiles.schemaHints: ../schema/{{table.lower()}}.yaml
       cloudFiles.useIncrementalListing: auto
       # schema
       inferSchema: false
@@ -53,8 +42,6 @@ raw:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    z_order_by:
-      - _load_date
     options:
       mergeSchema: true
       checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"

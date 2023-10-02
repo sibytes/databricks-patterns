@@ -88,7 +88,7 @@ def stream_load(
     destination: DeltaLake,
     drop_already_loaded:bool = False
 ):
-    stream = read_data(spark.readStream, source)
+    df = read_data(spark.readStream, source)
 
     df = transform(df, source, process_id)
 

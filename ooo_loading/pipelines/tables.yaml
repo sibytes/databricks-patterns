@@ -2,19 +2,6 @@
 
 version: 3.0.0
 
-audit_control:
-  delta_lake:
-    control_ooo_loading:
-      base_audt:
-        depends_on:
-        - base.ooo_loading.base_balance
-        sql: ../sql/{{database}}/{{table}}.sql
-      catalog: development
-      raw_audt:
-        depends_on:
-        - raw.ooo_loading.raw_balance
-        sql: ../sql/{{database}}/{{table}}.sql
-
 landing:
   read:
     ooo_loading:
