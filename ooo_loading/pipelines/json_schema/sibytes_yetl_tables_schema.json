@@ -91,7 +91,7 @@
             "minProperties": 1,
             "properties": {
                 "catalog": {
-                    "type": "string",
+                    "type": ["string", "null"],
                     "description": "the default catalog name for the database"
                 }
             },

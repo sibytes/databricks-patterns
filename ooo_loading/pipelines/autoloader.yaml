@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=./json_schema/sibytes_yetl_pipeline_schema.json
+
+version: 3.0.0
+# paths here are relative to this configuration document
+tables: ./tables.yaml
+
+audit_control:
+  delta_lake:
+    delta_properties:
+        delta.appendOnly: true
+        delta.autoOptimize.autoCompact: true
+        delta.autoOptimize.optimizeWrite: true
+    managed: false
+    container: datalake
+    options:
+      checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
+
+landing:
+  read:
+    trigger: customerdetailscomplete-{{filename_date_format}}*.flg
+    trigger_type: file
+    database: "{{database}}"
+    table: "{{table}}"
+    container: landing
+    location: "/Volumes/{{catalog}}/landing/header_footer_uc/{{table}}/*"
+    filename: "{{table}}-*.csv"
+    filename_date_format: "%Y%m%d"
+    path_date_format: "%Y%m%d"
+    format: cloudFiles
+    spark_schema: ../schema/{{table.lower()}}.yaml
+    options:
+      # autoloader
+      cloudFiles.format: csv
+      cloudFiles.schemaLocation:  ../schema/{{table.lower()}}.yaml
+      cloudFiles.schemaHints: /mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}
+      cloudFiles.useIncrementalListing: auto
+      # schema
+      inferSchema: false
+      cloudFiles.inferColumnTypes: true
+      # csv
+      header: true
+      # mode: PERMISSIVE
+      encoding: UTF-8
+      delimiter: ","
+      escape: '"'
+      nullValue: ""
+      quote: '"'
+      emptyValue: ""
+    
+
+raw:
+  delta_lake:
+    database: "{{database}}"
+    table: "{{table}}"
+    container: datalake
+    z_order_by:
+      - _load_date
+    options:
+      mergeSchema: true
+      checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
+
+
+base:
+  delta_lake:
+    database: "{{database}}"
+    table: "{{table}}"
+    container: datalake
+    options: null
