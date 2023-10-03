@@ -101,17 +101,9 @@ clear_down()
 
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC
-# MAGIC show databases
 
-# COMMAND ----------
+checkpoints = dbutils.fs.ls("/Volumes/development/checkpoint/ooo_loading")
 
-def clear_down():
-  checkpoints = [
-    "/mnt/datalake/checkpoint/ooo_loading"
-  ]
-  for c in checkpoints:
-    dbutils.fs.rm(c, True)
-  spark.sql("drop database if exists `development`.`ooo_loading` CASCADE")
-clear_down()
+for c in checkpoints:
+  dbutils.fs.rm(c.path, True)
+
