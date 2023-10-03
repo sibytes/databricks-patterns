@@ -11,10 +11,33 @@ catalog = dbutils.widgets.get("catalog")
 storage_account = dbutils.widgets.get("storage_account")
 container = dbutils.widgets.get("container")
 
-path = f"abfss://{container}@{storage_account}.dfs.core.windows.net/data/{project}"
-print(f"Creating volume {path}")
 
 # COMMAND ----------
+
+# DBTITLE 1,Create Checkpoint Volume
+path = f"abfss://{catalog}@{storage_account}.dfs.core.windows.net/data/checkpoint"
+print(f"Creating volume {path}")
+
+spark.sql(f"CREATE SCHEMA IF NOT EXISTS {catalog}.checkpoint")
+
+spark.sql(f"""
+CREATE EXTERNAL VOLUME IF NOT EXISTS {catalog}.checkpoint.{project}
+LOCATION '{path}'
+""")
+
+# COMMAND ----------
+
+volume_exists = (
+  spark.sql(f"SHOW VOLUMES in {catalog}.checkpoint").where(f"volume_name = '{project}'")
+).count()
+
+assert volume_exists == 1, "volume can't be found"
+
+# COMMAND ----------
+
+# DBTITLE 1,Create Data Volume
+path = f"abfss://{container}@{storage_account}.dfs.core.windows.net/data/{project}"
+print(f"Creating volume {path}")
 
 spark.sql(f"""
 CREATE EXTERNAL VOLUME IF NOT EXISTS {catalog}.{container}.{project}

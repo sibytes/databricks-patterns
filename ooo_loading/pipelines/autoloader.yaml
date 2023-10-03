@@ -20,7 +20,7 @@ landing:
     options:
       # autoloader
       cloudFiles.format: csv
-      cloudFiles.schemaLocation: /mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}  
+      cloudFiles.schemaLocation: "/Volumes/{{catalog}}/checkpoint/{{project}}/{{checkpoint}}"
       cloudFiles.schemaHints: ../schema/{{table.lower()}}.yaml
       cloudFiles.useIncrementalListing: auto
       # schema
@@ -44,7 +44,7 @@ raw:
     container: datalake
     options:
       mergeSchema: true
-      checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
+      checkpointLocation: "/Volumes/{{catalog}}/checkpoint/{{project}}/{{checkpoint}}"
 
 
 base:
