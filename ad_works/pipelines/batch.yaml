@@ -11,11 +11,10 @@ audit_control:
         delta.appendOnly: true
         delta.autoOptimize.autoCompact: true
         delta.autoOptimize.optimizeWrite: true
-    managed: false
     container: datalake
-    location: /mnt/{{container}}/data
-    path: "{{database}}/{{table}}"
     options: null
+
+
 
 landing:
   read:
@@ -24,7 +23,7 @@ landing:
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/mnt/{{container}}/data/{{project}}/csv/{{table}}/{{path_date_format}}"
+    location: "/Volumes/{{catalog}}/landing/{{project}}/csv/{{table}}/{{path_date_format}}"
     filename: "{{table}}-{{filename_date_format}}*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
@@ -55,8 +54,6 @@ raw:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: /mnt/{{container}}/data
-    path: "{{database}}/{{table}}"
     z_order_by:
       - _load_date
     options:
@@ -68,6 +65,5 @@ base:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: /mnt/{{container}}/data
-    path: "{{database}}/{{table}}"
-    options: null
+    options:
+      mergeSchema: true

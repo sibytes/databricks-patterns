@@ -13,10 +13,8 @@ audit_control:
         delta.autoOptimize.optimizeWrite: true
     managed: false
     container: datalake
-    location: /mnt/{{container}}/data/control
-    path: "{{database}}/{{table}}"
     options:
-      checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
+      checkpointLocation: "/Volumes/{{catalog}}/checkpoint/{{project}}/{{checkpoint}}"
 
 landing:
   read:
@@ -25,7 +23,7 @@ landing:
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/mnt/{{container}}/data/{{project}}/csv/{{table}}/*"
+    location: "/Volumes/{{catalog}}/landing/{{project}}/csv/{{table}}/*"
     filename: "{{table}}-*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
@@ -34,7 +32,7 @@ landing:
     options:
       # autoloader
       cloudFiles.format: csv
-      cloudFiles.schemaLocation:  /mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}
+      cloudFiles.schemaLocation:  "/Volumes/{{catalog}}/checkpoint/{{project}}/{{checkpoint}}"
       cloudFiles.useIncrementalListing: auto
       # schema
       inferSchema: false
@@ -56,13 +54,11 @@ raw:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: /mnt/{{container}}/data/raw
-    path: "{{database}}/{{table}}"
     z_order_by:
       - _load_date
     options:
       mergeSchema: true
-      checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
+      checkpointLocation: "/Volumes/{{catalog}}/checkpoint/{{project}}/{{checkpoint}}"
         # optional leave it out if you don't want them
     warning_thresholds:
       invalid_rows: 0
@@ -76,6 +72,7 @@ base:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: /mnt/{{container}}/data/base
-    path: "{{database}}/{{table}}"
-    options: null
+    options:
+      mergeSchema: true
+      checkpointLocation: "/Volumes/{{catalog}}/checkpoint/{{project}}/{{checkpoint}}"
+        # optional leave it out if you don't want them

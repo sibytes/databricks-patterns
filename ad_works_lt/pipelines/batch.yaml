@@ -11,7 +11,7 @@ audit_control:
         delta.appendOnly: true
         delta.autoOptimize.autoCompact: true
         delta.autoOptimize.optimizeWrite: true
-    managed: false
+    managed: true
     container: datalake
     options: null
 
@@ -22,7 +22,7 @@ landing:
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/mnt/{{container}}/data/{{project}}/csv/{{table.replace('_','-')}}/{{path_date_format}}"
+    location: "/Volumes/{{catalog}}/landing/{{project}}/csv/{{table.replace('_','-')}}/{{path_date_format}}"
     filename: "{{table.replace('_','-')}}-{{filename_date_format}}*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
