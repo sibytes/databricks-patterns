@@ -9,8 +9,6 @@ audit_control:
     # delta table properties can be set at stage level or table level
     managed: false
     container: datalake
-    location: /mnt/{{container}}/data/control
-    path: "{{database}}/{{table}}"
     options: null
 
 landing:
@@ -50,8 +48,6 @@ raw:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: /mnt/{{container}}/data/raw
-    path: "{{database}}/{{table}}"
     z_order_by:
       - _load_date
     options:
@@ -69,6 +65,4 @@ base:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: /mnt/{{container}}/data/base
-    path: "{{database}}/{{table}}"
     options: null

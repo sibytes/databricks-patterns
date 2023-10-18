@@ -4,24 +4,24 @@ version: 3.0.0
 
 audit_control:
   delta_lake:
-    yetl_control_ad_works_lt:
+    control_ad_works_lt:
       base_audit:
         depends_on:
-        - base.yetl_base_ad_works_lt.*
+        - base.base_ad_works_lt.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 30
-      catalog: null
+      catalog: development
       raw_audit:
         depends_on:
-        - raw.yetl_raw_ad_works_lt.*
+        - raw.raw_ad_works_lt.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 30
 
 landing:
   read:
-    yetl_landing_ad_works_lt:
+    landing_ad_works_lt:
       address: null
-      catalog: null
+      catalog: development
       customer: null
       customer_address: null
       product: null
@@ -34,26 +34,26 @@ landing:
 
 raw:
   delta_lake:
-    yetl_raw_ad_works_lt:
+    raw_ad_works_lt:
       address:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_lt.address
+        - landing.landing_ad_works_lt.address
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
         id: AddressID
         vacuum: 30
         z_order_by: _load_date
-      catalog: null
+      catalog: development
       customer:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_lt.customer
+        - landing.landing_ad_works_lt.customer
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -65,7 +65,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_lt.customer_address
+        - landing.landing_ad_works_lt.customer_address
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -79,7 +79,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_lt.product
+        - landing.landing_ad_works_lt.product
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -93,7 +93,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_lt.product_category
+        - landing.landing_ad_works_lt.product_category
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -105,7 +105,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_lt.product_description
+        - landing.landing_ad_works_lt.product_description
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -117,7 +117,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_lt.product_model
+        - landing.landing_ad_works_lt.product_model
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -129,7 +129,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_lt.product_model_product_description
+        - landing.landing_ad_works_lt.product_model_product_description
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -144,7 +144,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_lt.sales_order_detail
+        - landing.landing_ad_works_lt.sales_order_detail
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -158,7 +158,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_lt.sales_order_header
+        - landing.landing_ad_works_lt.sales_order_header
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -170,25 +170,25 @@ raw:
 
 base:
   delta_lake:
-    yetl_base_ad_works_lt:
+    base_ad_works_lt:
       address:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_ad_works_lt.address
+        - raw.raw_ad_works_lt.address
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
         id: AddressID
         vacuum: 30
-      catalog: null
+      catalog: development
       customer:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_ad_works_lt.customer
+        - raw.raw_ad_works_lt.customer
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -199,7 +199,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_ad_works_lt.customer_address
+        - raw.raw_ad_works_lt.customer_address
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -212,7 +212,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_ad_works_lt.product
+        - raw.raw_ad_works_lt.product
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -225,7 +225,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_ad_works_lt.product_category
+        - raw.raw_ad_works_lt.product_category
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -236,7 +236,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_ad_works_lt.product_description
+        - raw.raw_ad_works_lt.product_description
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -247,7 +247,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_ad_works_lt.product_model
+        - raw.raw_ad_works_lt.product_model
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -258,7 +258,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_ad_works_lt.product_model_product_description
+        - raw.raw_ad_works_lt.product_model_product_description
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -272,7 +272,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_ad_works_lt.sales_order_detail
+        - raw.raw_ad_works_lt.sales_order_detail
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -285,7 +285,7 @@ base:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - raw.yetl_raw_ad_works_lt.sales_order_header
+        - raw.raw_ad_works_lt.sales_order_header
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1

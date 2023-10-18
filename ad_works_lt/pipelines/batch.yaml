@@ -13,8 +13,6 @@ audit_control:
         delta.autoOptimize.optimizeWrite: true
     managed: false
     container: datalake
-    location: /mnt/{{container}}/data
-    path: "{{database}}/{{table}}"
     options: null
 
 landing:
@@ -51,10 +49,8 @@ raw:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: /mnt/{{container}}/data
-    path: "{{database}}/{{table}}"
-    z_order_by:
-      - _load_date
+    # z_order_by:
+    #   - _load_date
     options:
       mergeSchema: true
         # optional leave it out if you don't want them
@@ -70,6 +66,6 @@ base:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: /mnt/{{container}}/data
-    path: "{{database}}/{{table}}"
-    options: null
+    options:
+      mergeSchema: true
+        # optional leave it out if you don't want them
