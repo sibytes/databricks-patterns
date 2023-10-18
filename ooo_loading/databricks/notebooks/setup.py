@@ -2,7 +2,7 @@
 dbutils.widgets.text("project", "ooo_loading")
 dbutils.widgets.text("catalog", "development")
 dbutils.widgets.text("storage_account", "datalakegeneva")
-dbutils.widgets.text("container", "landing")
+dbutils.widgets.text("container", "landing")  
 
 # COMMAND ----------
 
@@ -83,20 +83,20 @@ dbutils.fs.cp(dbfs_from_path, volume_path, True)
 # COMMAND ----------
 
 # DBTITLE 1,Check Landing Data
+volume_path = f"/Volumes/{catalog}/{container}/{project}/balance"
 data_files = dbutils.fs.ls(volume_path)
-dirs = [d.name.replace("/", "") for d in data_files]
+dirs = [d.name for d in data_files]
 
-assert "balance" in dirs, f"balance is missing, {container} not setup"
-display(data_files)
+assert len(dirs) == 10, f"balance file count is wrong, {len(dirs)} != 10"
+
 
 # COMMAND ----------
 
 # DBTITLE 1,Clear Down the Data Lakehouse
 def clear_down():
-  print(f"dropping database {catalog}.raw_{project}")
-  spark.sql(f"drop database if exists {catalog}.raw_{project} CASCADE")
-  print(f"dropping database {catalog}.base_{project}")
-  spark.sql(f"drop database if exists {catalog}.base_{project} CASCADE")
+  print(f"dropping database {catalog}.{project}")
+  spark.sql(f"drop database if exists {catalog}.{project} CASCADE")
+
 clear_down()
 
 # COMMAND ----------

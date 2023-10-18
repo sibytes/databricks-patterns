@@ -70,7 +70,7 @@ dbutils.notebook.exit("Finished")
 
 # MAGIC %sql
 # MAGIC
-# MAGIC select 
+# MAGIC select distinct
 # MAGIC   transacted, 
 # MAGIC   created, 
 # MAGIC   amount, 
@@ -87,11 +87,3 @@ dbutils.notebook.exit("Finished")
 # MAGIC and `code_4` = '023012256-6'
 # MAGIC and `code_5` = '989988643-2'
 # MAGIC order by created
-
-# COMMAND ----------
-
-# MAGIC %python
-# MAGIC
-# MAGIC print(spark.sql("""
-# MAGIC show create table development.ooo_loading.balance
-# MAGIC """).first()[0])
