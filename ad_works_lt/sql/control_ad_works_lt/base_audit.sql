@@ -1,4 +1,4 @@
-  CREATE TABLE IF NOT EXISTS `yetl_control_ad_works_lt`.`base_audit`
+  CREATE TABLE IF NOT EXISTS `{{catalog}}`.`control_ad_works_lt`.`base_audit`
   (
 
     `file_name` string,
@@ -32,7 +32,6 @@
     _load_date timestamp
   )
   USING DELTA
-  LOCATION '{{location}}'
   TBLPROPERTIES (
     {{delta_properties}}
   )

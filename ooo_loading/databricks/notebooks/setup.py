@@ -15,7 +15,7 @@ container = dbutils.widgets.get("container")
 # COMMAND ----------
 
 # DBTITLE 1,Create Checkpoint Volume
-path = f"abfss://{catalog}@{storage_account}.dfs.core.windows.net/data/checkpoint"
+path = f"abfss://{catalog}@{storage_account}.dfs.core.windows.net/data/checkpoint/{project}/"
 print(f"Creating volume {path}")
 
 spark.sql(f"CREATE SCHEMA IF NOT EXISTS {catalog}.checkpoint")

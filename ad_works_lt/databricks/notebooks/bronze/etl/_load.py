@@ -61,6 +61,8 @@ def stream_load(
         .options(**source.options)
         .load(source.path)
     )
+    
+    destination.create_table(stream.schema)
 
     src_cols = [c for c in stream.columns if not c.startswith("_")]
     sys_cols = [c for c in stream.columns if c.startswith("_")]
@@ -108,6 +110,8 @@ def batch_load(
         .options(**source.options)
         .load(source.path)
     )
+
+    destination.create_table(df.schema)
 
     src_cols = [c for c in df.columns if not c.startswith("_")]
     sys_cols = [c for c in df.columns if c.startswith("_")]
