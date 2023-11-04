@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=./json_schema/sibytes_yetl_tables_schema.json
 
-version: 3.0.0
+version: 3.0.0.dev21
 
 audit_control:
   delta_lake:
@@ -46,7 +46,6 @@ raw:
           min_rows: 1
         id: AddressID
         vacuum: 30
-        z_order_by: _load_date
       catalog: development
       customer:
         custom_properties:
@@ -59,7 +58,6 @@ raw:
           min_rows: 1
         id: CustomerID
         vacuum: 30
-        z_order_by: _load_date
       customer_address:
         custom_properties:
           process_group: 1
@@ -73,7 +71,6 @@ raw:
         - AddressID
         - CustomerID
         vacuum: 30
-        z_order_by: _load_date
       product:
         custom_properties:
           process_group: 1
@@ -87,7 +84,6 @@ raw:
         - ProductID
         - ProductNumber
         vacuum: 30
-        z_order_by: _load_date
       product_category:
         custom_properties:
           process_group: 1
@@ -99,7 +95,6 @@ raw:
           min_rows: 1
         id: ProductCategoryID
         vacuum: 30
-        z_order_by: _load_date
       product_description:
         custom_properties:
           process_group: 1
@@ -111,7 +106,6 @@ raw:
           min_rows: 1
         id: ProductDescriptionID
         vacuum: 30
-        z_order_by: _load_date
       product_model:
         custom_properties:
           process_group: 1
@@ -123,7 +117,6 @@ raw:
           min_rows: 1
         id: ProductModelID
         vacuum: 30
-        z_order_by: _load_date
       product_model_product_description:
         custom_properties:
           process_group: 1
@@ -138,7 +131,6 @@ raw:
         - ProductModelID
         - Culture
         vacuum: 30
-        z_order_by: _load_date
       sales_order_detail:
         custom_properties:
           process_group: 1
@@ -152,7 +144,6 @@ raw:
         - SalesOrderDetailID
         - SalesOrderID
         vacuum: 30
-        z_order_by: _load_date
       sales_order_header:
         custom_properties:
           process_group: 1
@@ -166,7 +157,6 @@ raw:
         - SalesOrderID
         - SalesOrderNumber
         vacuum: 30
-        z_order_by: _load_date
 
 base:
   delta_lake:
@@ -268,6 +258,7 @@ base:
         - Culture
         vacuum: 30
       sales_order_detail:
+        cluster_by: OrderDate
         custom_properties:
           process_group: 1
           rentention_days: 365
