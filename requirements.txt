@@ -1,1 +1,1 @@
-yetl-framework==3.0.0.dev21
+yetl-framework==3.0.0
