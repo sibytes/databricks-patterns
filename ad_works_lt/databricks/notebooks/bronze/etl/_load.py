@@ -32,7 +32,7 @@ def z_order_by(
 def drop_if_already_loaded(df:Union[DataFrame, StreamingQuery], source:Read):
     already_loaded = spark.sql(f"""
       select struct(file_path, file_name, file_size, file_modification_time) as _metadata_loaded
-      from yetl_control_ad_works_lt.raw_audit
+      from control_ad_works_lt.raw_audit
       where source_table = '{source.table}'                   
     """)
     match_on_metadata = [
