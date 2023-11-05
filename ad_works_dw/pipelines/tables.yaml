@@ -1,21 +1,21 @@
-# yaml-language-server: $schema=./json_schema/sibytes_yetl_pipeline_schema.json
+# yaml-language-server: $schema=./json_schema/sibytes_yetl_tables_schema.json
 
 version: 3.0.0
 
 audit_control:
   delta_lake:
-    yetl_control_ad_works_dw:
-      catalog: null
+    control_ad_works_dw:
+      catalog: development
       raw_audit:
         depends_on:
-        - raw.yetl_raw_ad_works_dw.*
+        - raw.raw_ad_works_dw.*
         sql: ../sql/{{database}}/{{table}}.sql
         vacuum: 30
 
 landing:
   read:
-    yetl_landing_ad_works_dw:
-      catalog: null
+    landing_ad_works_dw:
+      catalog: development
       dim_account: null
       dim_currency: null
       dim_customer: null
@@ -45,14 +45,14 @@ landing:
 
 raw:
   delta_lake:
-    yetl_raw_ad_works_dw:
-      catalog: null
+    raw_ad_works_dw:
+      catalog: development
       dim_account:
         custom_properties:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_account
+        - landing.landing_ad_works_dw.dim_account
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -64,7 +64,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_currency
+        - landing.landing_ad_works_dw.dim_currency
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -76,7 +76,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_customer
+        - landing.landing_ad_works_dw.dim_customer
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -88,7 +88,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_date
+        - landing.landing_ad_works_dw.dim_date
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -100,7 +100,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_department
+        - landing.landing_ad_works_dw.dim_department
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -112,7 +112,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_employee
+        - landing.landing_ad_works_dw.dim_employee
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -124,7 +124,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_geography
+        - landing.landing_ad_works_dw.dim_geography
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -136,7 +136,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_organization
+        - landing.landing_ad_works_dw.dim_organization
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -148,7 +148,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_product
+        - landing.landing_ad_works_dw.dim_product
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -160,7 +160,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_product_category
+        - landing.landing_ad_works_dw.dim_product_category
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -172,7 +172,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_product_sub_category
+        - landing.landing_ad_works_dw.dim_product_sub_category
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -184,7 +184,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_promotion
+        - landing.landing_ad_works_dw.dim_promotion
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -196,7 +196,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_reseller
+        - landing.landing_ad_works_dw.dim_reseller
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -208,7 +208,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_sales_reason
+        - landing.landing_ad_works_dw.dim_sales_reason
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -220,7 +220,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_sales_territory
+        - landing.landing_ad_works_dw.dim_sales_territory
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -232,7 +232,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.dim_scenario
+        - landing.landing_ad_works_dw.dim_scenario
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -244,7 +244,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.fact_additional_international_product_description
+        - landing.landing_ad_works_dw.fact_additional_international_product_description
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -256,7 +256,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.fact_call_centre
+        - landing.landing_ad_works_dw.fact_call_centre
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -271,7 +271,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.fact_currency_rate
+        - landing.landing_ad_works_dw.fact_currency_rate
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -285,7 +285,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.fact_finance
+        - landing.landing_ad_works_dw.fact_finance
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -297,7 +297,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.fact_internet_sales
+        - landing.landing_ad_works_dw.fact_internet_sales
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -311,7 +311,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.fact_internet_sales_reason
+        - landing.landing_ad_works_dw.fact_internet_sales_reason
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -326,7 +326,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.fact_product_inventory
+        - landing.landing_ad_works_dw.fact_product_inventory
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -340,7 +340,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.fact_reseller_sales
+        - landing.landing_ad_works_dw.fact_reseller_sales
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -354,7 +354,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.fact_sales_quota
+        - landing.landing_ad_works_dw.fact_sales_quota
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
@@ -366,7 +366,7 @@ raw:
           process_group: 1
           rentention_days: 365
         depends_on:
-        - landing.yetl_landing_ad_works_dw.fact_survey_response
+        - landing.landing_ad_works_dw.fact_survey_response
         exception_thresholds:
           invalid_rows: 0
           min_rows: 1
