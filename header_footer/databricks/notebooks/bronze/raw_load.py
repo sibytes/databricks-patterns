@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==3.0.0.dev3
+# MAGIC %pip install pyaml pydantic yetl-framework==3.0.0
 
 # COMMAND ----------
 
@@ -13,6 +13,7 @@ dbutils.widgets.text("timeout", "3600")
 dbutils.widgets.text("process_group", "1")
 dbutils.widgets.text("load_type", "batch")
 dbutils.widgets.text("timeslice", "*")
+dbutils.widgets.text("catalog", "development")
 
 
 # COMMAND ----------
@@ -27,12 +28,14 @@ from yetl.workflow import (
 
 # COMMAND ----------
 
+project = "header_footer_uc"
 param_process_id = int(dbutils.widgets.get("process_id"))
 param_max_parallel = int(dbutils.widgets.get("max_parallel"))
 param_timeout = int(dbutils.widgets.get("timeout"))
 param_process_group = int(dbutils.widgets.get("process_group"))
 param_load_type = dbutils.widgets.get("load_type")
 param_timeslice = dbutils.widgets.get("timeslice")
+param_catalog = dbutils.widgets.get("catalog")
 
 try:
   load_type:LoadType = LoadType(param_load_type)
@@ -40,17 +43,18 @@ except Exception as e:
    raise Exception(f"load_type parameter {param_load_type} is not valid")
 
 print(f"""
+  project: {project}
   param_process_id: {param_process_id}
   param_max_parallel: {param_max_parallel}
   param_timeout: {param_timeout}
   process_group: {param_process_group}
   load_type: {str(load_type)}
   timeslice: {param_timeslice}
+  catalog: {param_catalog}
 """)
 
 # COMMAND ----------
 
-project = "header_footer"
 pipeline = load_type.value
 
 config = Config(
@@ -63,6 +67,7 @@ config = Config(
 tables = config.lookup_table(
   stage=StageType.raw, 
   first_match=False,
+  catalog=param_catalog,
   # this will filter the tables on a custom property
   # in the tables parameter you can add whatever custom properties you want
   # either for filtering or to use in pipelines
@@ -81,7 +86,8 @@ notebooks = [
     parameters={
       "process_id": str(param_process_id), 
       "table": t.table,
-      "load_type": load_type.value
+      "load_type": load_type.value,
+      "catalog": param_catalog
     }, 
     timeout=param_timeout, 
     retry=0, 

@@ -1,20 +1,26 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==3.0.0.dev3
+# MAGIC %pip install pyaml pydantic yetl-framework==3.0.0
 
 # COMMAND ----------
+
 dbutils.library.restartPython()
 
 # COMMAND ----------
-dbutils.widgets.text("load_type", "autoloader")
+
+dbutils.widgets.text("load_type", "batch")
+dbutils.widgets.text("catalog", "development")
 
 # COMMAND ----------
+
 from etl import LoadType
 from yetl import (
   Config, StageType
 )
 
 # COMMAND ----------
+
 param_load_type = dbutils.widgets.get("load_type")
+param_catalog = dbutils.widgets.get("catalog")
 
 try:
   load_type:LoadType = LoadType(param_load_type)
@@ -27,7 +33,7 @@ print(f"""
 
 # COMMAND ----------
 
-project = "header_footer"
+project = "header_footer_uc"
 pipeline = load_type.value
 
 config = Config(
@@ -38,7 +44,8 @@ config = Config(
 # COMMAND ----------
 
 tables = config.create_tables(
-  stage=StageType.audit_control
+  StageType.audit_control,
+  catalog=param_catalog
 )
 
 

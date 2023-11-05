@@ -1,5 +1,5 @@
 
-CREATE TABLE IF NOT EXISTS `{{catalog}}`.`yetl_control_header_footer_uc`.`header_footer`
+CREATE TABLE IF NOT EXISTS `{{catalog}}`.`control_header_footer`.`header_footer`
 (
     header struct<flag:string,row_count:bigint,period:bigint,batch:string>,
     raw_header string,

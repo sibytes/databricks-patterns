@@ -1,57 +1,71 @@
 # Databricks notebook source
-# DBTITLE 1,Clear Landing
-# dbfs_to_path = "/mnt/landing/data/header_footer"
-# dbutils.fs.rm(dbfs_to_path, True)
+dbutils.widgets.text("project", "ad_works_dw")
+dbutils.widgets.text("catalog", "development")
+dbutils.widgets.text("storage_account", "datalakegeneva")
+dbutils.widgets.text("container", "landing")  
 
 # COMMAND ----------
 
-# DBTITLE 1,Load Landing
-# import os
-
-# home = os.getcwd()
-# print(home)
-
-# data_dir = os.path.join(home, "../../../data/landing/customer_details")
-
-# dbfs_from_path = f"file://{data_dir}"
-# dbutils.fs.ls(dbfs_from_path)
-
-# print(f"Copying data from {dbfs_from_path} to {dbfs_to_path}")
-# dbutils.fs.cp(dbfs_from_path, dbfs_to_path, True)
-
-
+project = dbutils.widgets.get("project")
+catalog = dbutils.widgets.get("catalog")
+storage_account = dbutils.widgets.get("storage_account")
+container = dbutils.widgets.get("container")
 
 # COMMAND ----------
 
-# DBTITLE 1,Check Landing Data
-# data_files = dbutils.fs.ls(dbfs_to_path)
-# dirs = [d.name.replace("/", "") for d in data_files]
+# DBTITLE 1,Create Checkpoint Volume
+path = f"abfss://{catalog}@{storage_account}.dfs.core.windows.net/data/checkpoint/{project}"
+print(f"Creating volume {path}")
 
-# assert "customer_details_1" in dirs, "customer_details_1 is missing, landing not setup"
-# assert "customer_details_2" in dirs, "customer_details_2 is missing, landing not setup"
-# assert "customer_preferences" in dirs, "customer_preferences is missing, landing not setup"
-# display(data_files)
+spark.sql(f"CREATE SCHEMA IF NOT EXISTS {catalog}.checkpoint")
+
+spark.sql(f"""
+CREATE EXTERNAL VOLUME IF NOT EXISTS {catalog}.checkpoint.{project}
+LOCATION '{path}'
+""")
+
+# COMMAND ----------
+
+volume_exists = (
+  spark.sql(f"SHOW VOLUMES in {catalog}.checkpoint").where(f"volume_name = '{project}'")
+).count()
+
+assert volume_exists == 1, "volume can't be found"
+
+# COMMAND ----------
+
+# DBTITLE 1,Create Landing Volume
+path = f"abfss://{container}@{storage_account}.dfs.core.windows.net/data/{project}"
+print(f"Creating volume {path}")
+
+spark.sql(f"""
+CREATE EXTERNAL VOLUME IF NOT EXISTS {catalog}.{container}.{project}
+LOCATION '{path}'
+""")
+
+# COMMAND ----------
+
+volume_exists = (
+  spark.sql(f"SHOW VOLUMES in {catalog}.{container}").where(f"volume_name = '{project}'")
+).count()
+
+assert volume_exists == 1, "volume can't be found"
 
 # COMMAND ----------
 
 # DBTITLE 1,Clear Down the Data Lakehouse
-def clear_down():
-  checkpoints = [
-    "/mnt/datalake/data/yetl_raw_ad_works_dw",
-    "/mnt/datalake/data/yetl_base_ad_works_dw",
-    "/mnt/datalake/data/yetl_control_ad_works_dw",
-    "/mnt/datalake/checkpoint/ad_works_dw"
-  ]
-  for c in checkpoints:
-    dbutils.fs.rm(c, True)
-  spark.sql("drop database if exists yetl_raw_ad_works_dw CASCADE")
-  spark.sql("drop database if exists yetl_base_ad_works_dw CASCADE")
-  spark.sql("drop database if exists yetl_control_ad_works_dw CASCADE")
-clear_down()
 
+volume_path = f"/Volumes/{catalog}/checkpoint/{project}/"
+dbutils.fs.rm(volume_path, True)
 
-# COMMAND ----------
+print(f"dropping database {catalog}.raw_{project}")
+spark.sql(f"drop database if exists {catalog}.raw_{project} CASCADE")
+print(f"dropping database {catalog}.base_{project}")
+spark.sql(f"drop database if exists {catalog}.base_{project} CASCADE")
+print(f"dropping database {catalog}.control_{project}")
+spark.sql(f"drop database if exists {catalog}.control_{project} CASCADE")
 
-# MAGIC %sql
-# MAGIC
-# MAGIC show databases
+spark.sql(f"drop database if exists raw_{project} CASCADE")
+spark.sql(f"drop database if exists base_{project} CASCADE")
+spark.sql(f"drop database if exists control_{project} CASCADE")
+

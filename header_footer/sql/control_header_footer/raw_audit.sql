@@ -1,4 +1,4 @@
-  CREATE TABLE IF NOT EXISTS `{{catalog}}`.`yetl_control_header_footer_uc`.`base_audit`
+  CREATE TABLE IF NOT EXISTS `{{catalog}}`.`control_header_footer`.`raw_audit`
   (
 
     `file_name` string,

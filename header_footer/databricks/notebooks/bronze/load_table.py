@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==3.0.0.dev3
+# MAGIC %pip install pyaml pydantic yetl-framework==3.0.0
 
 # COMMAND ----------
 
@@ -11,6 +11,7 @@ dbutils.widgets.text("process_id", "-1")
 dbutils.widgets.text("table", "customer_details_1")
 dbutils.widgets.text("load_type", "batch")
 dbutils.widgets.text("timeslice", "*")
+dbutils.widgets.text("catalog", "development")
 
 # COMMAND ----------
 
@@ -26,6 +27,8 @@ param_process_id = int(dbutils.widgets.get("process_id"))
 param_table = dbutils.widgets.get("table")
 param_load_type = dbutils.widgets.get("load_type")
 param_timeslice = dbutils.widgets.get("timeslice")
+param_catalog = dbutils.widgets.get("catalog")
+project = "header_footer_uc"
 
 try:
   load_type:LoadType = LoadType(param_load_type)
@@ -37,17 +40,17 @@ if load_type == LoadType.autoloader:
 timeslice = Timeslice.parse_iso_date(param_timeslice)
 
 print(f"""
+  project : {project}
   param_process_id: {param_process_id}
   param_table: {param_table}
   load_type: {str(load_type)}
   timeslice: {timeslice}
+  catalog: {param_catalog}
 """)
 
 # COMMAND ----------
 
-project = "header_footer"
 pipeline = load_type.value
-
 config = Config(
   project=project, 
   pipeline=pipeline,
@@ -63,11 +66,14 @@ load = get_load(LoadFunction.load, load_type)
 table_mapping = config.get_table_mapping(
   stage=StageType.raw, 
   table=param_table,
-  create_table=True
+  create_table=True,
+  catalog=param_catalog
 )
 config.set_checkpoint(
   table_mapping.source, table_mapping.destination
 )
+
+
 
 # COMMAND ----------
 
@@ -75,6 +81,7 @@ print(load)
 load(
   param_process_id, table_mapping.source, table_mapping.destination
 )
+
 
 # COMMAND ----------
 
@@ -84,7 +91,8 @@ load = get_load(LoadFunction.load_header_footer, load_type)
 
 table_mapping_hf = config.get_table_mapping(
   stage=StageType.audit_control, 
-  table="header_footer"
+  table="header_footer",
+  catalog=param_catalog
 )
 
 source_hf:DeltaLake = table_mapping_hf.source[table_mapping.source.table]
@@ -92,9 +100,6 @@ config.set_checkpoint(
   source_hf, 
   table_mapping_hf.destination
 )
-
-
-# COMMAND ----------
 
 print(load)
 
@@ -111,7 +116,8 @@ load = get_load(LoadFunction.load_audit, load_type)
 
 table_mapping_audit = config.get_table_mapping(
   stage=StageType.audit_control, 
-  table="raw_audit"
+  table="raw_audit",
+  catalog=param_catalog
 )
 
 source_audit:DeltaLake = table_mapping_audit.source[table_mapping.source.table]
@@ -121,10 +127,6 @@ landing = table_mapping.source
 raw = table_mapping.destination
 header_footer = table_mapping_audit.source["header_footer"]
 destination = table_mapping_audit.destination
-
-
-
-# COMMAND ----------
 
 load(
   param_process_id, 
@@ -136,5 +138,5 @@ load(
 
 # COMMAND ----------
 
-msg = f"Succeeded: {table_mapping.destination.database}.{table_mapping.destination.table}"
+msg = f"Succeeded: {table_mapping.destination.qualified_table_name()}"
 dbutils.notebook.exit(msg)

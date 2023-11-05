@@ -2,7 +2,7 @@
 
 version: 3.0.0
 
-name: header_footer
+name: header_footer_uc
 sql: ./sql
 spark_schema: ./schema
 pipeline: ./pipelines

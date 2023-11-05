@@ -4,39 +4,14 @@ version: 3.0.0
 # paths here are relative to this configuration document
 tables: ./tables.yaml
 
-# deltalake table properties
-# https://docs.databricks.com/delta/table-properties.html
-
-# delta.appendOnly: false
-# delta.autoOptimize.autoCompact: none    
-# delta.autoOptimize.optimizeWrite: none    
-# delta.checkpoint.writeStatsAsJson: true
-# delta.checkpoint.writeStatsAsStruct: none
-# delta.columnMapping.mode: false
-# delta.compatibility.symlinkFormatManifest.enabled: false
-# delta.dataSkippingNumIndexedCols 32
-# delta.deletedFileRetentionDuration: interval 1 week
-# delta.enableChangeDataFeed: false
-# delta.isolationLevel:  WriteSerializable
-# delta.logRetentionDuration: interval 30 days
-# delta.minReaderVersion: 1
-# delta.minWriterVersion: 2
-# delta.randomizeFilePrefixes: false
-# delta.randomPrefixLength: 2
-# delta.setTransactionRetentionDuration: none
-# delta.tuneFileSizesForRewrites: none
-
 audit_control:
   delta_lake:
-    # delta table properties can be set at stage level or table level
     delta_properties:
         delta.appendOnly: true
         delta.autoOptimize.autoCompact: true
         delta.autoOptimize.optimizeWrite: true
-    managed: false
+    managed: true
     container: datalake
-    location: /mnt/{{container}}/data
-    path: "{{database}}/{{table}}"
     options: null
 
 landing:
@@ -46,7 +21,7 @@ landing:
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/mnt/{{container}}/data/header_footer/{{table}}/{{path_date_format}}"
+    location: "/Volumes/{{catalog}}/landing/header_footer_uc/{{table}}/{{path_date_format}}"
     filename: "{{table}}-{{filename_date_format}}*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
@@ -78,18 +53,9 @@ raw:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: /mnt/{{container}}/data
-    path: "{{database}}/{{table}}"
-    z_order_by:
-      - _load_date
+    managed: true
     options:
       mergeSchema: true
-    # # optional leave it out if you don't want them
-    # warning_thresholds:
-    #   invalid_rows: 0
-    # # optional leave it out if you don't want them
-    # exception_thresholds:
-    #   invalid_rows: 2
 
 
 base:
@@ -102,6 +68,5 @@ base:
     database: "{{database}}"
     table: "{{table}}"
     container: datalake
-    location: /mnt/{{container}}/data
-    path: "{{database}}/{{table}}"
+    managed: true
     options: null

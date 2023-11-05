@@ -45,10 +45,10 @@ def load_audit(
         hf._slice_date,
         hf._process_id,
         hf._load_date
-      FROM `{raw.database}`.`{raw.table}` as d
-      JOIN `{header_footer.database}`.`{header_footer.table}` as hf
+      FROM {raw.qualified_table_name()} as d
+      JOIN {header_footer.qualified_table_name()} as hf
         ON hf._process_id = d._process_id
-        AND hf._metadata.file_name = d._metadata.file_name
+        AND hf.file_name = d._metadata.file_name
       WHERE d._process_id = {process_id}
       GROUP BY
         hf.header.row_count,
@@ -65,14 +65,15 @@ def load_audit(
         hf._load_date
     """
 
+
     _logger.debug(sql)
-    _logger.info(f"loading table `{destination.database}`.`{destination.table}`")
+    _logger.info(f"loading table {destination.qualified_table_name()}")
 
     df = spark.sql(sql)
 
     result = (
         df.write.format("delta")
         .mode("append")
-        .saveAsTable(f"`{destination.database}`.`{destination.table}`")
+        .saveAsTable(f"{destination.qualified_table_name()}")
     )
     return result
