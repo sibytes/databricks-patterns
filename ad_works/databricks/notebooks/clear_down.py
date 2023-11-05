@@ -15,9 +15,9 @@ def clear_down():
   ]
   for c in checkpoints:
     dbutils.fs.rm(c, True)
-  spark.sql("drop database if exists yetl_raw_ad_works CASCADE")
-  spark.sql("drop database if exists yetl_base_ad_works CASCADE")
-  spark.sql("drop database if exists yetl_control_ad_works CASCADE")
+  spark.sql("drop database if exists hive_metastore.yetl_raw_ad_works CASCADE")
+  spark.sql("drop database if exists hive_metastore.yetl_base_ad_works CASCADE")
+  spark.sql("drop database if exists hive_metastore.yetl_control_ad_works CASCADE")
 clear_down()
 
 # COMMAND ----------
