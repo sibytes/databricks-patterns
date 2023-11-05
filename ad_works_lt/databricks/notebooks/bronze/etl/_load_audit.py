@@ -42,7 +42,7 @@ def load_audit(
         d._slice_date,
         d._process_id,
         d._load_date
-      FROM `{raw.database}`.`{raw.table}` as d
+      FROM `{raw.catalog}`.`{raw.database}`.`{raw.table}` as d
       WHERE d._process_id = {process_id}
       GROUP BY
         warning_thresholds,
@@ -60,13 +60,13 @@ def load_audit(
 
 
     _logger.debug(sql)
-    _logger.info(f"loading table `{destination.database}`.`{destination.table}`")
+    _logger.info(f"loading table `{raw.catalog}`.`{destination.database}`.`{destination.table}`")
 
     df = spark.sql(sql)
 
     result = (
         df.write.format("delta")
         .mode("append")
-        .saveAsTable(f"`{destination.database}`.`{destination.table}`")
+        .saveAsTable(f"`{raw.catalog}`.`{destination.database}`.`{destination.table}`")
     )
     return result
