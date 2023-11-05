@@ -13,7 +13,7 @@ audit_control:
     managed: false
     container: datalake
     options:
-      checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
+      checkpointLocation: "/Volumes/{{catalog}}/checkpoint/{{project}}/{{checkpoint}}"
 
 landing:
   read:
@@ -31,7 +31,7 @@ landing:
     options:
       # autoloader
       cloudFiles.format: csv
-      cloudFiles.schemaLocation:  /mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}
+      cloudFiles.schemaLocation:  "/Volumes/{{catalog}}/checkpoint/{{project}}/{{checkpoint}}"
       cloudFiles.useIncrementalListing: auto
       # schema
       inferSchema: false
@@ -57,7 +57,7 @@ raw:
       - _load_date
     options:
       mergeSchema: true
-      checkpointLocation: "/mnt/{{container}}/checkpoint/{{project}}/{{checkpoint}}"
+      checkpointLocation: "/Volumes/{{catalog}}/checkpoint/{{project}}/{{checkpoint}}"
 
 
 base:

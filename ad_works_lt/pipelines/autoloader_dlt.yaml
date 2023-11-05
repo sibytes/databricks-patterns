@@ -18,7 +18,7 @@ landing:
     database: "{{database}}"
     table: "{{table}}"
     container: landing
-    location: "/mnt/{{container}}/data/{{project}}/csv/{{table}}/*"
+    location: "/Volumes/{{catalog}}/landing/{{project}}/csv/{{table}}/*"
     filename: "{{table}}-*.csv"
     filename_date_format: "%Y%m%d"
     path_date_format: "%Y%m%d"
