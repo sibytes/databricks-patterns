@@ -22,7 +22,7 @@ def z_order_by(
       _z_order_by = ",".join(destination.z_order_by)
     print("Optimizing")
     sql = f"""
-        OPTIMIZE `{destination.database}`.`{destination.table}`
+        OPTIMIZE `{destination.catalog}`.`{destination.database}`.`{destination.table}`
         ZORDER BY ({_z_order_by})
     """
     _logger.info(sql)

@@ -1,5 +1,5 @@
 # Databricks notebook source
-# MAGIC %pip install pyaml pydantic yetl-framework==3.0.0.dev3
+# MAGIC %pip install pyaml pydantic yetl-framework==3.0.0
 
 # COMMAND ----------
 
@@ -65,8 +65,7 @@ load = get_load(LoadFunction.load, load_type)
 
 table_mapping = config.get_table_mapping(
   stage=StageType.raw, 
-  table=param_table,
-  create_table=True
+  table=param_table
 )
 config.set_checkpoint(
   table_mapping.source, table_mapping.destination
@@ -83,8 +82,7 @@ load = get_load(LoadFunction.load_audit, load_type)
 
 table_mapping_audit = config.get_table_mapping(
   stage=StageType.audit_control, 
-  table="raw_audit",
-  create_table=False
+  table="raw_audit"
 )
 
 landing = table_mapping.source
@@ -100,5 +98,5 @@ load(
 
 # COMMAND ----------
 
-msg = f"Succeeded: {table_mapping.destination.database}.{table_mapping.destination.table}"
+msg = f"Succeeded: {table_mapping.destination.catalog}.{table_mapping.destination.database}.{table_mapping.destination.table}"
 dbutils.notebook.exit(msg)

@@ -42,7 +42,7 @@ def load_audit(
         d._slice_date,
         d._process_id,
         d._load_date
-      FROM `{raw.database}`.`{raw.table}` as d
+      FROM `{raw.catalog}`.`{raw.database}`.`{raw.table}` as d
       WHERE d._process_id = {process_id}
       GROUP BY
         warning_thresholds,
