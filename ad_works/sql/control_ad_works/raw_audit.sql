@@ -32,7 +32,6 @@
     _load_date timestamp
   )
   USING DELTA
-  LOCATION '{{location}}'
   TBLPROPERTIES (
     {{delta_properties}}
   )
