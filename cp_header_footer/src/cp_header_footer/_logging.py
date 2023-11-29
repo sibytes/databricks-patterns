@@ -1,14 +1,14 @@
 import logging
 import logging.config
-import yaml
+import json
 import os
-from yaml import YAMLError
+from json.decoder import JSONDecodeError
 
 def configure_logging():
-    """Configures the logging based on the logging.yaml file in the root
+    """Configures the logging based on the logging.json file in the root
     """
 
-    log_config_file = f"{os.getcwd()}/../logging.yaml"
+    log_config_file = f"{os.getcwd()}/../logging.json"
 
 
     # check that it exists
@@ -19,21 +19,11 @@ def configure_logging():
     # load the logging configuration into the logger
     with open(log_config_file, "r") as f:
         try:
-            config = yaml.safe_load(f.read())
+            config = json.load(f.read())
             logging.config.dictConfig(config)
 
-            # if it errors because of invalid yaml format then
-            # provide details so the users can easily find and correct
-            # if it's a different exception just let it raise
-        except YAMLError as e:
-            location = ""
-            if hasattr(e, "problem_mark"):
-                mark = e.problem_mark
-                location = f"Error position ({mark.line}, {mark.column})"
-
-            if hasattr(e, "problem"):
-                problem = f"{e.problem}."
+        except JSONDecodeError as e:
 
             raise Exception(
-                f"Invalid yaml format in {log_config_file}. {problem} {location}"
-            )
+                f"Invalid yaml format in {log_config_file}."
+            ) from e

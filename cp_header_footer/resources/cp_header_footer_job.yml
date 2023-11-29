@@ -13,7 +13,7 @@ resources:
         - task_key: notebook_task
           job_cluster_key: job_cluster
           notebook_task:
-            notebook_path: ../src/notebook.ipynb
+            notebook_path: ../src/load_table.ipynb
 
       job_clusters:
         - job_cluster_key: job_cluster
