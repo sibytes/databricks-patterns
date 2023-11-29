@@ -1,6 +1,5 @@
 from pyspark.sql.types import StructType
 from pyspark.sql import DataFrame
-import yaml
 import logging
 from ._load_type_factory import get_load_type
 
