@@ -14,7 +14,6 @@ class Table():
       name:str,
       load_type:str,
       filename:str, 
-      stage_db:str,
       stage_table:str,
       stage_description: str,
       ):
@@ -23,8 +22,6 @@ class Table():
     # custom table properties
     self.name = name
     self.filename = filename
-    self.stage_table = stage_table
-    self.stage_db = stage_db
     self.stage_description = stage_description
 
     self.schema:StructType = self._load_schema(name = self.name)
@@ -34,16 +31,16 @@ class Table():
     self._load = load_type_config["load"]
 
   def stage_into(self, spark:SparkSession):
-
-    self._logger.info(f"creating stage table `{self.stage_db}`.`{self.stage_table}`")
+    stage_db = "raw_cp_header_footer"
+    self._logger.info(f"creating stage table `{stage_db}`.`{self.name}`")
     sql = f"""
-      create schema if not exists `{self.stage_db}`
+      create schema if not exists `{stage_db}`
     """
     self._logger.debug(sql)
     spark.sql(sql)
 
     sql = f"""
-      create table if not exists `{self.stage_db}`.`{self.stage_table}`
+      create table if not exists `{stage_db}`.`{self.name}`
       comment '{self.stage_description}'
       -- TBLPROPERTIES (<table-properties>);
     """
@@ -51,9 +48,9 @@ class Table():
     spark.sql(sql)
 
     path = f"/Volumes/development/landing/header_footer/{self.filename}/*/{self.filename}-*.csv"
-    self._logger.info(f"copy into {path} into `{self.stage_db}`.`{self.stage_table}`")
+    self._logger.info(f"copy into {path} into `{stage_db}`.`{self.name}`")
     sql = f"""
-      copy into `{self.stage_db}`.`{self.stage_table}`
+      copy into `{stage_db}`.`{self.name}`
       FROM '{path}'
       FILEFORMAT = CSV
       FORMAT_OPTIONS ('mergeSchema' = 'true')
@@ -84,26 +81,23 @@ class Table():
 # this register must be last so that the classes are loaded 1st
 # add any custom properties needed, but you must add the to class constructor also.
 def tables():
-  return {
+
+  config = {
     "customer_details_1": {
-      "stage_db": "raw_cp_header_footer",
-      "stage_table": "raw_customer_details_1",
       "stage_description": "my description",
       "filename": "customer_details_1",
       "class": Table
     },
     "customer_details_2": {
-      "stage_db": "raw_cp_header_footer",
-      "stage_table": "raw_customer_details_2",
       "stage_description": "my description",
       "filename": "customer_details_2",
       "class": Table
     },
     "customer_preferences": {
-      "stage_db": "raw_cp_header_footer",
-      "stage_table": "raw_customer_preferences",
       "stage_description": "my description",
       "filename": "customer_preferences",
       "class": Table
     }
   }
+
+  return config
