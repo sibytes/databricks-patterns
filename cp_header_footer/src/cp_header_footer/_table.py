@@ -34,25 +34,31 @@ class Table():
   def stage_into(self, spark:SparkSession):
 
     self._logger.info(f"creating stage table `{self.stage_db}`.`{self.stage_table}`")
-    spark.sql(f"""
+    sql = f"""
       create schema if not exists `{self.stage_db}`
-    """)
+    """
+    self._logger.debug(sql)
+    spark.sql(sql)
 
-    spark.sql(f"""
+    sql = f"""
       create table if not exists `{self.stage_db}`.`{self.stage_table}`
       comment '{self.stage_description}'
       -- TBLPROPERTIES (<table-properties>);
-    """)
+    """
+    self._logger.debug(sql)
+    spark.sql(sql)
 
     path = f"/Volumes/development/landing/header_footer/{self.filename}/*/{self.filename}-*.csv"
-    
-    spark.sql(f"""
+    self._logger.info(f"copy into {path} into `{self.stage_db}`.`{self.stage_table}`")
+    sql = f"""
       copy into `{self.stage_db}`.`{self.stage_table}`
       FROM '{path}'
       FILEFORMAT = CSV
       FORMAT_OPTIONS ('mergeSchema' = 'true')
       COPY_OPTIONS ('mergeSchema' = 'true');
-    """)
+    """
+    self._logger.debug(sql)
+    spark.sql(sql)
 
   def extract(self):
     df = self._extract(self)
