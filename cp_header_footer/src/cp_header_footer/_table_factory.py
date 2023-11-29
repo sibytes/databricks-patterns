@@ -1,11 +1,14 @@
-import os
 from ._logging import configure_logging
 import logging
 from ._table import tables
+from ._load_type import load_types
 
 configure_logging()
 
-def get_table(table: str, load_type: str):
+def get_table(
+    table: str, 
+    load_type: str
+  ):
 
   try:
     table_metadata = tables()[table]
