@@ -14,7 +14,6 @@ class Table():
       name:str,
       load_type:str,
       filename:str, 
-      stage_table:str,
       stage_description: str,
       ):
     self._logger = logging.getLogger(self.__class__.__name__)

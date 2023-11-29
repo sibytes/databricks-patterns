@@ -19,7 +19,7 @@ def configure_logging():
     # load the logging configuration into the logger
     with open(log_config_file, "r") as f:
         try:
-            config = json.load(f.read())
+            config = json.load(f)
             logging.config.dictConfig(config)
 
         except JSONDecodeError as e:
