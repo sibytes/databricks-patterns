@@ -50,7 +50,8 @@ class Table():
     self._logger.info(f"copy into {path} into `{stage_db}`.`{self.name}`")
     sql = f"""
       copy into `{stage_db}`.`{self.name}`
-      FROM '{path}'
+      FROM
+      (select *, _metadata FROM '{path}')
       FILEFORMAT = CSV
       FORMAT_OPTIONS ('mergeSchema' = 'true')
       COPY_OPTIONS ('mergeSchema' = 'true');
