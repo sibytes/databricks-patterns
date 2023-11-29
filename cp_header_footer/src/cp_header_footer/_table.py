@@ -19,13 +19,15 @@ class Table():
       stage_description: str,
       ):
     self._logger = logging.getLogger(self.__class__.__name__)
+
+    # custom table properties
     self.name = name
     self.filename = filename
     self.stage_table = stage_table
     self.stage_db = stage_db
     self.stage_description = stage_description
-    self.schema:StructType = self._load_schema(name = self.name)
 
+    self.schema:StructType = self._load_schema(name = self.name)
     # get the extract and load functions
     load_type_config = get_load_type(load_type)
     self._extract = load_type_config["extract"]
@@ -80,6 +82,7 @@ class Table():
 
 # register tables here and map them to a table Class
 # this register must be last so that the classes are loaded 1st
+# add any custom properties needed, but you must add the to class constructor also.
 def tables():
   return {
     "customer_details_1": {
